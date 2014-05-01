@@ -1,5 +1,78 @@
 \section{Exercise 2: An application of MCFP: rectilinear planar embedding}
+
 \subsection{Exercise 2.1}
+\todo[inline]{Table description should be better. Also the reference can't find
+  the correct number.}
+
+The $x_{vf}$ values for all vertices and and faces of Figure
+3 in \cite{assignment1} can be found in Table \ref{table:xvf}.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{l|lllll}
+$x_{vf}$ & $a$ & $b$ & $c$ & $d$ & $e$ \\ \hline
+$v_1$   & 0   & 1   & 1   & 0   & 0   \\
+$v_2$   & 0   & 0   & 1   & 1   & 0   \\
+$v_3$   & 1   & 0   & 1   & 1   & 1   \\
+$v_4$   & 0   & 0   & 0   & -1  & 1   \\
+$v_5$   & 1   & 0   & 0   & 0   & -1  \\
+$v_6$   & 1   & 1   & 0   & 1   & 1   \\
+$v_7$   & 0   & 0   & 0   & 0   & 0
+\end{tabular}
+\label{table:xvf}
+\caption{$x_{vf}$-values for all vertex/face combinations.}
+\end{table}
+
+The $z_{fg}$ values for the same graph can be found in Table \ref{table:zfg}.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{l|lllll}
+$z_{fg}$ & $a$ & $b$ & $c$ & $d$ & $e$ \\ \hline
+$a$     &     & 0   & 1   &     & 0   \\
+$b$     & 2   &     & 1   & 1   &     \\
+$c$     & 1   & 1   &     & 0   &     \\
+$d$     &     & 1   & 0   &     & 2   \\
+$e$     & 4   &     &     & 0   &
+\end{tabular}
+\label{table:zfg}
+\caption{$z_{fg}$ values for all faces, values for empty sets are not displayed}
+\end{table}
+
+Furthermore, there is a total of $12$ breakpoints in the graph.
+
+A drawing of a rectilinear layout for Figure 3 in \cite{assignment1} can be seen
+in Figure \ref{fig:rect}.
+
+\begin{tikzpicture}[-,>=stealth',shorten >=1pt,auto,node distance=1.3cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+
+  \node[state] (1) {$v_1$};
+  \node[state] (6) [below of=1]{$v_6$};
+  \node[state] (2) [left of=6]{$v_2$};
+  \node[state] (3) [below of=2]{$v_3$};
+  \node[state] (4) [right of=6]{$v_4$};
+  \node[state] (5) [left of=2]{$v_5$};
+
+\path (1) edge (6)
+      (1) edge (2)
+      (1) edge (5)
+      (1) edge (4)
+
+      (2) edge (5)
+      (2) edge (6)
+
+      (3) edge (5)
+      (3) edge (2)
+      (3) edge (6)
+      (3) edge (4)
+
+      (4) edge (5)
+
+      (6) edge (4);
+\end{tikzpicture}
+
 \subsection{Exercise 2.2}
 \subsection{Exercise 2.3}
 \subsection{Exercise 2.4}
