@@ -1,10 +1,17 @@
 \section{Exercise 1: $b$-flow}
+A flow is a b-flow if its satisfies the following
+\begin{align}
+\sum_{e \in \delta^- (v)} x_e - \sum_{e \in \delta^+ (v)} x_e &= b_v, \forall v \in V \label{1}\\
+0 \leq x_e &\leq u_e, \forall e \in E \label{2}
+\end{align}
+
+\noindent Below we have illustrated the $b$-flow for figure (a). We see that each node satisfies equation \ref{1} and \ref{2}, giving us the $b$-flow illustrated. \\
 
 \begin{minipage}{.5\textwidth}
 \centering
 \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
                     semithick]
-  \tikzstyle{every state}=[fill=gray,text=white]
+  \tikzstyle{every state}=[fill=white,text=black]
 
   \node[state,label=150:$3$] (1) {$v_1$};
   \node[state,label=30:$-2$] (2) [right of=1] {$v_2$};
@@ -29,7 +36,28 @@
 \centering
 \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
                     semithick]
-  \tikzstyle{every state}=[fill=gray,text=white]
+  \tikzstyle{every state}=[fill=white,text=black]
+
+  \node[state,label=150:$3$] (1) {$v_1$};
+  \node[state,label=30:$-2$] (2) [right of=1] {$v_2$};
+  \node[state,label=50:$4$] (3) [below of=1] {$v_3$};
+  \node[state,label=50:$2$] (4) [below of=2] {$v_4$};
+  \node[state,label=93:$-7$] (5) [below right of=3] {$v_5$};
+  
+  \path 	(2)	edge node {2} (4)
+		(5)	edge node {4} (3)
+			edge [bend left=75] node {3} (1);		
+\end{tikzpicture}
+\captionof{figure}{(a) $b$-flow}
+\end{minipage}\\
+
+\noindent In figure (b) we can only satisfy equation \ref{1} and \ref{2} with some of the nodes. Node $v_4$ does not satisfy the equations, and because of that we have no $b$-flow here. \\
+
+\begin{minipage}{.5\textwidth}
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
 
   \node[state,label=150:$3$] (1) {$v_1$};
   \node[state,label=30:$1$] (2) [right of=1] {$v_2$};
@@ -43,10 +71,24 @@
 			edge node {3} (4);		
 \end{tikzpicture}
 \captionof{figure}{(b)}
-\end{minipage}
+\end{minipage}%
+\begin{minipage}{.5\textwidth}
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
 
+  \node[state,label=150:$3$] (1) {$v_1$};
+  \node[state,label=30:$1$] (2) [right of=1] {$v_2$};
+  \node[state,label=-50:$-2$] (3) [below of=1] {$v_3$};
+  \node[state,label=-50:$-2$] (4) [below of=2] {$v_4$};
+  	
+  \end{tikzpicture}
+\captionof{figure}{(b) $b$-flow}
+\end{minipage}
 %TODO: Make stuff pretty! (Align caption and remove "Figure n" from caption
 
 \subsection{Graph (a)}
+
 
 \subsection{Graph (b)}
