@@ -47,6 +47,7 @@ A drawing of a rectilinear layout for Figure 3 in \cite{assignment1} can be seen
 in Figure \ref{fig:rect}.
 
 \todo[inline]{Rix the lines in the graph, they're direct not grid-formed-stuff.}
+
 \begin{tikzpicture}[-,>=stealth',shorten >=1pt,auto,node distance=1.3cm,
                     semithick]
   \tikzstyle{every state}=[fill=white,text=black]
@@ -77,6 +78,59 @@ in Figure \ref{fig:rect}.
 \end{tikzpicture}
 
 \subsection{Exercise 2.2}
+
+
+
 \subsection{Exercise 2.3}
+
+The assumption is necesarry since only 4 edges can be connected to any single
+node, when the edges are limited to moving in two directions. From each node, an
+edge can go either up or down, or left or right.
+
+
+To show that Equation 1 from \cite{assignment1} holds true we will divide it
+into the three different cases and show them seperetly.
+\begin{itemize}
+\item $\sum_f x_{vf} = 0$ if $v$ has degree 2 \\
+  Any vertex $v$ of degree 2 have 2 edges. This means that $v$ is part of
+  exactly 2 boundary cycles, lets call them $f$ and $g$. This means that our sum
+  can be defined as
+  \[
+    \sum_f x_{vf} = x_{vf} + x_{vg}.
+  \]
+  Since $v$ is of second degree, there is only two possible ``kinds'' of
+  configurations of the edges, either they form a 180 degree angle, or they form
+  a 90 and a 270 degree angle.  In the case of the 180 degree angles we have
+  $x_{vf} = x_{vg} = 0$. The last case is the $90/260$ degree case, this menas
+  one of them will be an innerturn and one will be an outer turn. Because of
+  this one cycle must have an $x$ value of $1$ and the other must have an $x$
+  value of $-1$ giving a summation of 0, proving the initial statement..
+\item $\sum_f x_{vf} = 2$ if $v$ has degree 3 \\
+  Having a degree of 3 means that the edge configuratin can be only one way, 2
+  edges will go either vertical or horizontal while the last edge is
+  perpendicular to those. This configuration leaves 2 inner turns, and no outer
+  turns. Naming the cycles $f, g$ and $h$ where $f$ and $g$ form inner turns
+  with $v$, the sum can be written and calculated like this
+  \[
+    \sum_f x_{vf} = x_{vf} + x_{vg} + x_{vh} = 1 + 1 + 0 = 2
+  \]
+  which shows the second part of the initial sum is true.
+
+\item $\sum_f x_{vf} = 4$ if $v$ has degree 4 \\
+  If $v$ is uf degree 4, there is exactly 4 edges connected to $v$ and $v$ must
+  be part of 4 cycles. In order to have space for these 4 edges all edges must
+  be inner turns, the sum can then be written out as so
+  \[
+    \sum_f x_{vf} = 1 + 1 + 1 + 1 = 4
+  \]
+\end{itemize}
+
+
+This hows that Equation 1 from \cite{assignment1} holds in all three cases for
+all vertices.
+
 \subsection{Exercise 2.4}
+
+
+
 \subsection{Exercise 2.5}
