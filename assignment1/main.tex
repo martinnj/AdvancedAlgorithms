@@ -1,0 +1,113 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage[pdftex]{color,graphicx}
+\usepackage{pdfpages}
+\usepackage{fancyhdr}
+\usepackage{textcomp}
+\usepackage{lmodern}
+\usepackage{xcolor}
+\usepackage{multicol}
+\usepackage{soul}
+\usepackage{url}
+\usepackage{algorithmic}
+\usepackage{wrapfig}
+\usepackage{caption}
+\usepackage{clrscode3e}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{mdwlist}
+\usepackage{pgfgantt}
+\usepackage[showframe=false]{geometry}
+\usepackage{changepage}
+\usepackage[bookmarks]{hyperref}
+\usepackage{listings}
+\usepackage{dirtree}
+\usepackage{todonotes}
+\pagestyle{fancy}
+\usepackage[font=small,labelfont=bf]{caption}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+
+\def\nosplit{\hfil\penalty 100 \hfilneg \hbox}
+
+\newcommand{\myurl}[1]{\nosplit{\url{#1}}}
+\newcommand{\graphicc}[4]{\begin{figure}[H] \centering
+            \includegraphics[width={#1\textwidth}, keepaspectratio=true]{{#2}}
+            \caption{{#3}} \label{#4} \end{figure}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+
+% Setup for lstlisting
+\lstset{language=C++,
+                basicstyle=\ttfamily,
+                keywordstyle=\color{blue}\ttfamily,
+                stringstyle=\color{red}\ttfamily,
+                commentstyle=\color{green}\ttfamily,
+                morecomment=[l][\color{magenta}]{\#}
+}
+
+%If in need of a header for the document, uncomment this and add desired text!
+\fancyhead[LO,LE]{Jenny V, Martin G \& Martin J}
+\fancyhead[RO,RE]{Assignment 1, Advanced Algorithms and Datastructures}
+%%%%%%%%%%%% END OF PREAMBLE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\begin{titlepage}
+
+\begin{center}
+
+\textsc{\LARGE Assignment 1}\\%[1.5cm]
+
+%\textsc{\Large Advanced Algorithms and Datastructures}\\[0.5cm]
+%\textsc{\Large Jenny Vej, Martin Grunbaum \& Martin Jørgensen}\\[0.5cm]
+
+\HRule \\[0.4cm]
+
+%{ \bfseries\large Jenny Vej, Martin Grunbaum \& Martin Jørgensen}\\[1cm]
+{ \bfseries\large Advanced Algorithms and Datastructures}\\[1cm]
+
+\HRule \\ [7.5cm]
+
+% Author and supervisor
+\begin{minipage}{0.5\textwidth}
+\begin{flushleft} \large
+Authors:\\
+Jenny Vej (KU-NUMMERPLADE OF WIN)\\
+Martin Grunbaum (KU-NUMMERPLADE OF WIN)\\
+Martin Jørgensen (tzk173)\\
+\vspace{0.5cm}
+\end{flushleft}
+\end{minipage}
+\begin{minipage}{0.4\textwidth}
+\begin{flushright} {\large
+\textbf{\today} }\\
+\end{flushright}
+\end{minipage}
+
+\vfill
+
+% Bottom of the page front page
+
+
+\end{center}
+
+\end{titlepage}
+\clearpage
+
+%\newpage
+%\tableofcontents
+%\newpage
+
+\input{ex1.tex}
+\input{ex2.tex}
+\input{ex3.tex}
+
+\newpage
+\appendix
+% Bibliography
+\bibliographystyle{plain}
+\bibliography{bib}
+
+\end{document}
