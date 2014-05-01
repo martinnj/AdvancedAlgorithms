@@ -1,6 +1,51 @@
 \section{Exercise 1: $b$-flow}
 
+\begin{minipage}{.5\textwidth}
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=gray,text=white]
 
+  \node[state,label=150:$3$] (1) {$v_1$};
+  \node[state,label=30:$-2$] (2) [right of=1] {$v_2$};
+  \node[state,label=150:$4$] (3) [below of=1] {$v_3$};
+  \node[state,label=50:$2$] (4) [below of=2] {$v_4$};
+  \node[state,label=93:$-7$] (5) [below right of=3] {$v_5$};
+  
+  \path 	(1) 	edge node {1} (4)
+  			edge node {4} (3)
+		(2)	edge node {5} (1)
+			edge [bend left=75] node {3} (5)
+			edge node {2} (4)
+		(3)	edge node {4} (2)
+			edge node {3} (4)
+		(4)	edge node {2} (5)
+		(5)	edge node {7} (3)
+			edge [bend left=75] node {6} (1);		
+\end{tikzpicture}
+\captionof{figure}{(a)}
+\end{minipage}%
+\begin{minipage}{.5\textwidth}
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=gray,text=white]
+
+  \node[state,label=150:$3$] (1) {$v_1$};
+  \node[state,label=30:$1$] (2) [right of=1] {$v_2$};
+  \node[state,label=-50:$-2$] (3) [below of=1] {$v_3$};
+  \node[state,label=-50:$-2$] (4) [below of=2] {$v_4$};
+  	
+  \path 	(1) 	edge node {4} (3)
+		(2)	edge node {3} (1)
+			edge node {6} (4)
+		(3)	edge node {2} (2)
+			edge node {3} (4);		
+\end{tikzpicture}
+\captionof{figure}{(b)}
+\end{minipage}
+
+%TODO: Make stuff pretty! (Align caption and remove "Figure n" from caption
 
 \subsection{Graph (a)}
 
