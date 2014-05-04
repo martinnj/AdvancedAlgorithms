@@ -43,42 +43,44 @@ $e$     & 4   &     &     & 0   &
   pretty sum.}
 Furthermore, there is a total of $13$ breakpoints in the graph.
 
-A drawing of a rectilinear layout for Figure 3 in \cite{assignment1} can be seen
+A drawing of a rectilinear layout for \cite[Figure 3]{assignment1} can be seen
 in Figure \ref{fig:rect}.
 
-\todo[inline]{Rix the lines in the graph, they're direct not grid-formed-stuff.}
-\begin{figure}
-\begin{tikzpicture}[-,>=stealth',shorten >=1pt,auto,node distance=1.3cm,
-                    semithick]
-  \tikzstyle{every state}=[fill=white,text=black]
+\graphicc{0.4}{img/2_1_1.png}{Graph in rectilinear form.}{fig:rect}
 
-  \node[state] (1) {$v_1$};
-  \node[state] (6) [below of=1]{$v_6$};
-  \node[state] (2) [left of=6]{$v_2$};
-  \node[state] (3) [below of=2]{$v_3$};
-  \node[state] (4) [right of=6]{$v_4$};
-  \node[state] (5) [left of=2]{$v_5$};
+\todo[inline]{Make the figure work in tikz, else this will have to suffice.}
+% \begin{figure}
+% \begin{tikzpicture}[-,>=stealth',shorten >=1pt,auto,node distance=1.3cm,
+%                     semithick]
+%   \tikzstyle{every state}=[fill=white,text=black]
 
-\path (1) edge (6)
-      (1) edge (2)
-      (1) edge (5)
-      (1) edge (4)
+%   \node[state] (1) {$v_1$};
+%   \node[state] (6) [below of=1]{$v_6$};
+%   \node[state] (2) [left of=6]{$v_2$};
+%   \node[state] (3) [below of=2]{$v_3$};
+%   \node[state] (4) [right of=6]{$v_4$};
+%   \node[state] (5) [left of=2]{$v_5$};
 
-      (2) edge (5)
-      (2) edge (6)
+% \path (1) edge (6)
+%       (1) edge (2)
+%       (1) edge (5)
+%       (1) edge (4)
 
-      (3) edge (5)
-      (3) edge (2)
-      (3) edge (6)
-      (3) edge (4)
+%       (2) edge (5)
+%       (2) edge (6)
 
-      (4) edge (5)
+%       (3) edge (5)
+%       (3) edge (2)
+%       (3) edge (6)
+%       (3) edge (4)
 
-      (6) edge (4);
-\end{tikzpicture}
-\caption{Rectilinear layour of the figure.}
-\label{fig:rect}
-\end{figure}
+%       (4) edge (5)
+
+%       (6) edge (4);
+% \end{tikzpicture}
+% \caption{Rectilinear layour of the figure.}
+% \label{fig:rect}
+% \end{figure}
 %\begin{tikzpicture}[node distance = 3cm, auto]
     % Place nodes
     % \node [v1] (init) {n};
