@@ -29,11 +29,11 @@ The $z_{fg}$ values for the same graph can be found in Table \ref{table:zfg}.
 \centering
 \begin{tabular}{l|lllll}
 $z_{fg}$ & $a$ & $b$ & $c$ & $d$ & $e$ \\ \hline
-$a$     &     & 0   & 0   &     & 0   \\
-$b$     & 2   &     & 1   & 1   &     \\
-$c$     & 1   & 1   &     & 0   &     \\
-$d$     &     & 1   & 0   &     & 2   \\
-$e$     & 4   &     &     & 0   &
+$a$     &    & 0   & 0   &  0  & 0   \\
+$b$     & 2   &    & 1   & 1   & 0   \\
+$c$     & 1   & 1   &    & 0   & 0   \\
+$d$     & 0   & 1   & 0   &    & 2   \\
+$e$     & 4   & 0   & 0   & 0   & 
 \end{tabular}
 \caption{$z_{fg}$ values for all faces, values for empty sets are not displayed}
 \label{table:zfg}
@@ -99,8 +99,31 @@ in Figure \ref{fig:rect}.
 
 \subsection{Exercise 2.2}
 
-
-
+Let $B$ be the set of all boundary cycles. In the following, we make use
+of the fact that given two boundary cycles $x$ and $y$, inner turns from x to y ($z_{xy}$)
+will be outer turns from y to x ($z_{yx}$). We do not verify the truth of this
+statement. $f$ is a boundary cycle in $B$, subject to
+%%
+\begin{align*}
+  \text{abs}\left(\left( \sum_{v\in f} x_{vf} \right) + \sum_{b\in B \setminus \{f\}} z_{fb} - z_{bf}\right) = 4
+\end{align*}
+%%
+Verifying this holds for cycle $a$:
+\begin{align*}
+  & \text{abs}\left(\left( \sum_{v\in a} x_{va} \right) + \sum_{b\in B \setminus \{a\}} z_{ab} - z_{ba}\right) \\
+  =& \text{abs}\left(3 + z_{ab} - z_{ba} + z_{ac} - z_{ca} + z_{ad} - z_{da} + z_{ae} - z_{ea}\right) \\
+  =& \text{abs}\left(3 + 0 - 2 + 0 - 1 + 0 - 0 + 0 - 4\right) \\
+  =& \text{abs}\left(3 - 2 - 1 - 4\right) = \text{abs}(-4) = 4
+\end{align*}
+%%
+Verifying this holds for cycle $e$:
+\begin{align*}
+  &   \text{abs}\left(\left( \sum_{v\in f} x_{vf}\right) + \sum_{b\in B \setminus \{f\}} z_{fb} - z_{bf}\right) \\
+  =&  \text{abs}\left(2 + z_{ea} - z_{ae} + z_{eb} - z_{be} + z_{ec} - z_{ce} + z_{ed} - z_{de}\right) \\
+  =&  \text{abs}\left(2 + 4 - 0 + 0 - 0 + 0 - 0 + 0 - 2\right) \\
+  =&  \text{abs}\left(2 + 4 - 2\right) = \text{abs}(4) = 4
+\end{align*}
+%%%
 \subsection{Exercise 2.3}
 
 The assumption is necesarry since only 4 edges can be connected to any single
@@ -144,13 +167,26 @@ into the three different cases and show them seperetly.
     \sum_f x_{vf} = 1 + 1 + 1 + 1 = 4
   \]
 \end{itemize}
-
-
+%
 This hows that Equation 1 from \cite{assignment1} holds in all three cases for
 all vertices.
-
+%
 \subsection{Exercise 2.4}
-
-
-
+%
+Given a boundary cycle $f$, and the set of all boundary cycles $B$:
+\begin{align*}
+  \text{minimize} \quad & z_{fg} + z_{gf} &  \\
+  \text{subject to} \quad & & \\
+  & \text{abs}\left(\left( \sum_{v\in f} x_{vf} \right) + 
+    \sum_{b\in B \setminus \{f\}} z_{fb} - z_{bf}\right) & = 4 \\
+  & \sum_{u\in V} \sum_{g} x_{ug} \ \textit{mod} \ 2 & = 0 \\
+  & \sum_{u\in V} \sum_{g} x_{ug} & \geq 0 \\
+  & \sum_{u\in V} \sum_{g} x_{ug} & \leq 4 \\
+  & z_{fg}, z_{gf} & \geq 0
+\end{align*} 
+%
+where the sum $\sum_{g}$ is over all boundary cycles $g$ containing vertex $u$. The reasoning
+behind this being that the number of breakpoints is the number of inner and
+outer turns made by a boundary cycle.
+%
 \subsection{Exercise 2.5}
