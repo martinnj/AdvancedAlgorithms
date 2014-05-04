@@ -1,11 +1,13 @@
 \section{Exercise 1: $b$-flow}
 A flow is a b-flow if its satisfies the following
 \begin{align}
-\sum_{e \in \delta^- (v)} x_e - \sum_{e \in \delta^+ (v)} x_e &= b_v, \forall v \in V \label{1}\\
-0 \leq x_e &\leq u_e, \forall e \in E \label{2}
+\sum_{e \in \delta^- (v)} x_e - \sum_{e \in \delta^+ (v)} x_e &= b_v, \forall v \in V \label{eq:1}\\
+0 \leq x_e &\leq u_e, \forall e \in E \label{eq:2}
 \end{align}
 
-\noindent Below we have illustrated the $b$-flow for figure (a). We see that each node satisfies equation \ref{1} and \ref{2}, giving us the $b$-flow illustrated. \\
+\noindent Below we have illustrated the $b$-flow for figure (a). We see that
+each node satisfies equation \ref{eq:1} and \ref{eq:2}, giving us the $b$-flow
+illustrated.
 
 \begin{minipage}{.5\textwidth}
 \centering
@@ -18,7 +20,7 @@ A flow is a b-flow if its satisfies the following
   \node[state,label=150:$4$] (3) [below of=1] {$v_3$};
   \node[state,label=50:$2$] (4) [below of=2] {$v_4$};
   \node[state,label=93:$-7$] (5) [below right of=3] {$v_5$};
-  
+
   \path 	(1) 	edge node {1} (4)
   			edge node {4} (3)
 		(2)	edge node {5} (1)
@@ -28,7 +30,7 @@ A flow is a b-flow if its satisfies the following
 			edge node {3} (4)
 		(4)	edge node {2} (5)
 		(5)	edge node {7} (3)
-			edge [bend left=75] node {6} (1);		
+			edge [bend left=75] node {6} (1);
 \end{tikzpicture}
 \captionof{figure}{(a)}
 \end{minipage}%
@@ -43,15 +45,17 @@ A flow is a b-flow if its satisfies the following
   \node[state,label=50:$4$] (3) [below of=1] {$v_3$};
   \node[state,label=50:$2$] (4) [below of=2] {$v_4$};
   \node[state,label=93:$-7$] (5) [below right of=3] {$v_5$};
-  
+
   \path 	(2)	edge node {2} (4)
 		(5)	edge node {4} (3)
-			edge [bend left=75] node {3} (1);		
+			edge [bend left=75] node {3} (1);
 \end{tikzpicture}
 \captionof{figure}{(a) $b$-flow}
-\end{minipage}\\
+\end{minipage}
 
-\noindent In figure (b) we can only satisfy equation \ref{1} and \ref{2} with some of the nodes. Node $v_4$ does not satisfy the equations, and because of that we have no $b$-flow here. \\
+\noindent In figure (b) we can only satisfy equation \ref{eq:1} and \ref{eq:2}
+with some of the nodes. Node $v_4$ does not satisfy the equations, and because
+of that we have no $b$-flow here.
 
 \begin{minipage}{.5\textwidth}
 \centering
@@ -63,12 +67,12 @@ A flow is a b-flow if its satisfies the following
   \node[state,label=30:$1$] (2) [right of=1] {$v_2$};
   \node[state,label=-50:$-2$] (3) [below of=1] {$v_3$};
   \node[state,label=-50:$-2$] (4) [below of=2] {$v_4$};
-  	
+
   \path 	(1) 	edge node {4} (3)
 		(2)	edge node {3} (1)
 			edge node {6} (4)
 		(3)	edge node {2} (2)
-			edge node {3} (4);		
+			edge node {3} (4);
 \end{tikzpicture}
 \captionof{figure}{(b)}
 \end{minipage}%
@@ -82,7 +86,7 @@ A flow is a b-flow if its satisfies the following
   \node[state,label=30:$1$] (2) [right of=1] {$v_2$};
   \node[state,label=-50:$-2$] (3) [below of=1] {$v_3$};
   \node[state,label=-50:$-2$] (4) [below of=2] {$v_4$};
-  	
+
   \end{tikzpicture}
 \captionof{figure}{(b) $b$-flow}
 \end{minipage}
