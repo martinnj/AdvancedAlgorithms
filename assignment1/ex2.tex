@@ -1,12 +1,9 @@
 \section{Exercise 2: An application of MCFP: rectilinear planar embedding}
-
 \subsection{Exercise 2.1}
-\todo[inline]{Table description should be better. Also the reference can't find
-  the correct number.}
-
+%%%
 The $x_{vf}$ values for all vertices and and faces of \cite[Figure
 3]{assignment1} can be found in Table \ref{table:xvf}.
-
+%%%
 \begin{table}[h]
 \centering
 \begin{tabular}{l|lllll}
@@ -22,9 +19,9 @@ $v_7$   & 0   & 0   & 0   & 0   & 0
 \caption{$x_{vf}$-values for all vertex/face combinations.}
 \label{table:xvf}
 \end{table}
-
+%%%
 The $z_{fg}$ values for the same graph can be found in Table \ref{table:zfg}.
-
+%%%
 \begin{table}[h]
 \centering
 \begin{tabular}{l|lllll}
@@ -38,17 +35,16 @@ $e$     & 4   & 0   & 0   & 0   &
 \caption{$z_{fg}$ values for all faces, values for empty sets are not displayed}
 \label{table:zfg}
 \end{table}
-
-\todo[inline]{This is the sum of the previous table (zfg), can we create a
-  pretty sum.}
-Furthermore, there is a total of $13$ breakpoints in the graph.
+%%%
+There are a total of 13 breakpoints in \cite[Figure 3]{assignment1}. This corresponds
+to the sum of all values of Table~\ref{table:zfg}, as we would expect.
 
 A drawing of a rectilinear layout for \cite[Figure 2]{assignment1} can be seen
 in Figure \ref{fig:rect}.
-
+%
 \graphicc{0.25}{img/2_1_1.png}{Graph in rectilinear form.}{fig:rect}
+%
 
-\todo[inline]{Make the figure work in tikz, else this will have to suffice.}
 % \begin{figure}
 % \begin{tikzpicture}[-,>=stealth',shorten >=1pt,auto,node distance=1.3cm,
 %                     semithick]
@@ -95,10 +91,8 @@ in Figure \ref{fig:rect}.
     % \path [line] (square) -- node [near start] {no} (newN);
     % \path [line] (newN) |- (sup);
 % \end{tikzpicture}
-
-
 \subsection{Exercise 2.2}
-
+%%
 Let $B$ be the set of all boundary cycles and $f_e$ the external boundary
 cycle. In the following, we make use of the fact that given two boundary cycles
 $x$ and $y$, inner turns from x to y ($z_{xy}$) will be outer turns from y to x
@@ -131,11 +125,10 @@ hold for $e$ specifically:
 \end{align*}
 %%%
 \subsection{Exercise 2.3}
-
+%%
 The assumption is necesarry since only 4 edges can be connected to any single
 node, when the edges are limited to moving in two directions. From each node, an
 edge can go either up or down, or left or right.
-
 
 To show that Equation 1 from \cite{assignment1} holds true we will divide it
 into the three different cases and show them seperetly.
@@ -181,7 +174,7 @@ all vertices.
 %
 The objective function $\sum_{f\in B} \sum_{g\in B\setminus\{f\}} z_{fg} +
 z_{gf}$ expresses the total number of breakpoints, which we wish to minimize.
-
+%%
 \begin{align*}
   \text{minimize} \quad & \sum_{f\in B} \sum_{g\in B\setminus\{f\}} z_{fg} + z_{gf} &  \\
   \text{subject to} \quad & & \\
