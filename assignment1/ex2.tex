@@ -19,8 +19,8 @@ $v_5$   & 1   & 0   & 0   & 0   & -1  \\
 $v_6$   & 1   & 1   & 0   & 1   & 1   \\
 $v_7$   & 0   & 0   & 0   & 0   & 0
 \end{tabular}
-\label{table:xvf}
 \caption{$x_{vf}$-values for all vertex/face combinations.}
+\label{table:xvf}
 \end{table}
 
 The $z_{fg}$ values for the same graph can be found in Table \ref{table:zfg}.
@@ -35,8 +35,8 @@ $c$     & 1   & 1   &     & 0   &     \\
 $d$     &     & 1   & 0   &     & 2   \\
 $e$     & 4   &     &     & 0   &
 \end{tabular}
-\label{table:zfg}
 \caption{$z_{fg}$ values for all faces, values for empty sets are not displayed}
+\label{table:zfg}
 \end{table}
 
 \todo[inline]{This is the sum of the previous table (zfg), can we create a
@@ -47,7 +47,7 @@ A drawing of a rectilinear layout for Figure 3 in \cite{assignment1} can be seen
 in Figure \ref{fig:rect}.
 
 \todo[inline]{Rix the lines in the graph, they're direct not grid-formed-stuff.}
-
+\begin{figure}
 \begin{tikzpicture}[-,>=stealth',shorten >=1pt,auto,node distance=1.3cm,
                     semithick]
   \tikzstyle{every state}=[fill=white,text=black]
@@ -76,7 +76,9 @@ in Figure \ref{fig:rect}.
 
       (6) edge (4);
 \end{tikzpicture}
-
+\caption{Rectilinear layour of the figure.}
+\label{fig:rect}
+\end{figure}
 %\begin{tikzpicture}[node distance = 3cm, auto]
     % Place nodes
     % \node [v1] (init) {n};
