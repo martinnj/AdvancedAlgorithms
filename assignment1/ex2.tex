@@ -194,3 +194,12 @@ expresses the total number of breakpoints, which we wish to minimize.
 where the sum $\sum_{g}$ is over all boundary cycles $g$ containing vertex $u$.
 %
 \subsection{Exercise 2.5}
+%
+We are unsure how to solve this exercise. Vertices and faces of the planar graph
+would correspond to vertices in an MCFP, such that an edge in the MCFP is either 
+of the form $(v,f)$ (vertex to face) or $(f,g)$ (face to different face). Flow should 
+correspond to some measure of inner turns (e.g.\ $z_{fg}$ for edges $(f,g)$ and $x_{vf}$ 
+for edges $(v,f)$). Demands should be of the form
+$-4+\sum_{v} x_vf$ for the external face and $4+\sum_{v} x_vf$ for the internal faces.
+We are unsure of capacity, except that there is zero capacity between faces which are not
+adjacent.
