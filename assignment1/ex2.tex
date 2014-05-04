@@ -46,7 +46,7 @@ Furthermore, there is a total of $13$ breakpoints in the graph.
 A drawing of a rectilinear layout for \cite[Figure 2]{assignment1} can be seen
 in Figure \ref{fig:rect}.
 
-\graphicc{0.4}{img/2_1_1.png}{Graph in rectilinear form.}{fig:rect}
+\graphicc{0.25}{img/2_1_1.png}{Graph in rectilinear form.}{fig:rect}
 
 \todo[inline]{Make the figure work in tikz, else this will have to suffice.}
 % \begin{figure}
@@ -99,11 +99,11 @@ in Figure \ref{fig:rect}.
 
 \subsection{Exercise 2.2}
 
-Let $B$ be the set of all boundary cycles and $f_e$ 
-the external boundary cycle. In the following, we make use of the fact that given two
-boundary cycles $x$ and $y$, inner turns from x to y ($z_{xy}$) will be outer
-turns from y to x ($z_{yx}$). We do not verify the truth of this statement.
-The constraints can be expressed as:
+Let $B$ be the set of all boundary cycles and $f_e$ the external boundary
+cycle. In the following, we make use of the fact that given two boundary cycles
+$x$ and $y$, inner turns from x to y ($z_{xy}$) will be outer turns from y to x
+($z_{yx}$). We do not verify the truth of this statement.  The constraints can
+be expressed as:
 %%
 \begin{align}
   \forall f \in B\setminus \{f_e\} : & \sum_{v} x_{vf} + \sum_{b\in B\setminus \{f\}} z_{fb} - z_{bf} &= 4 
@@ -112,7 +112,8 @@ The constraints can be expressed as:
     \label{c:external}
 \end{align}
 %%
-Boundary cycle $a$ is the external boundary cycle, so Eq~\ref{c:external} must hold for $a$:
+Boundary cycle $a$ is the external boundary cycle, so Eq~\ref{c:external} must
+hold for $a$:
 \begin{align*}
   &   \sum_{v} x_{v a} + \sum_{b\in B\setminus \{a\}} z_{a b} - z_{b a} \\
   &=  3 + z_{ab} - z_{ba} + z_{ac} - z_{ca} + z_{ad} - z_{da} + z_{ae} - z_{ea} \\
@@ -120,7 +121,8 @@ Boundary cycle $a$ is the external boundary cycle, so Eq~\ref{c:external} must h
   &=  3 - 2 - 1 - 4 = -4
 \end{align*}
 %%
-Boundary cycle $e$ is an internal boundary cycle, so Eq~\ref{c:internal} must hold for $e$ specifically:
+Boundary cycle $e$ is an internal boundary cycle, so Eq~\ref{c:internal} must
+hold for $e$ specifically:
 \begin{align*}
   & \sum_{v} x_{vf} + \sum_{b\in B\setminus f} z_{fb} - z_{bf} \\
   &= 2 + z_{ea} - z_{ae} + z_{eb} - z_{be} + z_{ec} - z_{ce} + z_{ed} - z_{de} \\
@@ -177,8 +179,8 @@ all vertices.
 %
 \subsection{Exercise 2.4}
 %
-The objective function $\sum_{f\in B} \sum_{g\in B\setminus\{f\}} z_{fg} + z_{gf}$
-expresses the total number of breakpoints, which we wish to minimize.
+The objective function $\sum_{f\in B} \sum_{g\in B\setminus\{f\}} z_{fg} +
+z_{gf}$ expresses the total number of breakpoints, which we wish to minimize.
 
 \begin{align*}
   \text{minimize} \quad & \sum_{f\in B} \sum_{g\in B\setminus\{f\}} z_{fg} + z_{gf} &  \\

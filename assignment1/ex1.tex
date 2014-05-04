@@ -5,9 +5,14 @@ A flow is a b-flow if its satisfies the following
 0 \leq x_e &\leq u_e, \forall e \in E \label{eq:2}
 \end{align}
 
-\noindent Below we have illustrated the $b$-flow for figure (a). We see that
-each node satisfies equation \ref{eq:1} and \ref{eq:2}, giving us the $b$-flow
-illustrated.
+\noindent Below we have illustrated the $b$-flows for figure (a). We see that
+each node satisfies equation \ref{eq:1} and \ref{eq:2}, giving us the $b$-flows
+\begin{align*}
+v_2 v_4 &= 2\\
+v_5 v_1 &= 3\\
+v_5 v_3 &= 4
+\end{align*} 
+which is illustrated in figure 2. 
 
 \begin{minipage}{.5\textwidth}
 \centering
@@ -54,8 +59,9 @@ illustrated.
 \end{minipage}
 
 \noindent In figure (b) we can only satisfy equation \ref{eq:1} and \ref{eq:2}
-with some of the nodes. Node $v_4$ does not satisfy the equations, and because
-of that we have no $b$-flow here.
+with some of the nodes. Due to the fact that vertex $v_4$ has no outgoing edges 
+and we do not allow negative flows, we can not fulfil the demand of -2. Because of 
+that, we have no $b$-flow here.
 
 \begin{minipage}{.5\textwidth}
 \centering
@@ -90,6 +96,3 @@ of that we have no $b$-flow here.
   \end{tikzpicture}
 \captionof{figure}{(b) $b$-flow}
 \end{minipage}
-
-\todo[inline]{: Make stuff pretty! (Align caption and remove "Figure n" from caption}
-\todo[inline]{: Check if the answer is good enough}
