@@ -150,3 +150,17 @@ The \textbf{capacity} of the cut $(S,T)$ is
 	c(S,T) = \sum_{u \in S} \sum_{v \in T} c(u,v)
 \]
 %
+Intuitively, the capacity of the cut is the capacity of all vertices going
+from $S$ to $T$, while the flow is the flow of vertices going from $S$ to $T$,
+minus the flow going from $T$ to $S$. A \textbf{minimum cut} of a network is a
+cut whose capacity is minimum over all cuts of the network.
+
+Theorem 26.6 (Max-flow min-cut theorem) involves proving the equivalence of 3
+different conditions:
+\begin{inparaenum}[i)]
+	\item $f$ is a maximum flow of $G$.
+	\item The residual network $G_f$ contains no augmenting paths.
+	\item $|f| = c(S,T)$ for some cut $(S,T)$ of $G$.
+\end{inparaenum}
+
+\todo[inline]{See page 723 and 724 and write up these 3 things.}
