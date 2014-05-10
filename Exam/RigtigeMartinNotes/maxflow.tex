@@ -49,4 +49,49 @@ conversion can be seen in Figure \ref{fig:supersource}.
 \graphicc{1}{img/supersource.png}{Example of a graphi with multiple sources and
   sink, combined using a supersource and supersink.}{fig:supersource}
 
+\subsubsection{Residual Networks}
+Given a flow network $G$ and a flow $f$ the residual network $G_f$ consists of
+edges and capacities that represent how we can change the flow on edges of $G$.
+Suppose we have a flow network $G=(V,E)$ with source $s$ and sink $t$. LEt $f$
+be a flow in $G$, and consider a pair of vertices $u,v \in V$. We then define
+the residual flow like this:
+\[
+  c_f(u,v) =
+  \begin{cases}
+    c(u,v) - f(u,v) & \text{if } (u,v) \in E, \\
+    f(v,u)          & \text{if } (v,u) \in E, \\
+    0               & \text{otherwise}.
+  \end{cases}
+\]
+
+\graphicc{1}{img/residualaugment.png}{An example of a flow being augmented and
+  showing the residual graph.}{fig:residualaugment}
+
+An example of a residual network can be seen in Figure
+\ref{fig:residualaugment}.
+
+
+\subsubsection{Augmenting Paths}
+Augmenting paths are simply flows that can be added to other flows in order to
+increase the flow value through the network. Augmenting flows are described
+using the $\uparrow$ operator like so:
+\[
+  (f\uparrow f')(u,v) =
+  \begin{cases}
+    f(v,u)+f'(u,v) - f'(v,u) & \text{if } (u,v) \in E, \\
+    0                        & \text{otherwise}.
+  \end{cases}
+\]
+an example of an applied augmenting path can bee seen in Figure
+\ref{fig:residualaugment}.
+
 \subsubsection{Ford-Fulkerson}
+\begin{codebox}
+\Procname{$\proc{Ford-Fulerson-Method}(G,s,t)$}
+\li initialize flow $f$ to 0
+\li \While there exists an augmenting path $p$ in the residual network $G_f$
+    \Do
+\li      augment flow $f$ along $p$
+    \End
+\li \Return $f$
+\end{codebox}
