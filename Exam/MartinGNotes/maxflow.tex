@@ -1,29 +1,30 @@
 \section{Max-flow}
+%%
 A flow network $G = (V,E)$ is a directed graph where each edge $(u,v) \in E$ has
 a non-negative capacity $c(u,v) \geq 0$. If there is an edge $(u,v) \in E$ then
 there is no edge $(v,u) \in E$. If $(u,v) \notin E$ then $c(u,v) = 0$ for convenience.
 When $(u,v) \notin E$, $f(u,v) = 0$.
 
 Flow networks have a source $s$ and a sink $t$. For each vertex $v \in V$, the flow
-network contains a path $s \sim v \sim t$. The graph is therefore connected, meaning
+network contains a path $s \leadsto v \leadsto t$. The graph is therefore connected, meaning
 $|E| \geq |V| - 1$.
 
 A flow is a real-valued function $f : V \times V \rightarrow \mathbb{R}$ that satisfies
 two properties:
-
+%%
 \begin{description}
 	\item[Capacity constraint:] For all $u,v \in V$, $0 \leq f(u,v) \leq c(u,v)$
 
 	\item[Flow conservation:] For all $u \in V - \{s,t\}$, 
 	$\sum_{v \in V} f(u,v) = \sum_{v \in V} f(v,u)$.
 \end{description}
-
+%%
 The value of a flow, $|f|$, is defined as:
-
+%%
 \begin{align*}
 	|f| = \sum_{v \in V} f(s,v) - \sum_{v \in V} f(v,s)
 \end{align*}
-
+%%
 In the \textbf{maximum-flow} problem, we are given a flow network $G$ and we wish to find
 a maximum flow.
 
@@ -33,5 +34,97 @@ $(u,x), (x,v), (v,u)$. The capacity of the new edges involving $x$ is the same a
 $(u,v)$. See page 711 in the book for an example.
 
 \subsection{Multiple sources and sinks}
+%%
 This can be accounted for by introducing a \textbf{supersink} and \textbf{supersource} with infinite
 flow and capacity out to all of the sources and from all of the sinks to the supersink. See page 713.
+
+\subsection{Ford-Fulkerson}
+%%
+Three basic principles: \textbf{residual networks}, \textbf{augmenting paths} and \textbf{cuts}.
+Essential for \textbf{max-flow min-cut} theorem (Theorem 26.6).
+
+Intuition is as follows: We have a flow network $G$. We iteratively alter the flow of $G$, 
+by finding an augmenting path in an associated residual network $G_f$. Once we know the edges
+that belong to an augmenting path, we can identify specific edges in $G$ to increase or decrease
+the flow of. Each iteration increases overall flow, but it may do so by decreasing the flow along
+certain edges. This is repeated until the residual network $G_f$ has no more augmenting paths.
+
+\textbf{max-flow min-cut} shows that upon termination, this yields a maximum flow.
+
+\subsubsection{Residual network}
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{images/augmenting_paths}
+\end{figure}
+%%
+Given a network $G = (V,E)$ with a flow $f$, the \textbf{residual network}
+of $G$ induced by $f$ is $G_f = (V, E_f)$, where
+%%
+\[
+	E_f = \{(u,v) \in V \times V : c_f(u,v) > 0\}.
+\]
+%%
+Residual capacity $c_f(u,v)$ is defined by
+%%
+\[
+ c_f(u,v) =
+  \begin{cases}
+  	c(u,v) - f(u,v) & \text{if } (u,v) \in E, \\
+  	f(v,u) & \text{if } (v,u) \in E, \\
+  	0 & \text{otherwise}
+  \end{cases}
+\]
+%%
+\textit{Note:} that $(u,v) \in E$ implies $(v,u) \notin E$, so there is always only one of the three
+above cases that applies. 
+
+Because the edges in $E_f$ are either edges from $E$ or an edge in the opposite direction,
+$|E_f| \leq 2|E|$.
+
+Intuition: A residual network $G_f$ consists of edges with capacities that
+represent how we can alter the flow on edges of $G$. $G$ can admit an
+additional amount of flow along an edge, equal to the capacity minus the
+current flow. If the edge can admit more flow, that edge is placed into $G_f$
+with a value of $c_f(u,v) = c(u,v) - f(u,v)$. The residual network may also
+contain edges that are not in $G$: In order to represent a possible decrease
+of a flow $f(u,v)$ on an edge in $G$, we place an edge $(v,u)$ into $G_f$ with
+residual capacity $c_f(v,u) = f(u,v)$. In other words, an edge that can admit
+flow in the opposite direction, at most cancelling out flow entirely. See
+Figure~\ref{fig:aug_paths} for an example.
+
+Flows in a residual network satisfy the definition of a flow, but with respect to capacities
+$c_f$ in the network $G_f$. If $f$ is a flow in $G$ and $f'$ is a flow in the corresponding residual
+network $G_f$, we define $f \uparrow f'$, the \textbf{augmentation flow} of f by f', as a function
+from $V \times V$ to $\mathbb{R}$ defined by
+%%
+\[
+  (f \uparrow f')(u,v) =
+  \begin{cases}
+  	f(u,v) + f'(u,v) - f'(v,u) & \text{if } (u,v) \in E, \\
+  	0 & \text{otherwise.}
+  \end{cases}
+\]
+
+Intuition: Increase the flow ($f(u,v)$) by $f'(u,v)$, but decrease it by the flow in the
+opposite direction ($f'(v,u)$). Pushing flow in the reverse direction is also called \textbf{cancellation}.
+
+\subsubsection{Augmenting path}
+An augmenting path $p$ is a simple path from $s$ to $t$ in the residual network $G_f$. By the definition
+of a residual network, we may increase the flow of an edge $(u,v)$ by up to $c_f(u,v)$ without violating the
+capacity constraint on whichever of $(u,v)$ and $(v,u)$ is in the original flow network $G$.
+
+The maximum amount by which we can increase flow on each edge of an augmenting path $p$ is the
+\textbf{residual capacity} of $p$, given by $c_f(p) = min\{c_f(u,v) : (u,v) \text{ is on p}\}$. More specifically,
+if $p$ is an augmenting path in $G_f$, we define a function $f_p : V \times V \rightarrow \mathbb{R}$ as
+%%%
+\[
+	f_p(u,v) =
+	\begin{cases}
+		c_f(p) & \text{if } (u,v) \text{is on } p, \\
+		0 & \text{otherwise}.
+	\end{cases}
+\]
+%%
+Then $f_p$ is a flow in $G_f$ with value $|f_p| = c_f(p) > 0$. See Lemma 26.2, page 720. It remains to be
+shown that augmenting $f$ by $f_p$ produces a different flow in $G$ whose value is closer to the maximum.
+Corollary 26.3 on page 720 shows this by immediate proof, using Lemma 26.1 and 26.2.
