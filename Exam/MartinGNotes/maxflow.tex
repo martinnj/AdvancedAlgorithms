@@ -1,0 +1,37 @@
+\section{Max-flow}
+A flow network $G = (V,E)$ is a directed graph where each edge $(u,v) \in E$ has
+a non-negative capacity $c(u,v) \geq 0$. If there is an edge $(u,v) \in E$ then
+there is no edge $(v,u) \in E$. If $(u,v) \notin E$ then $c(u,v) = 0$ for convenience.
+When $(u,v) \notin E$, $f(u,v) = 0$.
+
+Flow networks have a source $s$ and a sink $t$. For each vertex $v \in V$, the flow
+network contains a path $s \sim v \sim t$. The graph is therefore connected, meaning
+$|E| \geq |V| - 1$.
+
+A flow is a real-valued function $f : V \times V \rightarrow \mathbb{R}$ that satisfies
+two properties:
+
+\begin{description}
+	\item[Capacity constraint:] For all $u,v \in V$, $0 \leq f(u,v) \leq c(u,v)$
+
+	\item[Flow conservation:] For all $u \in V - \{s,t\}$, 
+	$\sum_{v \in V} f(u,v) = \sum_{v \in V} f(v,u)$.
+\end{description}
+
+The value of a flow, $|f|$, is defined as:
+
+\begin{align*}
+	|f| = \sum_{v \in V} f(s,v) - \sum_{v \in V} f(v,s)
+\end{align*}
+
+In the \textbf{maximum-flow} problem, we are given a flow network $G$ and we wish to find
+a maximum flow.
+
+Edges are anti-parallel if there is both an edge $(u,v)$ and an edge $(v,u)$. This is not allowed,
+and to get around this we instead introduce a new edge $x$ and re-structure the edges as follows:
+$(u,x), (x,v), (v,u)$. The capacity of the new edges involving $x$ is the same as the capacity from
+$(u,v)$. See page 711 in the book for an example.
+
+\subsection{Multiple sources and sinks}
+This can be accounted for by introducing a \textbf{supersink} and \textbf{supersource} with infinite
+flow and capacity out to all of the sources and from all of the sinks to the supersink. See page 713.

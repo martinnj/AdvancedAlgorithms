@@ -1,0 +1,100 @@
+ % !Mode:: "TeX:UTF-8"
+\RequirePackage[l2tabu, orthodox]{nag}
+\documentclass[a4paper, 10pt]{article}
+
+%%%% PACKAGES %%%%
+\usepackage[T1]{fontenc}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage[table,usenames,dvipsnames]{xcolor}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{placeins}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage[colorlinks=true]{hyperref}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{paralist}
+\usepackage{parskip}
+\usepackage[justification=justified,singlelinecheck=false]{caption}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+\usepackage{fullpage}
+\usepackage{lmodern}
+\usepackage[nounderscore]{syntax}
+\usepackage{lipsum}
+\usepackage{multicol}
+\usepackage{float}
+\usepackage[framemethod=TikZ]{mdframed}
+\usepackage{booktabs}
+\usepackage{cleveref}
+\usepackage[colorinlistoftodos]{todonotes}
+
+%%%% PACKAGE SETTINGS & GENERAL ALTERATIONS %%%%
+
+% Page margins
+\renewcommand{\headrulewidth}{0in}
+\setlength\headsep{40pt}
+\setlength\headheight{20pt}
+\addtolength{\textheight}{-20pt}
+\setlength{\columnsep}{20pt}
+
+% Boxed floats
+%\floatstyle{boxed}
+%\restylefloat{figure}
+
+% MD Frames
+\mdfdefinestyle{stubFrame}{%
+    linecolor=red,
+    linewidth=3pt,
+    leftmargin=1cm,
+    innerleftmargin=20pt,
+    innerrightmargin=20pt,
+    rightmargin=1cm,
+    topline=false,
+    bottomline=false}
+\mdfsetup{skipabove=\topskip,skipbelow=\topskip}
+
+\mdfdefinestyle{theoremstyle}{%
+    linecolor=red,linewidth=2pt,%
+    frametitlerule=true,%
+    frametitlebackgroundcolor=gray!20,
+    innertopmargin=\topskip,
+}
+
+
+%%%% FILL THESE OUT %%%%
+\newcommand{\mySubject}{Advanced Algorithms: Notes}
+\newcommand{\myLocation}{DIKU}
+\newcommand{\myAuthor}{Martin Grünbaum (martin@itsolveonline.net)}
+\newcommand{\myShortAuthor}{Martin G.}
+
+\newcommand{\maxflow}{\begin{center}\Large \vspace{100pt} \textsc{!!! MAX-FLOW !!!} \normalsize\end{center}}
+
+% \maketitle-related
+\title{Advanced Algorithms: Notes}
+\author{Author: \myAuthor}
+
+% Fancy header
+\pagestyle{fancy}
+\lhead{\footnotesize \myShortAuthor\\\ }
+\chead{\footnotesize\mySubject}
+\rhead{\footnotesize\myLocation\\\today}
+\cfoot{Page \thepage}
+
+% Document-specific commands
+
+
+\begin{document}
+    \maketitle
+    \thispagestyle{empty}
+    \pagebreak
+    \pagestyle{empty}
+    \tableofcontents
+    \pagebreak
+    \setcounter{page}{1}
+    \pagestyle{fancy}
+    \include{maxflow}
+    %\bibliographystyle{plain}
+    %\bibliography{bibliography}
+\end{document}
