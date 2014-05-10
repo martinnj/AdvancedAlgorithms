@@ -29,3 +29,24 @@ V \rightarrow \mathbb{R}$ that satisfies the two following properties:
     \]
     that is the total flow out of the source minus the flow into the source.
 \end{itemize}
+
+\subsubsection{Antiparallel Edges and Multiple Sources/Sinks}
+Since a flow network cannot contain anti-parallel edges, but we want to be albe
+to represent them in our graph, we need a way to do so. This is done by
+inserting an additional node $v'$ and let one of the edges go through this node
+instead, see Figure \ref{fig:antiedges} for an example.
+
+If a network have multiple sources or sinks, we can convert it to a single
+source/sink network by adding a supersource and supersink. An example of such
+conversion can be seen in Figure \ref{fig:supersource}.
+
+\subsubsection{Flow Examples}
+\graphicc{1}{img/flow_example.png}{Example flow.}{fig:flowexample}
+%%
+\graphicc{1}{img/antiedges.png}{Conversion from antiparallel edges to proper
+  flow.}{fig:antiedges}
+%%
+\graphicc{1}{img/supersource.png}{Example of a graphi with multiple sources and
+  sink, combined using a supersource and supersink.}{fig:supersource}
+
+\subsubsection{Ford-Fulkerson}
