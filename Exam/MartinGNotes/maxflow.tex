@@ -128,3 +128,25 @@ if $p$ is an augmenting path in $G_f$, we define a function $f_p : V \times V \r
 Then $f_p$ is a flow in $G_f$ with value $|f_p| = c_f(p) > 0$. See Lemma 26.2, page 720. It remains to be
 shown that augmenting $f$ by $f_p$ produces a different flow in $G$ whose value is closer to the maximum.
 Corollary 26.3 on page 720 shows this by immediate proof, using Lemma 26.1 and 26.2.
+
+\subsubsection{Cuts of a network}
+We know, based on the above, that we can augment flows in $G$ and that doing
+so can produce a new flow closer to the maximum. But how do we know that when
+it terminates, the algorithm has in fact found a maximum flow? Max-flow min-
+cut tells us that a flow is maximum only if its residual network contains no
+augmenting paths.
+
+A \textbf{cut} $(S,T)$ of a flow network $G = (V,E)$ is a partition of $V$ into $S$ and $T=V-S$ such that
+$s \in S$ and $t \in T$. If $f$ is a flow then the \textbf{net flow} $f(S,T)$ across the cut $(S,T)$ is
+defined to be
+%
+\[
+	f(S,T) = \sum_{u \in S} \sum_{v \in T} f(u,v) - \sum_{u in \S} \sum_{v \in T} f(v,u)
+\]
+%
+The \textbf{capacity} of the cut $(S,T)$ is
+%
+\[
+	c(S,T) = \sum_{u \in S} \sum_{v \in T} c(u,v)
+\]
+%
