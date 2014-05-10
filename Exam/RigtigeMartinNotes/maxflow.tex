@@ -1,0 +1,31 @@
+\subsection{Max-Flow}
+\subsubsection{Flow Network}
+A flow network $G=(V,E)$ is a directed graph where each edge $(u,v) \in E$ have
+a nonnegative capacity $c(u,v) \geq 0$. In addition, for any edge $(u,v)$ there
+can be no antiparallel edge $(v,u)$.
+
+Two vertices in the network have special characteristics the source $s$ and sink
+$t$. We assume each vertex $v \in V$ lies on some path from $s$ to $t$, that is,
+for each vertex $v \in V$, the flow network contains a path $s \leadsto v
+\leadsto t$.
+
+\subsubsection{Flow Definition}
+We have a flow network $G = (V,E)$ with a source $s$ and a sink $t$, the network
+has a capacity function $c(u,v)$. A flow is a real-valued function $f : V \times
+V \rightarrow \mathbb{R}$ that satisfies the two following properties:
+\begin{itemize}
+  \item \textbf{Capacity Constraint}:\\
+    For all $u,v \in V$, we require $0 \leq f(u,v) \leq c(u,v)$
+  \item \textbf{Flow Conservation}:\\
+    For all $u \in V - \{s,t\}$ we require
+    \[
+      \sum_{v\in V}f(v,u) = \sum_{v\in V}f(u,v)
+    \]
+    When $(u,v) \notin E$, there can be no flow from $u$ to $v$, and $f(u,v) =
+    0$. We call the nonnegative quantity $f(u,v)$ the flow from vertex $u$ to
+    vertex $v$. The value $|f|$ of a flow $f$ is defined as
+    \[
+      |f| = \sum_{v \in V} f(s,v) - \sum_{v \in V} f(v,s)
+    \]
+    that is the total flow out of the source minus the flow into the source.
+\end{itemize}
