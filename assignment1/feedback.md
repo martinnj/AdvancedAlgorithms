@@ -11,8 +11,8 @@ Resubmit:
  - 3.4
 
 ###Ex 1
-Korrekt. I skriver v_2v_4 = 2 hvor I mener x_{(v_2,v_4)} = 2.(Og
-x_{v_2v_4} = 2 ville også være forståeligt)
+Korrekt. I skriver v_2v_4 = 2 hvor I mener x_{(v_2,v_4)} = 2.(Og x_{v_2v_4} = 2
+ville også være forståeligt)
 
 ###Ex 2.1
 Korrekt.
@@ -21,10 +21,13 @@ Korrekt.
 Korrekt.Lighedstegnene skulle helt ud til højre i (3) og (4)? :-)
 
 ###Ex 2.3
-Korrekt.Ex 2.4:I kommer til at tælle dobbelt i summmen \sum_{f,g}
-z_{fg}+z_{gf}.Jeres constraints er desværre forkerte: Ligning 1, 2 og 6 er
-rigtige,men ligning nr 5 passer ikke. Ligning 3,4,5 skal vist erstattesaf en
-anden ligning der udtrykker det i fant ud af i ex 2.3.
+Korrekt.
+
+###Ex 2.4
+I kommer til at tælle dobbelt i summmen \sum_{f,g} z_{fg}+z_{gf}.Jeres
+constraints er desværre forkerte: Ligning 1, 2 og 6 er rigtige,men ligning nr 5
+passer ikke. Ligning 3,4,5 skal vist erstattesaf en anden ligning der udtrykker
+det i fant ud af i ex 2.3.
 
 ###Ex 2.5
 I er meget tæt på at have den rigtige løsning. Det er i hvert faldden rigtige
