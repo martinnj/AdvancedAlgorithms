@@ -23,7 +23,7 @@ Korrekt.Lighedstegnene skulle helt ud til højre i (3) og (4)? :-)
 ###Ex 2.3
 Korrekt.
 
-###Ex 2.4
+###Ex 2.4 [Corrected]
 I kommer til at tælle dobbelt i summmen \sum_{f,g} z_{fg}+z_{gf}.Jeres
 constraints er desværre forkerte: Ligning 1, 2 og 6 er rigtige,men ligning nr 5
 passer ikke. Ligning 3,4,5 skal vist erstattesaf en anden ligning der udtrykker
