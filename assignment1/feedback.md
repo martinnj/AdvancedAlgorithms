@@ -10,17 +10,14 @@ Resubmit:
  - 3.3
  - 3.4
 
-Ex 1
-----
+##Ex 1
 Korrekt. I skriver v_2v_4 = 2 hvor I mener x_{(v_2,v_4)} = 2.(Og
 x_{v_2v_4} = 2 ville også være forståeligt)
 
-Ex 2.1
-------
+##Ex 2.1
 Korrekt.
 
-Ex 2.2
--------
+##Ex 2.2
 Korrekt.Lighedstegnene skulle helt ud til højre i (3) og (4)? :-)
 
 Ex 2.3
