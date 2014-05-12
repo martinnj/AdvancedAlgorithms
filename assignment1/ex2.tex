@@ -178,13 +178,19 @@ z_{gf}$ expresses the total number of breakpoints, which we wish to minimize.
 \begin{align*}
   \text{minimize} \quad & \sum_{f\in B} \sum_{g\in B\setminus\{f\}} z_{fg} + z_{gf} &  \\
   \text{subject to} \quad & & \\
-  & \forall f \in B\setminus \{f_e\} : \sum_{v} x_{vf} + \sum_{b\in B\setminus \{f\}} z_{fb} - z_{bf} &= 4 \\
-  & \sum_{v} x_{v f_e} + \sum_{b\in B\setminus \{f_e\}} z_{f_e b} - z_{b f_e} &= -4 \\
-  & \sum_{u\in V} \sum_{g} x_{ug} \ \textit{mod} \ 2 & = 0 \\
-  & \sum_{u\in V} \sum_{g} x_{ug} & \geq 0 \\
-  & \sum_{u\in V} \sum_{g} x_{ug} & \leq 4 \\
-  & z_{fg}, z_{gf} & \geq 0
-\end{align*} 
+  & \forall f \in B\setminus \{f_e\} : \sum_{v} x_{vf} + \sum_{b\in B\setminus \{f\}} z_{fb} - z_{bf} &&= 4 \\
+  & \sum_{v} x_{v f_e} + \sum_{b\in B\setminus \{f_e\}} z_{f_e b} - z_{b f_e} &&= -4 \\
+  & \sum_{u\in V} \sum_{g} x_{ug} \ \textit{mod} \ 2 && = 0 \\
+  & \sum_{u\in V} \sum_{g} x_{ug} && \geq 0 \\
+  %& \sum_{u\in V} \sum_{g} x_{ug} & \leq 4 \\
+  & \sum_{f} x_{vf} &&=
+      \begin{cases}
+        0 & \text{if $v$ has degree 2}\\
+        2 & \text{if $v$ has degree 3}\\
+        4 & \text{if $v$ has degree 4}
+      \end{cases}\\
+  & z_{fg}, z_{gf} && \geq 0
+\end{align*}
 %
 where the sum $\sum_{g}$ is over all boundary cycles $g$ containing vertex $u$.
 %
