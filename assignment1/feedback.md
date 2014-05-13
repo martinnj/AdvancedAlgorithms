@@ -40,3 +40,10 @@ For at løse opgaven skal I prøve at tænke i samme baner, som davi skulle fjer
 antiparallelle kanter i maxflow problemet tidligere.Ideen er at hver gang man
 har en kant, så kan du fjerne den og indsætteet par nye kanter og knuder, der
 giver et ækvivalent problem.Vi kan snakke om ex 3 og ex 2.5 på tirsdag.
+
+####Additional notes from exercise lesson
+
+If an edge have a negative capacity, create an edge that goes the other
+direction. If there already is an edge that direction, adjust the price, maybe
+insert a vertex in one of the edges (like when inserting vertices into a maxflow
+problem). Remember to adjust the cost and such.
