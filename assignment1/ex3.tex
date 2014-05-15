@@ -1,9 +1,102 @@
 \section{Exercise 3: Reduction to MCFP}
-Unfortunately we did not manage to break this exercise, even though we have tried for several hours.
-If we could get some help with it, we would appreciate it very much, and we would be happy to solve 
-it for the re-handin. 
+%Unfortunately we did not manage to break this exercise, even though we have
+%tried for several hours.  If we could get some help with it, we would appreciate
+%it very much, and we would be happy to solve it for the re-handin.
 
 \subsection{Exercise 3.1}
+
+If we have a graph $G=(V,E)$ where $V=\{u,v\}$ and $E=\{(u,v)\}$, with
+$l_{(u,v)} = -\infty$ and $u_{(u,v)}=\infty$ we can view the negative $l$
+capacity as an edges ability to carry flow in the reverse direction. But
+inserting a anti-parallel edge $(v,u)$ with $u_{(v,u)} = \infty$, this will make
+the $l$ value for both edges equal 0. Figure \ref{fig:3_1_ex1} shows the example
+graph before and after this operation.
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{.25\textwidth}
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+
+  \node[state] (1) {$u$};
+  \node[state] (2) [below of=1] {$v$};
+
+  \path 	(1) 	edge node[align=center] {$\infty$\\$-\infty$} (2);
+\end{tikzpicture}
+\captionof{subfigure}{The initial graph $G$ with two vertices and on edge.}
+\label{fig:3_1_ex1a}
+\end{minipage}%
+$\Longrightarrow$
+\begin{minipage}{.25\textwidth}
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+
+
+  \node[state] (1) {$u$};
+  \node[state] (2) [below of=1] {$v$};
+
+  \path 	(1) 	edge[bend left=25] node[align=center] {$\infty$\\$0$} (2)
+		(2)	edge[bend left=25] node[align=center] {$\infty$\\$0$} (1);
+\end{tikzpicture}
+\captionof{subfigure}{The resulting graph $G$ with 2 vertices and 2 edges.}
+\label{fig:3_1_ex1b}
+\end{minipage}
+
+\caption{The result of the first part of the operation.}
+\label{fig:3_1_ex1}
+\end{figure}
+
+Since we cannot have anti-parallel edges we will insert an extra vertex and
+connect one of the edges to this vertex and add a new edge. The new vertex $w$
+shall have a demand $b = 0$ so as to not consume or produce any additional
+flow. The edge $(v,u)$ shall be changed to $(v,w)$ and a new edge with $(w,u)$
+shall be introduced with the same capacities but with cost $c(w,u) = 0$. Figure
+\ref{fig:3_1_ex2} Illustrates this example.
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{.25\textwidth}
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+
+  \node[state] (1) {$u$};
+  \node[state] (2) [below of=1] {$v$};
+
+  \path 	(1) 	edge node[align=center] {$\infty$\\$-\infty$} (2);
+\end{tikzpicture}
+\captionof{subfigure}{The graph $G$ after the first operation.}
+\label{fig:3_1_ex2a}
+\end{minipage}%
+$\Longrightarrow$
+\begin{minipage}{.25\textwidth}
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+
+
+  \node[state] (1) {$u$};
+  \node[state] (2) [below of=1] {$v$};
+  \node[state] (3) [below left of=1] {$w$};
+
+  \path 	(1) 	edge[bend left=25] node[align=center] {$\infty$\\$0$} (2)
+		(2)	edge[bend left=25] node[align=center] {$\infty$\\$0$} (3)
+                (3)     edge[bend left=25] node[align=center] {$\infty$\\$0$} (1);
+\end{tikzpicture}
+\captionof{subfigure}{The final graph $G$ at the end of the procedure.}
+\label{fig:3_1_ex2b}
+\end{minipage}
+
+\caption{The result of the entire operation.}
+\label{fig:3_1_ex2}
+\end{figure}
+
 \subsection{Exercise 3.2}
 \subsection{Exercise 3.3}
 \subsection{Exercise 3.4}
