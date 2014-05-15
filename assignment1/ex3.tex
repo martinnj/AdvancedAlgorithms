@@ -208,8 +208,8 @@ $\Longrightarrow$
   \node[state] (3) [below left of=1] {$w$};
 
   \path 	(1) 	edge[bend left=25] node[align=center] {$k$\\$0$} (2)
-		(2)	edge[bend left=25] node[align=center] {$k$\\$0$} (3)
-                (3)     edge[bend left=25] node[align=center] {$k$\\$0$} (1);
+		(2)	edge[bend left=25] node[align=center] {$\infty$\\$0$} (3)
+                (3)     edge[bend left=25] node[align=center] {$\infty$\\$0$} (1);
 \end{tikzpicture}
 \captionof{subfigure}{The final graph $G$ at the end of the procedure.}
 \label{fig:3_2_ex1b}
@@ -223,9 +223,94 @@ $\Longrightarrow$
 
 In the two previous questions we did this for case 2 and 4 (Figure
 \ref{fig:case2} and \ref{fig:case4}). We will now pay attention to case 1 and 3
-(Figure \ref{fig:case1} and \ref{fig:case3}.) It is worth noticing that with
-these two casses there is no requirement that the finite constant $l$ be
-negative, it might also be positive.
+(Figure \ref{fig:case1} and \ref{fig:case3}).
+
+The cases correspond to a constant $l$ being either negative, or positive.
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{.25\textwidth}
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+
+  \node[state] (1) {$u$};
+  \node[state] (2) [below of=1] {$v$};
+
+  \path   (1)   edge node[align=center] {$k$\\$-l$} (2);
+\end{tikzpicture}
+\captionof{subfigure}{The graph $G$ in the beginning.}
+\label{fig:3_3_ex1a}
+\end{minipage}%
+$\Longrightarrow$
+\begin{minipage}{.25\textwidth}
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+
+
+  \node[state] (1) {$u$};
+  \node[state] (2) [below of=1] {$v$};
+  \node[state] (3) [below left of=1] {$w$};
+
+  \path   (1)   edge[bend left=25] node[align=center] {$k$\\$0$} (2)
+    (2) edge[bend left=25] node[align=center] {$l$\\$0$} (3)
+                (3)     edge[bend left=25] node[align=center] {$l$\\$0$} (1);
+\end{tikzpicture}
+\captionof{subfigure}{The final graph $G$ at the end of the procedure.}
+\label{fig:3_3_ex1b}
+\end{minipage}
+
+\caption{The result of the entire operation.}
+\label{fig:3_3_ex1}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{.25\textwidth}
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+
+  \node[state] (1) {$u$};
+  \node[state] (2) [below of=1] {$v$};
+
+  \path   (1)   edge node[align=center] {$k$\\$l$} (2);
+\end{tikzpicture}
+\captionof{subfigure}{The graph $G$ in the beginning.}
+\label{fig:3_3_ex2a}
+\end{minipage}%
+$\Longrightarrow$
+\begin{minipage}{.25\textwidth}
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+
+
+  \node[state] (1) {$u$};
+  \node[state,label=100:{$b_w=-l$}] (2) [right of=1] {$w$};
+  \node[state,label=100:{$b_x=l$}] (3) [below of=2] {$x$};
+  \node[state] (4) [left of=3] {$v$};
+
+  \path (4) edge node[align=center] {$k$\\$l$} (3)
+  (3) edge node[align=center] {$k$\\$l$} (2)
+  (2) edge node[align=center] {$k$\\$l$} (1);
+
+  %\path   (1)   edge[bend left=25] node[align=center] {$k$\\$0$} (2)
+  %  (2) edge[bend left=25] node[align=center] {$l$\\$0$} (3)
+  %              (3)     edge[bend left=25] node[align=center] {$l$\\$0$} (1);
+\end{tikzpicture}
+\captionof{subfigure}{The final graph $G$ at the end of the procedure.}
+\label{fig:3_3_ex2b}
+\end{minipage}
+
+\caption{The result of the entire operation.}
+\label{fig:3_3_ex2}
+\end{figure}
 
 \subsection{Exercise 3.4}
 \subsection{Exercise 3.5 (Optional)}
