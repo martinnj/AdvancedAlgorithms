@@ -3,14 +3,87 @@
 %tried for several hours.  If we could get some help with it, we would appreciate
 %it very much, and we would be happy to solve it for the re-handin.
 
-\subsection{Exercise 3.1}
+In this assignment there is 4 cases that should be taken into account with
+regards to the $l$ and $u$ capacities. These cases can be seen in Figure \ref{fig:cases}.
 
-If we have a graph $G=(V,E)$ where $V=\{u,v\}$ and $E=\{(u,v)\}$, with
-$l_{(u,v)} = -\infty$ and $u_{(u,v)}=\infty$ we can view the negative $l$
-capacity as an edges ability to carry flow in the reverse direction. But
-inserting an anti-parallel edge $(v,u)$ with $u_{(v,u)} = \infty$, this will make
-the $l$ value for both edges equal to 0. Figure \ref{fig:3_1_ex1} shows the example
-graph before and after this operation.
+\begin{figure}[H]
+\centering
+
+\begin{minipage}{.22\textwidth}
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+
+  \node[state] (1) {$u$};
+  \node[state] (2) [below of=1] {$v$};
+
+  \path 	(1) 	edge node[align=center] {$k$\\$l$} (2);
+\end{tikzpicture}
+\captionof{subfigure}{Case where both $u_e$ and $l_e$ are finite constants.}
+\label{fig:case1}
+\end{minipage}%
+\quad
+\begin{minipage}{.22\textwidth}
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+
+  \node[state] (1) {$u$};
+  \node[state] (2) [below of=1] {$v$};
+
+  \path 	(1) 	edge node[align=center] {$k$\\$-\infty$} (2);
+\end{tikzpicture}
+\captionof{subfigure}{Case where both $u_e$ are a finite constant and $l_e$ is
+  negative infinite.}
+\label{fig:case2}
+\end{minipage}%
+\quad
+\begin{minipage}{.22\textwidth}
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+
+  \node[state] (1) {$u$};
+  \node[state] (2) [below of=1] {$v$};
+
+  \path 	(1) 	edge node[align=center] {$\infty$\\$l$} (2);
+\end{tikzpicture}
+\captionof{subfigure}{Case where $u_e$ is infinite and $l_e$ is a constant.}
+\label{fig:case3}
+\end{minipage}%
+\quad
+\begin{minipage}{.22\textwidth}
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+
+  \node[state] (1) {$u$};
+  \node[state] (2) [below of=1] {$v$};
+
+  \path 	(1) 	edge node[align=center] {$\infty$\\$-\infty$} (2);
+\end{tikzpicture}
+\captionof{subfigure}{Case where $u_e$ are infinite and $l_e$ is negative
+  infinite.}
+\label{fig:case4}
+\end{minipage}%
+
+
+\caption{The different cases for vertices and edges.}
+\label{fig:cases}
+\end{figure}
+
+\subsection{Exercise 3.1}
+The only case we need to handle here is case 4, as seen in Figure
+\ref{fig:case4}.  If we have a graph $G=(V,E)$ where $V=\{u,v\}$ and
+$E=\{(u,v)\}$, with $l_{(u,v)} = -\infty$ and $u_{(u,v)}=\infty$ we can view the
+negative $l$ capacity as an edges ability to carry flow in the reverse
+direction. But inserting an anti-parallel edge $(v,u)$ with $u_{(v,u)} =
+\infty$, this will make the $l$ value for both edges equal to 0. Figure
+\ref{fig:3_1_ex1} shows the example graph before and after this operation.
 
 \begin{figure}[H]
 \centering
@@ -65,10 +138,12 @@ shall be introduced with the same capacities but with cost $c(w,u) = 0$. Figure
                     semithick]
   \tikzstyle{every state}=[fill=white,text=black]
 
+
   \node[state] (1) {$u$};
   \node[state] (2) [below of=1] {$v$};
 
-  \path 	(1) 	edge node[align=center] {$\infty$\\$-\infty$} (2);
+  \path 	(1) 	edge[bend left=25] node[align=center] {$\infty$\\$0$} (2)
+		(2)	edge[bend left=25] node[align=center] {$\infty$\\$0$} (1);
 \end{tikzpicture}
 \captionof{subfigure}{The graph $G$ after the first operation.}
 \label{fig:3_1_ex2a}
@@ -98,6 +173,59 @@ $\Longrightarrow$
 \end{figure}
 
 \subsection{Exercise 3.2}
+
+For this part we need only consider case 2 as seen in Figure \ref{fig:case2}
+since we have already solved this for case 4 in the previous question.  This
+problem is solvable using the exact same method as above, only the $u_e$ values
+are different. The reduction can be seen in Figure \ref{fig:3_2_ex1}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{.25\textwidth}
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+
+  \node[state] (1) {$u$};
+  \node[state] (2) [below of=1] {$v$};
+
+  \path 	(1) 	edge node[align=center] {$k$\\$-\infty$} (2);
+\end{tikzpicture}
+\captionof{subfigure}{The graph $G$ in the beginning.}
+\label{fig:3_2_ex1a}
+\end{minipage}%
+$\Longrightarrow$
+\begin{minipage}{.25\textwidth}
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+
+
+  \node[state] (1) {$u$};
+  \node[state] (2) [below of=1] {$v$};
+  \node[state] (3) [below left of=1] {$w$};
+
+  \path 	(1) 	edge[bend left=25] node[align=center] {$k$\\$0$} (2)
+		(2)	edge[bend left=25] node[align=center] {$k$\\$0$} (3)
+                (3)     edge[bend left=25] node[align=center] {$k$\\$0$} (1);
+\end{tikzpicture}
+\captionof{subfigure}{The final graph $G$ at the end of the procedure.}
+\label{fig:3_2_ex1b}
+\end{minipage}
+
+\caption{The result of the entire operation.}
+\label{fig:3_2_ex1}
+\end{figure}
+
 \subsection{Exercise 3.3}
+
+In the two previous questions we did this for case 2 and 4 (Figure
+\ref{fig:case2} and \ref{fig:case4}). We will now pay attention to case 1 and 3
+(Figure \ref{fig:case1} and \ref{fig:case3}.) It is worth noticing that with
+these two casses there is no requirement that the finite constant $l$ be
+negative, it might also be positive.
+
 \subsection{Exercise 3.4}
 \subsection{Exercise 3.5 (Optional)}
