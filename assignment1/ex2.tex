@@ -176,12 +176,12 @@ The objective function $\sum_{f\in B} \sum_{g\in B\setminus\{f\}} z_{fg} +
 z_{gf}$ expresses the total number of breakpoints, which we wish to minimize.
 %%
 \begin{align*}
-  \text{minimize} \quad & \sum_{f\in B} \sum_{g\in B\setminus\{f\}} z_{fg} + z_{gf} &  \\
+  \text{minimize} \quad & \sum_{f,g\in B|g \neq f} z_{fg} &  \\
   \text{subject to} \quad & & \\
   & \forall f \in B\setminus \{f_e\} : \sum_{v} x_{vf} + \sum_{b\in B\setminus \{f\}} z_{fb} - z_{bf} &&= 4 \\
   & \sum_{v} x_{v f_e} + \sum_{b\in B\setminus \{f_e\}} z_{f_e b} - z_{b f_e} &&= -4 \\
-  & \sum_{u\in V} \sum_{g} x_{ug} \ \textit{mod} \ 2 && = 0 \\
-  & \sum_{u\in V} \sum_{g} x_{ug} && \geq 0 \\
+  %& \sum_{u\in V} \sum_{g} x_{ug} \ \textit{mod} \ 2 && = 0 \\
+  %& \sum_{u\in V} \sum_{g} x_{ug} && \geq 0 \\
   %& \sum_{u\in V} \sum_{g} x_{ug} & \leq 4 \\
   & \sum_{f} x_{vf} &&=
       \begin{cases}
@@ -196,11 +196,41 @@ where the sum $\sum_{g}$ is over all boundary cycles $g$ containing vertex $u$.
 %
 \subsection{Exercise 2.5}
 %
-We are unsure how to solve this exercise. Vertices and faces of the planar graph
-would correspond to vertices in an MCFP, such that an edge in the MCFP is either
-of the form $(v,f)$ (vertex to face) or $(f,g)$ (face to different face). Flow
-should correspond to some measure of inner turns (e.g.\ $z_{fg}$ for edges
-$(f,g)$ and $x_{vf}$ for edges $(v,f)$). Demands should be of the form
-$-4+\sum_{v} x_vf$ for the external face and $4+\sum_{v} x_vf$ for the internal
-faces.  We are unsure of capacity, except that there is zero capacity between
-faces which are not adjacent.
+We limit the capacity, demands and costs of the resulting MCFP to be integers. Real-valued
+amounts of breakpoints does not make sense.
+
+Consider a rectilinear graph $G=(V,E)$ and an MCFP $G' = (V',E')$.
+
+$V'$ contains a vertex for every face $f \in G$, and a vertex for every vertex
+$v \in V$. $E'$ contains an edge $e_{fg}$ for every pair of faces $f,g$ that
+share at least one vertex, and an edge $e_{vf}$ for every vertex $v$ that was
+part of $f$ in $G$. The intuition here is that faces and vertices both become
+vertices in the MCFP, and edges exist from vertices to faces and from faces to
+faces.
+
+The demands of the MCFP are derived from the constraints previously established,
+and are as follows:
+%
+\begin{align*}
+  b_v &= 4 \text{ if $v$ was an inner face} \\
+  b_v &= -4 \text{ if $v$ was the external face} \\
+  b_v &= \begin{cases}
+        0 & \text{if $v \in V$ and $v$ has degree 2}\\
+        2 & \text{if $v \in V$ and $v$  has degree 3}\\
+        4 & \text{if $v \in V$ and $v$  has degree 4}
+      \end{cases}
+\end{align*}
+%
+Between two vertices that were faces in $G$, e.g.\ $v_f$ and $v_g$, the
+capacity is $\infty^+$ and the cost is $1$. Between a vertex that was a face
+in $G$ and a vertex from $V$, e.g.\ $v_f$ and $v_v$, the capacity is $1$ and
+the cost is $0$.
+
+Flow corresponds to the amount of breakpoints, which we wish to minimize. That
+is, we wish to find an assignment of real numbers $x_e$ to each edge $e \in E'$,
+such that
+%
+\begin{align*}
+  \forall v\in V': & \sum_{e \in \delta^-(v)} x_e - \sum_{e \in \delta^+(v)} x_e = b_v,\\
+  \forall e\in E': & \ 0 \leq x_e \leq u_e
+\end{align*}
