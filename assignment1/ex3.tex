@@ -292,8 +292,8 @@ $\Longrightarrow$
 
 
   \node[state] (1) {$u$};
-  \node[state,label=100:{$b_w=-l$}] (2) [right of=1] {$w$};
-  \node[state,label=100:{$b_x=l$}] (3) [below of=2] {$x$};
+  \node[state,label=300:{$b_w=-l$}] (2) [right of=1] {$w$};
+  \node[state,label=300:{$b_x=l$}] (3) [below of=2] {$x$};
   \node[state] (4) [left of=3] {$v$};
 
   \path (4) edge node[align=center] {$k$\\$l$} (3)
@@ -313,4 +313,11 @@ $\Longrightarrow$
 \end{figure}
 
 \subsection{Exercise 3.4}
+We begin with $|E|$ edges. $I_1$, $I_2$, $I_3$ all add at most two edges per
+edge, meaning at most $\mathcal{O}(2E)$ additonal edges. This is in the worst
+case where all edges fall into one of the four cases in
+Figure~\ref{fig:cases}. We assume that the four cases cover all possible
+cases. Transforming from $I_0$ to $I_3$ is thus adding, at most,
+$\mathcal{O}(2E)+\mathcal{O}(2E)+\mathcal{O}(2E)=\mathcal{O}(E)$.
+
 \subsection{Exercise 3.5 (Optional)}
