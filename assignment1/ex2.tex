@@ -234,3 +234,80 @@ such that
   \forall v\in V': & \sum_{e \in \delta^-(v)} x_e - \sum_{e \in \delta^+(v)} x_e = b_v,\\
   \forall e\in E': & \ 0 \leq x_e \leq u_e
 \end{align*}
+
+\begin{tikzpicture}[-=stealth',shorten >=1pt,auto,node distance=3cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=white,text=black]
+
+   \node[state,label=100:$-4$] (a) {a};
+   \node[state,label=100:$-4$] (v1) [below of=a] {$v_1$};
+   \node[state,label=100:$4$] (d) [below of=v1] {d};
+   \node[state,label=100:$4$] (e) [below of=d] {e};
+   \node[state,label=100:$-4$] (v3) [below of=e] {$v_3$};
+   \node[state,label=100:$4$] (h) [below of=v3] {h};
+   
+   \node[state,label=100:$4$] (f) [right of=v1] {f};
+   \node[state,label=100:$-4$] (v6) [below right of=d] {$v_6$};
+   \node[state,label=100:$4$] (g) [right=1cm of v6] {g};
+   \node[state,label=100:$-4$] (v4) [right=4cm of v3] {$v_4$};
+   
+   \node[state,label=100:$4$] (b) [left of=v1] {b};
+   \node[state,label=150:$-4$] (v2) [below left of=d] {$v_2$};
+   \node[state,label=150:$4$] (c) [below left of=v2] {c};
+   \node[state,label=100:$-4$] (v5) [below left of=b] {$v_5$};
+   
+   \path 	(a) 	edge [dashed] node {1} (v1)
+			edge node {$\infty$} (b)
+			edge node {} (f)
+			edge [dashed, bend left=40] node {} (v4)
+			edge [dashed, bend right=40] node {1} (v5)
+			edge [bend left=90] node {} (h)
+			
+		(v1)	edge [dashed] node {} (d)
+			edge [dashed] node {1} (f)
+			edge [dashed] node {1} (b)
+			
+		(d)	edge node {} (e)
+			edge node {} (f)
+			edge node {} (b)
+			edge [dashed] node {1} (v2)
+			edge [dashed] node {} (v6)
+		
+		(e)	edge [dashed] node {} (v3)
+			edge [dashed] node {} (v2)
+			edge [dashed] node {} (v6)
+			edge node {} (f)
+			edge [bend right=30] node {} (g)
+			edge node {$\infty$} (c)
+			
+		(v3) 	edge [dashed] node {} (h)
+			edge [dashed, bend right=35] node {} (g)
+			edge [dashed] node {1} (c)
+			
+		(h)	edge [bend right=28] node {} (g)
+			edge [dashed, bend right=15] node {} (v4)
+			edge [dashed, bend left=60] node {1} (v5)
+			edge node {$\infty$} (c)
+			
+		(f)	edge [dashed, bend right=10] node {} (v6)
+			edge node {} (g)
+			edge [dashed, bend left=20] node {} (v4)
+		
+		(g) 	edge [dashed] node {} (v4)
+			edge [dashed] node {} (v6)
+		
+		(v2)	edge [dashed] node {1} (b)
+			edge [dashed] node {1} (c)
+			
+		(b) 	edge node {$\infty$} (c)
+			edge [dashed] node {} (v5)
+			
+		(c)	edge [dashed] node {} (v5);
+
+\end{tikzpicture}
+
+
+
+
+
+
