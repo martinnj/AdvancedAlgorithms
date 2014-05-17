@@ -226,7 +226,27 @@ Suppose that we have a flow network $G = (V, E)$ with source $s$ and sink $t$. L
 \newpage
 
 \section{Hashing}
+OMG LOLZ'n SHIZZLES! You'r gonna nail this shit!
+
 \subsection{Direct-address tables}
+We have a scenario where we want to maintain a dynamic set of some sort. Each element has a key drawn from a universe $U = \{0, 1, ..., m-1\}$ where $m$ is not too large, and no two elements have the same key. \\
+
+Representing it by a direct-address table, or array $T[0...m-1]$, each slot or position corresponds to a key  in $U$. If there is an element $x$ with the key $k$, then $T[k]$ contains a pointer to $x$ - otherwise $T[k]$ is empty represented by $NIL$\\
+
+Illustration in the book on page 254
+\begin{algorithm}
+\begin{algorithmic}[1]
+\State{DIRECT-ADDRESS-SEARCH}{$(T, k)$}
+   \State \textbf{return} $T[k]$
+   
+\State{DIRECT-ADDRESS-INSERT}{$T, x$}
+   \State \textbf{return} $T[key[x]] \leftarrow x$
+
+\State{DIRECT-ADDRESS-DELETE}{$T, x$}
+   \State \textbf{return} $T[key[x]] \leftarrow NIL$
+\end{algorithmic}
+\end{algorithm}
+
 \subsection{Hash tables}
 \subsection{Hash functions}
 \subsubsection{The division method}
