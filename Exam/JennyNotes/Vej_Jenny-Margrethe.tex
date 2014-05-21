@@ -237,18 +237,59 @@ Illustration in the book on page 254
 \begin{algorithm}
 \begin{algorithmic}[1]
 \State{DIRECT-ADDRESS-SEARCH}{$(T, k)$}
-   \State \textbf{return} $T[k]$
+   \State \textbf{return} $T[k]$\\
    
 \State{DIRECT-ADDRESS-INSERT}{$T, x$}
-   \State \textbf{return} $T[key[x]] \leftarrow x$
+   \State \textbf{return} $T[key[x]] \leftarrow x$\\
 
 \State{DIRECT-ADDRESS-DELETE}{$T, x$}
    \State \textbf{return} $T[key[x]] \leftarrow NIL$
 \end{algorithmic}
 \end{algorithm}
 
+Downsides of direct addressing: If the universe $U$ is large, storing a table $T$ of size $|U|$ may be impractical or even impossible, given the memory available on a typical computer. Furthermore, the set $K$ of keys actually stored may be so small relative to $U$ that most of the space allocated for $T$ would be wasted. 
+
 \subsection{Hash tables}
+To overcome the downsides of direct addressing, we can use hash tables. When $K$ is much smaller than $U$, a hash table requires much less space than a direct-address table. It can also reduce storage requirements to $\Theta (|K|)$. \\
+
+This bound is for average-case time whereas for direct addressing it holds for the worst-case time. \\
+
+With direct addressing, an element with $k$ is stored in slot $k$. With hashing, this element is stores in slot $h(k)$; that is, we use a hash function $h$ to compute the slot from the key $k$. There is one hitch: 2 keys may hash to the same slot - called a collision. See page 256 for illustrations. \\
+
+A hash function $h$ must be deterministic in that a given input $k$ should always produce the same output $h(k)$. \\
+
+\textbf{Collision resolution by chaining}\\
+In chaining we place all the elements that hash to the same slot into the same linked list. See figure on page 257.
+
+\begin{algorithm}
+\begin{algorithmic}[1]
+\State{DIRECT-HASH-SEARCH}{$(T, x)$}
+   \State \textbf{search} for an element with key $k$ in list $T(T, k)$\\
+   
+\State{DIRECT-HASH-INSERT}{$T, x$}
+   \State \textbf{insert} $x$ at the head of the list $T[h(x.key)]$\\
+
+\State{DIRECT-HASH-DELETE}{$T, x$}
+   \State \textbf{delete} $x$ from the list $T[h(x.key)]$
+\end{algorithmic}
+\end{algorithm}
+
+\textbf{Analysis of hashing with chaining}\\
+Given a hash table $T$ with $m$ slots that stores $n$ elements, we define the load factor $\alpha$ for $T$ as $n/m$ which is the same as the average number of elements stores in a chain. \\
+
+Worst case performing: $\Theta (n)$ + the time to compute the hash function (all $n$ keys hash to the same slot, creating a list of length $n$. \\
+
+Average case performing of hashing depends on how well the hash function $h$ distributes the set of keys to be stores among the $m$ slots, on the average. \\
+
+\textbf{\textit{Theorem 11.1}}
+In a hash table in which collisions are resolved by chaining, an unsuccessful search takes an average-case time $\Theta (1 + \alpha)$, under the assumption of simple uniform hashing. (OBS: Beviset herfor står på side 259!! LÆS OG FORSTÅ)\\
+
+\textbf{\textit{Theorem 11.2}} 
+In a hash table in which collisions are resolved by chaining, a successful search takes average-case time $\Theta (1 + \alpha)$, under the assumption of simple uniform hashing. (OBS: Beviset herfor står på side 259-260!! LÆS OG FORSTÅ)
+
 \subsection{Hash functions}
+\textbf{What makes a good hash function?}
+
 \subsubsection{The division method}
 \subsubsection{The multiplication method}
 \subsubsection{Universal hashing}
