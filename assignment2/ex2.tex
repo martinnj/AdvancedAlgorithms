@@ -27,9 +27,17 @@ taking the $k$ topmost values from both stacks and then merging them and taking
 the $k$ smallest values from the resulting stack.
 
 Since we take the $k$ smallest values from each stack we are guaranteed to have
-the smallest value from the union of $A$ and $B$, thus proving the equality.
+the smallest value from the union of $A$ and $B$ since even if the smallest
+values in $B$ is bigger than the biggest values in $A$ we still have the $k$
+smalles values from $A$, thus proving the equality.
 
 \subsection{Exercise 4(b)}
+% Left side of the equality is basically taking the k smallest values from the
+% union and only keeping those that appear in both sets.
+
+% Right side of the equality is basically taking the k smallest values from the
+% union and only keeping those that are part of the k-smallest in both sets.
+
 
 
 \subsection{Exercise 4(c)}
