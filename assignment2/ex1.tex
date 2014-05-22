@@ -1,20 +1,40 @@
 \section{Hash functions for sampling}
 \subsection{Exercise 1(a')}
-We must show that $p \leq Pr[h_m(x)/m < p] \leq 1.01p$.
+We must show that $p \leq Pr[h_m(x)/m < p] \leq 1.01p$. To do so, we first
+look at finding a different way to express the probability of sampling (i.e.\ probability
+of $h_m(x)/m < p$). We then make use of various re-writes and the fact that $h_m$ is
+strongly universal, to re-express the equality and find a tight bound.
 
 We are given some $p \geq 100/m$, a suitably large $m$ and a strongly universal hashing
-function $h_m : U \rightarrow [m]$. In the following, we make use of the fact that 
-$p \geq 100/m$ implies that $p/100 \geq 1/m$ and that $a \leq \lceil a \rceil < a+1$.
+function $h_m : U \rightarrow [m]$. Note that $p \geq 100/m$ implies that $p/100 \geq 1/m$ 
+and that for some generic $a$ (such as $pm$ in the following), $a \leq \lceil a \rceil < a+1$.
 
 We observe that
-\begin{align}
-		& Pr[h_m(x)/m < p] \\
+\begin{align*}
+	& Pr[h_m(x)/m < p] \\
 	&= \sum_{0 \leq k < pm} Pr[h_m(x) = k] \\
 	&= \sum_{0 \leq k < pm} \frac{1}{m} \\
 	&= \frac{1}{m} \sum_{0 \leq k < pm} 1 \\
 	&= \frac{1}{m} \left| [0,pm) \right| \\
 	&= \frac{1}{m} \cdot \lceil pm \rceil \\
 	&= \frac{\lceil pm \rceil}{m}
-\end{align}
+\end{align*}
+
+Therefore, we have that
+\begin{align*}
+	p 	&= \frac{pm}{m} \leq Pr[h_m(x)/m < p] = \frac{\lceil pm \rceil}{m} \leq \frac{pm+1}{m} 
+		\leq p + \frac{p}{100} = 1.01p
+\end{align*}
 
 \subsection{Exercise 1(b)}
+The probability of a collision ($h_m(x)/m = h_m(y)/m$) is the probability
+that there exists two elements in $A$ such that they hash to the same thing.
+Therefore, we have that:
+\begin{align*}
+	& Pr[\exists \{x,y\} \in A : h_m(x)/m = h_m(y)/m] & \\
+	& \leq \sum_{\{x,y\}\in A} Pr[h_m(x)/m = h_m(y)/m] & \quad \text{Union bound} \\
+	& = \frac{\binom{|A|}{2}}{m} & \quad \text{$\frac{1}{m}$ probability for each pair $\{x,y\}$}\\
+	& \leq \frac{|A|(|A|-1)}{2 \cdot 100|A|^2} & \quad \text{Because $m \geq 100|A|^2$} \\
+	& \leq \frac{|A|(|A|-1)}{200|A|^2} & \\
+	& \leq \frac{1}{200} & \quad \text{As the numerator is \textbf{almost} $|A|^2$} &
+\end{align*}
