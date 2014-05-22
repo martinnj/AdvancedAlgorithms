@@ -1,3 +1,20 @@
 \section{Hash functions for sampling}
-\subsection{Exercise 1(a)}
+\subsection{Exercise 1(a')}
+We must show that $p \leq Pr[h_m(x)/m < p] \leq 1.01p$.
+
+We are given some $p \geq 100/m$, a suitably large $m$ and a strongly universal hashing
+function $h_m : U \rightarrow [m]$. In the following, we make use of the fact that 
+$p \geq 100/m$ implies that $p/100 \geq 1/m$ and that $a \leq \lceil a \rceil < a+1$.
+
+We observe that
+\begin{align}
+		& Pr[h_m(x)/m < p] \\
+	&= \sum_{0 \leq k < pm} Pr[h_m(x) = k] \\
+	&= \sum_{0 \leq k < pm} \frac{1}{m} \\
+	&= \frac{1}{m} \sum_{0 \leq k < pm} 1 \\
+	&= \frac{1}{m} \left| [0,pm) \right| \\
+	&= \frac{1}{m} \cdot \lceil pm \rceil \\
+	&= \frac{\lceil pm \rceil}{m}
+\end{align}
+
 \subsection{Exercise 1(b)}
