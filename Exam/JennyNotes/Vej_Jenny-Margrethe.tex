@@ -288,7 +288,11 @@ In a hash table in which collisions are resolved by chaining, an unsuccessful se
 In a hash table in which collisions are resolved by chaining, a successful search takes average-case time $\Theta (1 + \alpha)$, under the assumption of simple uniform hashing. (OBS: Beviset herfor står på side 259-260!! LÆS OG FORSTÅ)
 
 \subsection{Hash functions}
-\textbf{What makes a good hash function?}
+\textbf{What makes a good hash function?} \\
+A good hash function satisfies (approximately) the assumption of simple uniform hashing: each key is equally likely to hash to any of the $m$ slots, independently of where any other key has hashed to. In practice, we can often employ heuristic techniques to create a hash function that performs well. \\
+
+\textbf{Interpreting keys as natural numbers}\\
+Most hash functions assume that the universe of keys is the set $\mathbb{N} = \{0, 1, 2, ...\}$ of natural numbers. 
 
 \subsubsection{The division method}
 \subsubsection{The multiplication method}
