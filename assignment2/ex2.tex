@@ -28,6 +28,7 @@ Since we take the $k$ smallest values from each stack we are guaranteed to have
 the smallest value from the union of $A$ and $B$ since even if the smallest
 values in $B$ is bigger than the biggest values in $A$ we still have the $k$
 smallest values from $A$, thus proving the equality.
+\todo[inline]{Someone should formalize this a bit, XOXO Martin}
 
 \subsection{Exercise 4(b)}
 % Left side of the equality is basically taking the k smallest values from the
@@ -38,6 +39,19 @@ smallest values from $A$, thus proving the equality.
 
 We want to prove the equality $A \cap B \cap S^{k}_{h}(A \cup B) = S^{k}_{h}(A)
 \cap S^{k}_{h}(B) \cap S^{k}_{h}(A \cup B)$.
+
+The lefthandside corresponds to taking the $k$ smallest keys in the union of
+$A$ and $B$ and then eliminating all entries that is not also in both $A$ and
+$B$.
+%
+The righthandside is the same as taking the $k$ smallest keys in the union of
+$A$ and $B$ and then eliminating all the entries that is not part of the $k$
+smallest keys in both $A$ and $B$.
+
+Since $S^{k}_{h}(A \cup B)$ naturally limits both sides of the equality to only
+the $k$ smallest entries in the union, $A \cap B$ gets limited by the intersect
+with $S^{k}_{h}(A \cup B)$.
+\todo[inline]{Someone should formalize this a bit, XOXO Martin}
 
 %We see trivially that $S^{k}_{h}(A) = S^{k}_{h}(A)$. We also easily see that
 %$S^{k}_{h}(A) \cap S^{k}_{h}(B) \subseteq A \cap B$
