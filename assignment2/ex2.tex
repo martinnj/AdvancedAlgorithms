@@ -15,11 +15,19 @@ As written above we would be able to process/insert the next key in $O(\text{lg
 
 \subsection{Exercise 4}
 \subsection{Exercise 4(a)}
-$S^{k}_{h}(\text{A} \cup \text{B}) = S^{k}_{h}(S^{k}_{h}(A) \cup S^{k}_{h}(B))$\\
+We will prove the equality $S^{k}_{h}(\text{A} \cup \text{B}) =
+S^{k}_{h}(S^{k}_{h}(A) \cup S^{k}_{h}(B))$.
+%
+We can see each set as a sorted stack that keeps the smallest values at the
+top. The left hand part of the equality ($S^{k}_{h}(\text{A} \cup \text{B}))$)
+corresponds to merging the two stacks and taking the $k$ top values.
+%
+The right hand side ($S^{k}_{h}(S^{k}_{h}(A) \cup S^{k}_{h}(B))$) corresponds to
+taking the $k$ topmost values from both stacks and then merging them and taking
+the $k$ smalles values from the resulting stack.
 
-$(S^{k}_{h}(A) \cup S^{k}_{h}(B))$ ender med at give os en k-værdi i intervallet [k til k+k], hvilket tydeligt ikke er det samme som antallet af k keys på venstre side af lighedstegnet. Derfor tilføjer vi en parantes og S^{k}_{h} til argumentet, som sørger for, at selvom vi inden i parantesen får et k i førnævnte interval, så ender vi med et k, der er lig med k'et på venstre side af lighedstegnet. \\
-
-
+Since we take the $k$ smallest values from each stack we are guaranteed to have
+the smallest value from the union of $A$ and $B$, thus proving the equality.
 
 \subsection{Exercise 4(b)}
 
