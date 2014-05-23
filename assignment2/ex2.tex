@@ -1,6 +1,47 @@
 \section{Bottom-$k$ sampling}
 
 \subsection{Exercise 2}
+We assume that $C$ and $S_h^k(A)$ are independently drawn, and that $S_h^k(A)$ is a uniformly
+random subset of $A$ of size $k$. We know that the probability of an element in $A$ being
+in the bottom-$k$ sample $S_h^k(A)$ is $p=k/n$.
+
+We first note that
+\begin{align}
+  & C \subseteq A \notag \\
+  \mathbb{E}\left[|C|\right] &= \sum_{a\in A} \mathbb{E}\left[ a\in C\right] \notag \\
+  &= \sum_{a\in A} Pr\left[ a \in C \right] \notag \\
+  &= \frac{|C|}{|A|} \label{eq:2:sizeOfC}
+\end{align}
+
+Intuitively, the probability that a randomly selected element of $A$ is also in the subset $C$
+depends on the ratio between the size of $C$ and $A$, i.e.\ when $C$ grows the probability increases,
+when $A$ grows the probability decreases.
+
+Then we have that
+\begin{align}
+  & \mathbb{E} \left[ | C \cap S_h^k(A) | \right] \notag \\
+  &= \sum_{a\in A} \mathbb{E}\left[ a \in C \land a \in S_h^k(A) \right] \notag \\
+  &= \sum_{a\in A} Pr\left[ a \in C \land a \in S_h^k(A) | \right] \notag \\
+  &= \sum_{a\in A} \left( Pr\left[ a \in C \right] \cdot Pr\left[ a \in S_h^k(A) \right] \right) 
+    \label{eq:2:independent} \\
+  &= \sum_{a\in A} \left( \frac{|C|}{|A|} \cdot \frac{k}{|A|} \right) \label{eq:2:final}
+\end{align}
+where \eqref{eq:2:independent} because the probability of the events is independent, and \eqref{eq:2:final} makes use of \eqref{eq:2:sizeOfC} as well as the probability for an element of
+$A$ being in $S_h^k(A)$.
+
+Finally:
+\begin{align*}
+  & \mathbb{E}\left[ \frac{| C \cap S_h^k(A) |}{k}\right] & \\
+  &= \frac{1}{k} \cdot \mathbb{E}\left[ | C \cap S_h^k(A) |\right] & \\
+  &= \frac{1}{k} \cdot \sum_{a\in A} \left( \frac{|C|}{|A|} \cdot \frac{k}{|A|} \right) 
+    & \quad \text{See \eqref{eq:2:final}} \\
+  &= \frac{1}{k} \cdot \frac{|C|}{|A|} \cdot \frac{k}{|A|} \cdot \sum_{a\in A} 1
+    & \quad \text{Components of sum do not depend on $a\in A$} \\
+  &= \frac{1}{k} \cdot \frac{|C|}{|A|} \cdot \frac{k}{|A|} \cdot |A| & \\
+  &= \frac{1}{k} \cdot \frac{|C|}{|A|} \cdot k & \\
+%  &= 1 \cdot \frac{|C|}{|A|} \\
+  &= \frac{|C|}{|A|}
+\end{align*}
 
 \subsection{Exercise 3(a)}
 \label{sec:ex3a}
