@@ -3,6 +3,7 @@
 \subsection{Exercise 2}
 
 \subsection{Exercise 3(a)}
+\label{sec:ex3a}
 We would store the buttom-$k$ samples in a minimum heap structure $H$, sorted by
 their hashing value. This way we can insert new entries in $O(\text{lg } n)$,
 and retrieve the $S^{k}_{h}(H)$ lowest hash values in $O(k \text{ lg } n)$ where
@@ -57,3 +58,50 @@ with $S^{k}_{h}(A \cup B)$.
 %$S^{k}_{h}(A) \cap S^{k}_{h}(B) \subseteq A \cap B$
 
 \subsection{Exercise 4(c)}
+
+We can divide
+\[
+|S^{k}_{h}(A) \cap S^{k}_{h}(B) \cap S^{k}_{h}(S^{k}_{h}(A) \cup S^{k}_{h}(B))|
+/ k
+\]
+%
+into several smaller pieces in order to estimate it's running time, on psudo BNF
+it will be
+\begin{align*}
+  full  &= |sets| / k \\
+  sets  &= S^{k}_{h}(A) \cap S^{k}_{h}(B) \cap ext \\
+  ext   &= S^{k}_{h}(union) \\
+  union &= S^{k}_{h}(A) \cup S^{k}_{h}(B)
+\end{align*}
+With these smaller fragments it will be easier to calculate the runningtime and
+see where the different time consumers are. We will start from the bottom and
+move up
+\begin{itemize}
+\item[$union$] Assuming we're using our minimum-heap structure proposed in
+  \ref{sec:ex3a} $S^{k}_{h}(A)$ and $S^{k}_{h}(B)$ can both be done in $O(k
+  \text{ lg } n)$. The union can be done in $\Theta(2k)$. Giving this part a
+  running time of $O(k \text{ lg } n)) + \Theta(k)$.
+%
+\item[$ext$] The output from $union$ now contains $2k$ elements meaning we can
+  get the $k$ smallest in $O(k \text{ lg } 2k))$ time.
+%
+\item[$sets$] Each of the extractions in this part can be done in $O(k \text{ lg
+  } n)$ time, and since the heaps are ordered the intersect requires only linear
+  time giving running time of $O(k \text{ lg } n) + O(k)$. The intersect with
+  the $ext$ part requires linear runningtime in the number of elements in the
+  largest heap, since both are of maximum size $k$, the final time is $O(k
+  \text{ lg } n)) + O(k) + O(k)$.
+%
+\item[$full$] Since the number of entries in the heap can be decided in $O(1)$
+  time if we assume the heap has an associated peorperty with the number of
+  nodes that are updated in all operations (also done in constant time), and the
+  division itself is also in constant time. This means we just need to determine
+  the runningtime of all the above segments combined.
+\begin{align*}
+  union &= O(k \text{ lg } n)) + \Theta(k) \\
+  ext   &= O(k \text{ lg } 2k)) \\
+  sets  &= O(k \text{ lg } n)) + O(k) + O(k) \\
+  full  &= O(1) + O(k \text{ lg } n)) + O(k) + O(k) + O(k \text{ lg } 2k)) + O(k \text{ lg } n)) + \Theta(k) \\
+        &= O(k \text{ lg } n))
+\end{align*}
+\end{itemize}
