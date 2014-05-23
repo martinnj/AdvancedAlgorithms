@@ -90,3 +90,6 @@ sympy-plots-for-*.tex/
 
 #latexmkrc
 latexmkrc
+
+#output files
+main.pdf
