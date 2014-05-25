@@ -1,30 +1,74 @@
 \section{Bottom-$k$ sampling with strong universality}
 \subsection{Exercise 5}
+For positive parameters $a < 1$ and $b$, the probability of the
+overestimate is $|C \cap S| > \frac{1+b}{1-a} fk$. We would like to
+prove that if (I) and (II) are both false, then so is the probability
+of the overestimate. Because $a$ and $b$ have been fixed as pr. the
+assignment text, we have that $p=\frac{k}{n(1-a)}$. We also recall
+that $n=|A|$.
+
+We assume the opposite of (I) and (II) to be true:
+%
+\begin{description}
+	\item[(I`)] The number of elements from $A$ that hash below $p$
+	is greater than $k$.
+	\item[(II`)] The number of elements from $C$ that hash below $p$
+	is less than or equal to $(1+b) p |C|$.
+\end{description}
+%
+(I`) implies that all elements of $S$ hash below $p$ too, since there are $k$
+elements in $S$ and there are more than $k$ elements in $A$ that hash below
+$p$. Per (II`), $|C|\leq (1+b)p|C|$ and therefore also 
+$|C \cap S| \leq (1+b)p|C|$. \textit{Given} (I`) and (II`), we want to arrive 
+at $|C \cap S| \leq \frac{1+b}{1-a} fk$, and if we do so we have proven (I) 
+and (II) by contraposition.
+%
+\begin{align*}
+	|C \cap S| 	\leq & (1+b)p|C| & \\
+				=& (1+b) \frac{k}{n(1-a)} |C| & \\
+				=& (1+b) \frac{k}{|A|(1-a)} |C| & \text{$n=|A|$}\\
+				=& (1+b) \frac{k}{1-a} f & \text{Because $f=|C|/|A|$}\\
+				=& \frac{(1+b)k}{1-a} f & \\
+				=& \frac{1+b}{1-a} fk & 
+\end{align*}
 
 \subsection{Exercise 6}
-% Expansion of the formula, for clarification.
-% \begin{align*}
-%   \text{Pr}&\left[ |X - \mu| \geq r\sqrt{\mu} \right] &\leq \frac{1}{r^2} \\
-%   \text{Pr}&\left[ ||S_{h,p}(A)| - \mu| \geq r\sqrt{\mu} \right] &\leq \frac{1}{r^2} \\
-%   \text{Pr}&\left[ ||S_{h,p}(A)| - \text{E}\left[X\right]| \geq r\sqrt{\text{E}\left[X\right]} \right] &\leq \frac{1}{r^2} \\
-%   \text{Pr}&\left[ ||S_{h,p}(A)| - \text{E}\left[|S_{h,p}(A)|\right]| \geq r\sqrt{\text{E}\left[|S_{h,p}(A)|\right]} \right] &\leq \frac{1}{r^2} \\
-% \end{align*}
+We have that
+%
+\begin{align}
+	k =& \mu_A(1-a) = \mu_A(1 - r \sqrt{k}) \label{eq:6:k} \\
+	u_A =& E[X_A] = pn = k/(1-a) \label{eq:6:ua} \\
+	& Pr\left[ |X - \mu| \geq r \sqrt{\mu} \right] \leq \frac{1}{r^2} \label{eq:6:pr}
+\end{align}
+%
+We wish to prove that $P_{(I)} = Pr \left[ X_A < k\right] \leq 1/r^2$:
 
-(I) The number of elements from A that hash below p is less than k.\\
-For $r \geq 1$ it holds trivially. So we need to prove it for $0 < r \leq 1$.
 \begin{align*}
-  0 < r \leq \frac{\sqrt{k}}{3}\\
-  P_{(I)} &= \text{Pr}\left[ X_A < k \right] &\leq \frac{1}{r^2} \\
-  P_{(I)} &= \text{Pr}\left[ \mu_A(1-r/\sqrt{k}) \right] &\leq \frac{1}{r^2} \\
-  P_{(I)} &= \text{Pr}\left[ E(X_A)(1-r/\sqrt{k}) \right] &\leq \frac{1}{r^2} \\
+	 & Pr\left[X_A < k\right] & \\
+	=& Pr\left[X_A < \mu_A(1-\frac{r}{\sqrt{k}})\right] & \text{From \eqref{eq:6:k}} \\
+	=& Pr\left[X_A < \mu_A - \frac{\mu_A \cdot r}{\sqrt{k}}\right] & \\
+	=& Pr\left[X_A - \mu_A < -\frac{\mu_A \cdot r}{\sqrt{k}} \right] & \\
+	=& Pr\left[\mu_A - X_A > \frac{\mu_A \cdot r}{\sqrt{k}} \right] & \text{Multiplying with -1} \\
+	\leq & Pr\left[|X_A - \mu_A| > \frac{\mu_A \cdot r}{\sqrt{k}} \right] 
+		& \\
+	\leq & Pr\left[|X_A - \mu_A| > \frac{\mu_A \cdot r}{\sqrt{\mu_A}} \right]
+		& \text{\eqref{eq:6:ua} implies $\mu_A > k$} \\
+	=& Pr\left[|X_A - \mu_A| > r \sqrt{\mu_A} \right]
+		& \text{Because $\frac{a}{\sqrt{a}} = \sqrt{a}$}\\
+	\leq & Pr\left[|X_A - \mu_A| \geq r \sqrt{\mu_A} \right]
+		& \\
+	\leq & 1/r^2 & \text{See \eqref{eq:6:pr}}
 \end{align*}
-Lemma 1:
-\begin{align*}
-  \text{Pr}&\left[ |X - \mu| \geq r\sqrt{\mu} \right] \leq \frac{1}{r^2} \\
-  \text{Pr}&\left[ |X - E(X)| \geq r\sqrt{E(X)} \right] \leq \frac{1}{r^2} \\
-  %P_{(I)} &= \text{Pr}\left[ \mu_A(1-r/\sqrt{k}) \right] &\leq \frac{1}{r^2}\\
-  %P_{(I)} &= \text{Pr}\left[ |S_{h,p}(A)| < k \right] &\leq \frac{1}{r^2}
-\end{align*}
-
 
 \subsection{Exercise 7}
+We did not finish this assignment in time. We want to end up with Lemma 1 again:
+
+\begin{align*}
+	& Pr\left[ X_C > (1+\frac{r}{\sqrt{fk}}) \mu_C \right] & \\
+	\leq & Pr\left[ X_C > (1+\frac{r}{\sqrt{\mu_C}}) \mu_C \right]
+		& \text{Because $\mu_C > fk$} \\
+	=& Pr\left[ X_C > \mu_C + \mu_C \cdot \frac{r}{\sqrt{\mu_C}} \right]
+		& \\
+	=& Pr\left[ X_C - \mu_C > \mu_C \cdot \frac{r}{\sqrt{\mu_C}} \right]
+		&
+\end{align*}
