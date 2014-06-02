@@ -37,10 +37,16 @@ Finally we have that:
 
 \subsection{Exercise 3(a)}
 \label{sec:ex3a}
-We would store the buttom-$k$ samples in a minimum heap structure $H$, sorted by
-their hashing value. This way we can insert new entries in $O(\text{lg } n)$,
-and retrieve the $S^{k}_{h}(H)$ lowest hash values in $O(k \text{ lg } n)$ where
-$n$ is the total number of input values.
+We would store the data in a max-heap structure $H$ where we only store the $k$
+smallest keys. Since we only want to store a key if it is smaller than the
+biggest element in the heap, and the biggest element is on the top of the heap,
+we can do this check in $O(1)$ time. And furthermore insert elements in
+$O(\text{lg }k)$ time.
+
+% We would store the buttom-$k$ samples in a minimum heap structure $H$, sorted by
+% their hashing value. This way we can insert new entries in $O(\text{lg } n)$,
+% and retrieve the $S^{k}_{h}(H)$ lowest hash values in $O(k \text{ lg } n)$ where
+% $n$ is the total number of input values.
 
 \subsection{Exercise 3(b)}
 As written above we would be able to process/insert the next key in $O(\text{lg
