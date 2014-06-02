@@ -1,9 +1,7 @@
 \section{Bottom-$k$ sampling with strong universality}
 \subsection{Exercise 5}
-For positive parameters $a < 1$ and $b$, the probability of the
-overestimate is $|C \cap S| > \frac{1+b}{1-a} fk$. We would like to
-prove that if (I) and (II) are both false, then so is the probability
-of the overestimate. Because $a$ and $b$ have been fixed as pr. the
+We would like to prove that if (I) and (II) are both false, then 
+so is (4). Because $a$ and $b$ have been fixed as pr. the
 assignment text, we have that $p=\frac{k}{n(1-a)}$. We also recall
 that $n=|A|$.
 
@@ -21,7 +19,7 @@ elements in $S$ and there are more than $k$ elements in $A$ that hash below
 $p$. Per (II`), $|C|\leq (1+b)p|C|$ and therefore also 
 $|C \cap S| \leq (1+b)p|C|$. \textit{Given} (I`) and (II`), we want to arrive 
 at $|C \cap S| \leq \frac{1+b}{1-a} fk$, and if we do so we have proven (I) 
-and (II) by contraposition.
+or (II) by contraposition.
 %
 \begin{align*}
 	|C \cap S| 	\leq & (1+b)p|C| & \\
@@ -61,7 +59,7 @@ We wish to prove that $P_{(I)} = Pr \left[ X_A < k\right] \leq 1/r^2$:
 \end{align*}
 
 \subsection{Exercise 7}
-We did not finish this assignment in time. We want to end up with Lemma 1 again:
+This is the same approach as Exercise 6.
 
 \begin{align*}
 	& Pr\left[ X_C > (1+\frac{r}{\sqrt{fk}}) \mu_C \right] & \\
@@ -70,5 +68,10 @@ We did not finish this assignment in time. We want to end up with Lemma 1 again:
 	=& Pr\left[ X_C > \mu_C + \mu_C \cdot \frac{r}{\sqrt{\mu_C}} \right]
 		& \\
 	=& Pr\left[ X_C - \mu_C > \mu_C \cdot \frac{r}{\sqrt{\mu_C}} \right]
-		&
+		& \\
+	\leq& Pr\Big[ | X_C - \mu_C | > r \sqrt{\mu_C} \Big]
+		& \\
+	\leq& Pr\Big[ | X_C - \mu_C | \geq r \sqrt{\mu_C} \Big]
+		& \\
+	\leq& 1/r^2
 \end{align*}
