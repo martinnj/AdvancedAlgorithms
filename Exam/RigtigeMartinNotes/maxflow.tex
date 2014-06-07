@@ -184,16 +184,27 @@ $|f|$, the value of the flow.
   must have $f(u,v) = c(u,v)$ otherwise $(u,v)\in E_f$ wich would place $v$ in
   $S$.
 
-  \todo[inline]{Finish this off. See page 723-724}
+  If $(v,u) \in E$, we must have $f(v,u) = 0$, because otherwise $c_f(u,v) =
+  f(v,u)$ would be positive and we would have $(u,v) \in E_f$, whouch would place
+  $v$ in $S$. If neither $(u,v)$ or $(v,u)$ is in $E$, then $f(u,v) = f(v,u) =
+  0$. We thus have
+  \begin{align*}
+    f(S,T) &= \sum_{u\in S}\sum_{v\in T}f(u,v) - \sum_{u\in S}\sum_{v\in T}f(v,u) \\
+           &= \sum_{u\in S}\sum_{v\in T}c(u,v) - \sum_{u\in S}\sum_{v\in T} 0 \\
+           &= c(S,T).
+  \end{align*}
+  By Lemma 26.4, we then have $|f| = f(S,T) = c(S,T)$.
 
-  $(3) \implies (1)$:
-  \todo[inline]{Finish this off. See page 723-724}
+  $(3) \implies (1)$: By corollary 26.5, $|f| \leq c(S,T)$ for all cuts
+  $(S,T)$. The condition $|f| = c(S,T)$ thus implies that $f$ is a maximum flow.
+  \qed
 \end{description}
 
 
 \subsubsection{Ford-Fulkerson}
+The general algorithm:
 \begin{codebox}
-\Procname{$\proc{Ford-Fulerson-Method}(G,s,t)$}
+\Procname{$\proc{Ford-Fulkerson-Method}(G,s,t)$}
 \li initialize flow $f$ to 0
 \li \While there exists an augmenting path $p$ in the residual network $G_f$
     \Do
@@ -201,3 +212,49 @@ $|f|$, the value of the flow.
     \End
 \li \Return $f$
 \end{codebox}
+
+\noindent Implementation:
+
+\begin{codebox}
+\Procname{$\proc{Ford-Fulkerson}(G,s,t)$}
+\li \For each edge $(u,v)\in G.E$ \Do
+\li   $(u,v).f = 0$ \End
+\li \While there exists a path $p$ from $s$ to $t$ in the residual network $G_f$
+\li   \Do $c_f(p) =$ min$\{c_f(u,v):(u,v)$ is in $p\}$
+\li   \For each edge $(u,v)$ in $p$ \Do
+\li     \If $(u,v) \in E$ \Do
+\li       $(u,v).f = (u,v).f + c_f(p)$
+\li     \Else $(v,u).f = (v,u).f - c_f(p)$
+\end{codebox}
+
+\noindent Assume we can pick the path $p$ in linear time, the loop header is
+running in $O(E)$. If $f^*$ denote a maximum flow, then the while loop is
+executed at most $|f^*|$ times, since each augmentation must increase the flow
+value with at least one. The for loop inside the loop can be done in $O(E)$
+since the longest $p$ can be no longer than $|E|$. Giving a running time of
+$O(|f^*| \dot (E+E)) = O(E|f^*|)$.
+
+\subsubsection{Edmonds-Karp}
+Is a Ford-Fulkerson implementation that uses Shortest-Path to find the path $p$
+in line 3 of the Ford-Fulkerson algorithm. Each edge is given unit-weight and
+the algorithm will then pick the shortest path each time. It then has a
+runningtime of $O(VE^2)$.
+
+\begin{description}
+\item[Lemma 26.7] If Edmonds-Karp is run on a flow network $G = (V,E)$ with
+  source $s$ and sink $t$, then for all vertices $v\in V - \{s,t\}$, the
+  shortest-path distance $\delta_f(s,v)$ in the residual network $G_f$ increases
+  monotonically with each flow augmentation.
+\item[Proof-ish] Intuitively, if we chose a path $p$ from $s\to v$ that is a
+  shortest path, and then assume there is a path $p'$ from $s\to v$ which is
+  shorter, we contradict our initial statement that $p$ is a shortest path. This
+  proves that the path length do not decrease. $p'$ might have the same length
+  as $p$ or might be longer.\qed
+\end{description}
+
+\begin{description}
+\item[Theorem 26.8] If Edmonds-Karp is run on a flow network $G = (V,E)$ with
+  source $s$ and sink $t$, then the total number of flow augmentations performed
+  by the algorithm is $O(VE)$.
+  \todo[inline]{Write down and understand the proof...}
+\end{description}
