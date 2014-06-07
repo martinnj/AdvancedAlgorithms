@@ -1,4 +1,25 @@
-\section{Max-flow}
+\section{Max-flow: Disposition}
+\begin{enumerate}
+	\item Flow network
+	\begin{itemize}
+		\item Source/Sink
+		\item Capacity
+		\item Supersource/supersink.
+	\end{itemize}
+	\item Flow $|f|$
+	\begin{itemize}
+		\item Capacity Constraint: $\forall u,v\in V: 0 \leq f(u,v) \leq c(u,v)$
+		\item Flow conservation: $\forall u\in V - \{s,t\}:
+			\sum_{v\in V} f(u,v) = \sum_{v\in V} f(v,u)$
+	\end{itemize}
+	\item Ford-Fulkerson
+	\begin{itemize}
+		\item Residual network
+		\item Augmenting paths
+		\item Cuts
+	\end{itemize}
+\end{enumerate}
+\section{Max-flow: Notes}
 %%
 A flow network $G = (V,E)$ is a directed graph where each edge $(u,v) \in E$ has
 a non-negative capacity $c(u,v) \geq 0$. If there is an edge $(u,v) \in E$ then
@@ -155,12 +176,37 @@ from $S$ to $T$, while the flow is the flow of vertices going from $S$ to $T$,
 minus the flow going from $T$ to $S$. A \textbf{minimum cut} of a network is a
 cut whose capacity is minimum over all cuts of the network.
 
-Theorem 26.6 (Max-flow min-cut theorem) involves proving the equivalence of 3
+Theorem 26.6 (Max-flow min-cut theorem, p. 723/724) involves proving the equivalence of 3
 different conditions:
-\begin{inparaenum}[i)]
-	\item $f$ is a maximum flow of $G$.
-	\item The residual network $G_f$ contains no augmenting paths.
-	\item $|f| = c(S,T)$ for some cut $(S,T)$ of $G$.
-\end{inparaenum}
+\begin{enumerate}
+	\item $f$ is a maximum flow of $G$. \label{max-min-theorem:1}
+	\item The residual network $G_f$ contains no augmenting paths. \label{max-min-theorem:2}
+	\item $|f| = c(S,T)$ for some cut $(S,T)$ of $G$. \label{max-min-theorem:3}
+\end{enumerate}
 
-\todo[inline]{See page 723 and 724 and write up these 3 things.}
+\ref{max-min-theorem:1} => \ref{max-min-theorem:2}:
+%
+Assume that $f$ were a maximum flow in $G$ and there \textbf{was} an augmenting path. This
+means, by the proof of augmenting paths, that we could create a new flow $f'$ in $G$ with a strictly
+larger flow value than $f$, i.e. that $|f'| > |f|$. This contradicts $f$ being a maximum flow.
+
+\ref{max-min-theorem:2} => \ref{max-min-theorem:3}:
+%
+Suppose that there are no augmenting paths, that is there is no path from $s$ to $t$ in $G_f$.
+
+Define $S = \{v\in V: \text{there exists a path from $s$ to $v$ in $G_f$}\}$. That is, the set $S$
+contains all those vertices for which there could be pushed more flow along, but which perhaps have
+not because a later capacity limits that possibility. Define $T = V-S$. A partition $(S,T)$ is a cut,
+where $s\in S$ and $t \notin S$ (since there is no path from $s$ to $t$, or we would not have a maximum
+flow).
+
+Consider two vertices $(u,v)$ where $u\in S$ and $v\in T$:
+
+If $(u,v)\in E$, we must have that $f(u,v) = c(u,v)$. If this were not the case we would have 
+$(u,v)\in E_f$, since we would be able to push more flow out until at capacity. Then, by the definition 
+of $S$ we would have that $v\in S$. This is a contradiction.
+
+If $(v,u)\in E$, we must have that $f(v,u) = 0$. If this were not the case we would have
+$(v,u)\in E_f$, since the residual capacity $c_f(u,v) = f(v,u)$ would be positive. This
+means $(u,v)\in E_f$, and we would have that $v\in S$. This is a contradiction.
+
