@@ -1,4 +1,13 @@
-\section{Max-flow}
+\section{Max-flow: Disposition}
+\begin{enumerate}
+	\item Flow network $G$
+	\item Flow $|f|$ (Capacity constraint, flow conservation)
+	\item Residual network, augmenting paths, cuts.
+	\item Max-flow min-cut theorem
+	\item Ford-Fulkerson method
+	\item Edmonds-Karp
+\end{enumerate}
+\section{Max-flow: Notes}
 %%
 A flow network $G = (V,E)$ is a directed graph where each edge $(u,v) \in E$ has
 a non-negative capacity $c(u,v) \geq 0$. If there is an edge $(u,v) \in E$ then
@@ -38,7 +47,7 @@ $(u,v)$. See page 711 in the book for an example.
 This can be accounted for by introducing a \textbf{supersink} and \textbf{supersource} with infinite
 flow and capacity out to all of the sources and from all of the sinks to the supersink. See page 713.
 
-\subsection{Ford-Fulkerson}
+\subsection{Ford-Fulkerson method}
 %%
 Three basic principles: \textbf{residual networks}, \textbf{augmenting paths} and \textbf{cuts}.
 Essential for \textbf{max-flow min-cut} theorem (Theorem 26.6).
@@ -141,7 +150,8 @@ $s \in S$ and $t \in T$. If $f$ is a flow then the \textbf{net flow} $f(S,T)$ ac
 defined to be
 %
 \[
-	f(S,T) = \sum_{u \in S} \sum_{v \in T} f(u,v) - \sum_{u in \S} \sum_{v \in T} f(v,u)
+	f(S,T) = \sum_{u \in S} \sum_{v \in T} f(u,v) - 
+	\sum_{u \in S} \sum_{v \in T} f(v,u)
 \]
 %
 The \textbf{capacity} of the cut $(S,T)$ is
@@ -155,12 +165,131 @@ from $S$ to $T$, while the flow is the flow of vertices going from $S$ to $T$,
 minus the flow going from $T$ to $S$. A \textbf{minimum cut} of a network is a
 cut whose capacity is minimum over all cuts of the network.
 
-Theorem 26.6 (Max-flow min-cut theorem) involves proving the equivalence of 3
+Theorem 26.6 (Max-flow min-cut theorem, p. 723/724) involves proving the equivalence of 3
 different conditions:
-\begin{inparaenum}[i)]
-	\item $f$ is a maximum flow of $G$.
-	\item The residual network $G_f$ contains no augmenting paths.
-	\item $|f| = c(S,T)$ for some cut $(S,T)$ of $G$.
-\end{inparaenum}
+\begin{enumerate}
+	\item $f$ is a maximum flow of $G$. \label{max-min-theorem:1}
+	\item The residual network $G_f$ contains no augmenting paths. \label{max-min-theorem:2}
+	\item $|f| = c(S,T)$ for some cut $(S,T)$ of $G$. \label{max-min-theorem:3}
+\end{enumerate}
 
-\todo[inline]{See page 723 and 724 and write up these 3 things.}
+\ref{max-min-theorem:1} => \ref{max-min-theorem:2}:
+%
+Assume that $f$ were a maximum flow in $G$ and there \textbf{was} an augmenting path. This
+means, by the proof of augmenting paths, that we could create a new flow $f'$ in $G$ with a strictly
+larger flow value than $f$, i.e. that $|f'| > |f|$. This contradicts $f$ being a maximum flow.
+
+\ref{max-min-theorem:2} => \ref{max-min-theorem:3}:
+%
+Suppose that there are no augmenting paths, that is there is no path from $s$ to $t$ in $G_f$.
+
+Define $S = \{v\in V: \text{there exists a path from $s$ to $v$ in $G_f$}\}$. That is, the set $S$
+contains all those vertices for which there could be pushed more flow along, but which perhaps have
+not because a later capacity limits that possibility. Define $T = V-S$. A partition $(S,T)$ is a cut,
+where $s\in S$ and $t \notin S$ (since there is no path from $s$ to $t$, or we would not have a maximum
+flow).
+
+Consider two vertices $(u,v)$ where $u\in S$ and $v\in T$:
+
+If $(u,v)\in E$, we must have that $f(u,v) = c(u,v)$. If this were not the case we would have 
+$(u,v)\in E_f$, since we would be able to push more flow out until at capacity. Then, by the definition 
+of $S$ we would have that $v\in S$. This is a contradiction.
+
+If $(v,u)\in E$, we must have that $f(v,u) = 0$. If this were not the case we would have
+$(v,u)\in E_f$, since the residual capacity $c_f(u,v) = f(v,u)$ would be positive. This
+means $(u,v)\in E_f$, and we would have that $v\in S$. This is a contradiction.
+
+Therefore:
+\begin{align*}
+	f(S,T) =& 	\sum_{u\in S}\sum_{v\in T} f(u,v) -
+				\sum_{u\in S}\sum_{v\in T} f(v,u) \\
+		   =&	\sum_{u\in S}\sum_{v\in T} c(u,v) -
+		   		\sum_{u\in S}\sum_{v\in T} 0 \\
+		   =&	c(S,T)
+\end{align*}
+%
+\ref{max-min-theorem:3} => \ref{max-min-theorem:1}:
+%
+The value of \textbf{any} flow $f$ in a flow network $G$
+is bounded from above by the capacity of \textbf{any} cut
+of $G$. Proof:
+\begin{align*}
+	|f| =& f(S,T) \\
+		=& \sum_{u\in S}\sum_{v\in T} f(u,v) -
+			\sum_{u\in S}\sum_{v\in T} f(v,u) \\
+		\leq& \sum_{u\in S}\sum_{v\in T} f(u,v) \\
+		\leq& \sum_{u\in S}\sum_{v\in T} c(u,v) \\
+		=& c(S,T)
+\end{align*}
+
+Because of this, $|f| \leq c(S,T)$ for \textbf{all} cuts
+$(S,T)$. Therefore, $|f| = c(S,T)$ implies that $f$ is
+a maximum flow.
+
+\begin{algorithm}
+\caption{Ford-Fulkerson Method}
+\begin{algorithmic}[1]
+\Procedure{Ford-Fulkerson Method}{G,s,t}
+	\State Initialize flow $f$ to $0$
+	\While{there exists an augmenting path $p$ in residual network $G_f$}
+		\State Augment flow $f$ along $p$
+	\EndWhile
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{Ford-Fulkerson Basic Algorithm}
+\begin{algorithmic}[1]
+\Procedure{FordFulkersonSimple}{G,s,t}
+	\For{each edge $(u,v) \in G.E$}
+		\State $(u,v).f = 0$
+	\EndFor
+	\While{there exists a path $p$ from $s$ to $t$ in residual network $G_f$}
+		\State $c_f(p) = \text{min}\{c_f(u,v) : (u,v) \text{is in $p$}\}$
+		\For{each edge $(u,v)$ in $p$}
+			\If{$(u,v) \in G.E$}
+				\State $(u,v).f = (u,v).f + c_f(p)$
+			\Else
+				\State $(v,u).f = (v,u).f - c_f(p)$
+			\EndIf
+		\EndFor
+	\EndWhile
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+Running time of the simple algorithm depends on how we find the augmenting path $p$.
+If we assume an appropriate data structure where we can represent the directed graph,
+the time to find an appropriate path can be linear in the number of edges, if using
+breadth-first or depth-first search. 
+
+This gives us $O(E)$ work per iteration of the while loop, and at most the same number of
+iterations as the value of the maximum flow (since we increase by at least one unit per iteration).
+The total running time is therefore $O(|f*| E)$, where $|f*|$ is the maximum flow.
+
+\subsection{Edmonds-Karp}
+Edmonds-Karp works by finding the shortest augmenting path each time. We choose the augmenting path
+as a shortest path from $s$ to $t$ in the residual network, where each edge has unit distance (weight).
+Edmonds-Karp runs in $O(VE^2)$ time. 
+
+\textbf{(Lemma 26.7)}
+If the Edmonds-Karp algorithm is run on a flow network $G = (V,E)$ with source $s$
+and sink $t$, then for all vertices $v\in V - \{s,t\}$ the shortest-path distance $delta_f(s,v)$
+in the residual network $G_f$ increases monotonically with each flow augmentation.
+
+\textbf{(Theorem 26.8)}
+If the Edmonds-Karp algorithm is run on a flow network $G = (V,E)$ with source $s$
+and sink $t$, then the total number of flow augmentations performed by the algorithm
+is $O(V E^2)$
+
+Each iteration of Edmonds-Karp, at least one edge along the augmenting path is
+a critical edge (an edge that bottlenecks the path, i.e.\ an edge that becomes
+saturated). The main idea behind the theorem is to show that each edge can
+become critical at most $|V|/2$ times. And since there are $O(E)$ pairs of
+vertices that can have an edge between them in a residual network, the total
+number of critical edges during the entire execution of Edmonds-Karp is
+$O(VE)$.
+
+Using breadth-first search to find an augmenting path in $O(E)$ time, this gives a total running
+time of $O(V E^2)$.
