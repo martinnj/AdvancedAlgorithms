@@ -1,0 +1,113 @@
+\section{Fibonacci heaps: Disposition}
+\begin{enumerate}
+	\item Mergeable heaps
+	\item Structure
+	\item Operations
+	\begin{itemize}
+		\item Make-Heap
+		\item Insert
+		\item ExtractMin
+		\item Union / Merge
+		\item DecreaseKey
+		\item Delete
+	\end{itemize}
+\end{enumerate}
+
+\section{Fibonacci heaps: Notes}
+
+\subsection{Mergeable heaps}
+A mergeable heap is one which supports the following operations:
+%
+\begin{description}
+	\item[Make-Heap()] Creates and returns a new heap containing no elements.
+	\item[Insert(H,x)] Inserts element $x$, whose key has already been filled in,
+	into heap $H$.
+	\item[Minimum(H)] Returns a pointer to the element in heap $H$ whose key is minimum.
+	\item[Extract-Min(H)] Deletes the element from heap $H$ whose key is minimum,
+	returning a pointer to the element.
+	\item[Union($H_1$,$H_2$)] Creates and returns a new heap
+	that contains all the elements of heaps $H_1$ and $H_2$.
+	The original heaps are destroyed by this operation.
+\end{description}
+%
+In addition to the above operations, Fibonacci heaps also
+support the following two operations:
+%
+\begin{description}
+	\item[Decrease-Key(H,x,k)] Assigns to element $x$ within
+	heap $H$ the new key value $k$, which we assume to be no
+	greater than its current key value.
+	\item[Delete(H,x)] Deletes element $x$ from heap $H$.
+\end{description}
+
+\begin{table}[h!]
+\caption{Running time of operations}
+\begin{tabular}{ccc}
+	Procedure & Binary heap(worst case) & Fibonacci heap (amortized) \\ \hline
+	Make-heap & $\Theta(1)$ & $\Theta(1)$ \\
+	Insert    & $\Theta(lg n)$ & $\Theta(1)$ \\
+	Minimum   & $\Theta(1)$ & $\Theta(1)$ \\
+	Extract-Min & $\Theta(lg n)$ & $\mathbb{O}(lg n)$ \\
+	Union	& $\Theta(n)$ & $\Theta(1)$ \\
+	Decrease-Key & $\Theta(lg n)$ & $\Theta(1)$ \\
+	Delete & $\Theta(lg n)$ & $\mathbb{O}(lg n)$
+\end{tabular}
+\end{table}
+
+Fibonacci heaps are theoretically desirable when the number
+of Extract-Min and Delete operations is small relative to the
+number of other operations performed. This can be the case for
+some algorithms in graph problems, that call decrease-key once
+per edge. Fast algorithms for computing minimum spanning trees and
+finding single-source shortest paths make essential use of
+Fibonacci heaps.
+
+From a practical point of view, however, the constant factors
+and complexity of Fibonacci heaps make them less desirable than
+ordinary binary (or k-ary) heaps for most applications.
+As such, Fibonacci heaps are pre-dominantly of theoretical
+interest.
+
+A Fibonacci heap is a collection of rooted trees that are
+min-heap ordered. Each tree obeys the min-heap property: the
+key of a node is greater than or equal to the key of its
+parent. Each node contains a pointer to its parent and a pointer
+to any one of its children. The children are linked together in
+a circular, doubly linked list. In a circular, doubly linked list
+we can insert a node into any location or remove a node from
+anywhere in the list in $O(1)$ time. We can also concatenate two
+such lists in $O(1)$ time. 
+
+Each node also contains the number of children (x.degree) and
+a boolean-valued attribute x.mark, to indicate whether it has
+lost a child since the last time $x$ was made the child of another
+node. Newly created nodes are unmarked, and a node becomes unmarked
+whenever it is made the child of another node.
+
+We access a Fibonacci heap $H$ by a pointer $H.min$ to the
+root of a tree containing the minimum key; we call this node the
+minimum node of the Fibonacci heap.
+
+The roots of all the trees in a Fibonacci heap are linked
+together using their left and right pointers into a circular,
+doubly linked list called the root list of the Fibonacci heap.
+Finally, $H.n$ refers to the number of nodes currently in the heap.
+
+In the following, the potential function of $\Phi(H) = t(H) + 2m(H)$ is used,
+where $t(H)$ is the number of trees and $m(H)$ is the number of marked nodes.
+
+\subsection{Make-Heap}
+Creates a fibonacci heap with no trees. This gives a potential energy of
+$\Phi(H) = 0$, since $t(H)=0$ and $m(H)=0$. The total running time is thus the
+actual cost of $O(1)$.
+
+\subsection{Insert}
+To determine the amortized cost, let $H$ be the input Fibonacci Heap
+and $H'$ be the resulting Fibonacci heap. Then, $t(H')=t(H)+1$ and
+$m(H')=m(H)$. The increase in potential is thus: $((t(H)+1) + 2m(H)) - (t(H) + 2m(H)) = 1$.
+
+Since the actual cost is $O(1)$, the amortized cost is $O(1) + 1 = O(1)$.
+\subsection{ExtractMin}
+\subsection{Union / Merge}
+\subsection{DecreaseKey}
+\subsection{Delete}
