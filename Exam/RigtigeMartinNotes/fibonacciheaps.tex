@@ -1,8 +1,80 @@
 \subsection{Fibonacci Heaps}
-\todo[inline]{Write something about mergable heaps}
+\todo[inline]{Write something about mergable heaps} Fibonacci heaps are a
+datastructure that supports a set of operations qualifying it as a ``meargeable
+heap'', meaning it supports the following operations.
+
+\begin{itemize*}
+  \item \texttt{Make-Heap()} Creates and returns a new heap with no elements.
+  \item \texttt{Insert(H,x)} Inserts element $x$ whose key have already been
+    filled in., into heap $H$.
+  \item \texttt{Minimum(H)} Returns a pointer to the element in heap $H$ whose
+    key is minimum.
+  \item \texttt{Extract-Min(H)} Deletes the element from heap $H$ whose key is
+    minimum, returning a pointer to the element.
+  \item \texttt{Union(H$_1$,H$_2$)} Creates and returns a new heap that contains
+    all the elements of both heaps. Both heaps are destroyed by the operation.
+\end{itemize*}
+
+Apart from the meargeable heap operations above, Fibonacci Heaps also support
+the following two operations.
+
+\begin{itemize*}
+\item \texttt{Decrease-Key(H,x,k)} Assigns to element $x$ in heap $H$ the new
+  key value $k$, which cannot be greater than it's current value.
+  \item \texttt{Delete(H,x)} Deletes element $x$ from $H$.
+\end{itemize*}
+
+Fibonacci Heaps are by default min-heaps, but could just as well be max heaps,
+then we would just replace the Minimum, Extract-Min and Decrease-Key operations
+with Maximum, Extract-Max and Increase-Key instead.
+
+Fibonacci Heaps have a benefit in the fact that many operations are run in
+constat amortized time. So if these operations are used frequently, the
+Fibonacci Heap is a well suited structure.
+
+\begin{table}[h]
+\begin{tabular}{lll}
+  Procedure    & Binary heap(worst case) & Fibonacci heap (amortized) \\ \hline
+  Make-heap    & $\Theta(1)$             & $\Theta(1)$ \\
+  Insert       & $\Theta(lg n)$          & $\Theta(1)$ \\
+  Minimum      & $\Theta(1)$             & $\Theta(1)$ \\
+  Extract-Min  & $\Theta(lg n)$          & $\mathbb{O}(lg n)$ \\
+  Union        & $\Theta(n)$             & $\Theta(1)$ \\
+  Decrease-Key & $\Theta(lg n)$          & $\Theta(1)$ \\
+  Delete       & $\Theta(lg n)$          & $\mathbb{O}(lg n)$
+\end{tabular}
+\end{table}
 
 \subsubsection{Structure}
+
+A Fibonaccci Heap is a collectoin of rooted trees that are ``min-heap
+ordered''. That is, each tree obeys the minimum-heap property: The key of a node
+is greater than or equal to the key of its parent. A node $x$ contains a pointer
+$x.p$ to its parent and a pointer $x.child$ to any one of its children. This
+list is called the child list. Each node also contains 2 pointers $x.left$ and
+$x.right$, these points to a nodes siblings or to the node itself if it has n
+osiblings. This forms a circular doubly-linked list called the child list. The
+nodes may appear in the child list in any order.
+
+Nodes have 2 additional properties, $x.degree$ which is how many children a node
+have, and a boolean value $x.mark$. $x.mark$ indicates if $x$ has lost a child
+since $x$ was made the child of another node. Nodes initially have $x.mark =$
+False.
+
+\graphicc{1}{img/fib_heaps_example}{An example of a Fibonacci Heap with(b) and
+  without(a) the child-list.}{fig:figexample}
+
+We access a fibonacci Heap by the pointer $H.min$ which points to the root of a
+tree containing the minimum key, this node is called the minimum node. If there
+are several nodes with the smallest key, any of those will work. When the heap
+is empty, $H.min =$ NIL. The roots of all the tree in a Fibonacci Heap ar linked
+togeter in a circular doubly-linked list called the ``root list''. $H.min$
+points to a node in the root list. The heap also have one other property, $H.n$
+which is the number of nodes currently in $H$.
+
 \subsubsection{Operations}
+
+\todo[inline]{Side 509 og frem! :)}
 
 \begin{description}
 \item[Make-Heap]
