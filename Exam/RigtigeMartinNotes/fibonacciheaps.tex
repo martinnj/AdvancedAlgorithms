@@ -38,11 +38,12 @@ Fibonacci Heap is a well suited structure.
   Make-heap    & $\Theta(1)$             & $\Theta(1)$ \\
   Insert       & $\Theta(lg n)$          & $\Theta(1)$ \\
   Minimum      & $\Theta(1)$             & $\Theta(1)$ \\
-  Extract-Min  & $\Theta(lg n)$          & $\mathbb{O}(lg n)$ \\
+  Extract-Min  & $\Theta(lg n)$          & $O(lg n)$ \\
   Union        & $\Theta(n)$             & $\Theta(1)$ \\
   Decrease-Key & $\Theta(lg n)$          & $\Theta(1)$ \\
-  Delete       & $\Theta(lg n)$          & $\mathbb{O}(lg n)$
+  Delete       & $\Theta(lg n)$          & $O(lg n)$
 \end{tabular}
+\caption{Amortized running times of normal binary heaps and Fibonacci Heaps.}
 \end{table}
 
 \subsubsection{Structure}
@@ -74,14 +75,139 @@ which is the number of nodes currently in $H$.
 
 \subsubsection{Operations}
 
-\todo[inline]{Side 509 og frem! :)}
-
 \begin{description}
-\item[Make-Heap]
-\item[Insert]
-\item[Minimum]
-\item[Extract-Min]
-\item[Union]
+\item[Make-Heap] Simply creates a pointer $H.min =$ NIL; since there is no trees
+  in $H$ at this point. This operation can be performed in $O(1)$ time.
+
+\item[Insert] Insertion is done on constant time as well.
+  \begin{codebox}
+    \Procname{$\proc{Fib-Heap-Insert}(H,x)$}
+    \li $x.degree \gets 1$
+    \li $x.p \gets \const{nil}$
+    \li $x.child \gets \const{nil}$
+    \li $x.mark \gets \const{false}$
+    \li \If $H.min == \const{false}$ \Do
+    \li   Create a root list for $H$ containing just $x$.
+    \li   $H.min = x$
+    \li \Else insert $x$ into $H$'s root list
+    \li   \If $x.key < H.min.key$ \Do
+    \li     $H.min = x$
+          \End
+        \End
+    \li $H.n = H.n + 1$
+
+  \end{codebox}
+
+\item[Minimum] Just follow the $H.min$ pointer and you're home safe.
+
+\item[Extract-Min] This is the most complicated and expensive of the meargeable
+  heap procedures, since it will be doing the work of actually consolidating the
+  trees in the list. Most other procedures put of this work so that it can be
+  done when using Extract-Min. This operation can be done in $O(\text{lg }n)$
+  time.
+  \begin{codebox}
+    \Procname{$\proc{Fib-Heap-Extract-Min}(H)$}
+    \li $z.min \gets H.min$
+    \li \If $z \neq \const{nil}$ \Do
+    \li   \For each child $x$ of $z$ \Do
+    \li     add $x$ to the root list of $H$
+    \li     $x.p \gets \const{nil}$ \End
+    \li   remove $z$ from the root list of $H$
+    \li   \If $z == z.right$ \Do
+    \li     $H.min \gets \const{nil}$
+    \li   \Else $H.min \gets z.right$
+    \li     $\proc{Consolidate}(H)$ \End
+    \li   $H.n = H.n - 1$ \End
+    \li \Return $z$
+  \end{codebox}
+
+  Notice that $D(H.n)$ here will calculate the upper bound on the degree.
+  \begin{codebox}
+    \Procname{$\proc{Consolidate}(H)$}
+    \li let $A[0..D(H.n)] $ be a new array
+    \li \For $i \gets 0$ \To $D(H.n)$ \Do
+    \li   $A[i] \gets \const{nil}$ \End
+    \li \For each node $w$ in the root list of $H$ \Do
+    \li   $x \gets w$
+    \li   $d \gets x.degree$
+    \li   \While $A[d] \neq \const{nil}$ \Do
+    \li     $y \gets A[d]$ \Comment another node with the same degree as $x$
+    \li     \If $x.key > y.key$ \Do
+    \li       exchange $x$ with $y$ \End
+    \li     $\proc{Fib-Heap-Link}(H,y,x)$
+    \li     $A[d] \gets \const{nil}$
+    \li     $d \gets d + 1$ \End
+    \li   $A[d] \gets x$ \End
+    \li $H.min \gets \const{nil}$
+    \li \For $i \gets 0$ \To $D(H.n)$ \Do
+    \li   \If $A[i] \neq \const{nil}$ \Do
+    \li     \If $H.min == \const{nil}$ \Do
+    \li       create a root list for $H$ containing just $A[i]$
+    \li       $H.min \gets A[i]$
+    \li     \Else insert $A[i]$ into $H$'s root list \Do
+    \li       \If $A[i].key < H.min.key$ \Do
+    \li         $H.min = A[i]$
+  \end{codebox}
+
+  \begin{codebox}
+    \Procname{$\proc{Fib-Heap-Link}(H,y,x)$}
+    \li remove $y$ from the root list of $H$
+    \li make $y$ a child of $x$, incrementing $x.degree$
+    \li $y.mark \gets \const{false}$
+  \end{codebox}
+
+
+\item[Union] Merging two fibonacci Heaps are done in constant:
+  \begin{codebox}
+    \Procname{$\proc{Fib-Heap-Union}(H_1,H_2)$}
+    \li $H \gets \proc{Make-Fib-Heap}()$
+    \li $H.min \gets H_1.min$
+    \li Concatenate the root list oh $H_2$ with the root list of $H$.
+    \li \If $(H_1.min == \const{nil})$ or ($H_2.min \neq \const{nil}$ and $H_2.min.key < H_1.min.key)$ \Do
+    \li   $H.min \gets H_2.min$ \End
+    \li $H.n \gets H_1.n + H_2.n$
+    \li \Return $H$
+  \end{codebox}
+
 \item[DecreaseKey]
-\item[Delete]
+  We can decrease the key of any node using this method, it runs in $O(1)$ time.
+  \begin{codebox}
+    \Procname{$\proc{Fib-Heap-Decrease-Key}(H,x,k)$}
+    \li \If $k > x.key$ \Do
+    \li   \Error new key is greater than current key"\End
+    \li $x.key \gets k$
+    \li $y \gets x.p$
+    \li \If $y \neq \const{nil}$ adn $x.key < y.key$ \Do
+    \li   $\proc{Cut}(H,x,y)$
+    \li   $\proc{Cascading-Cut}(H,y)$ \End
+    \li \If $x.key < H.min.key$ \Do
+    \li   $H.min \gets x$
+  \end{codebox}
+  \begin{codebox}
+    \Procname{$\proc{Cut}(H,x,y)$}
+    \li remove $x$ from the child list of $y$, decrementing $y.degree$
+    \li add $x$ to the root list of $H$
+    \li $x.p \gets \const{nil}$
+    \li $x.mark \gets \const{false}$
+  \end{codebox}
+  \begin{codebox}
+    \Procname{$\proc{Cascading-Cut}(H,y)$}
+    \li $z \gets y.p$
+    \li \If $z \neq \const{nil}$ \Do
+    \li   \If $y.mark == \const{false}$ \Do
+    \li     $y.mark \gets \const{true}$
+    \li   \Else $\proc{Cut}(H,y,z)$
+    \li     $\proc{Cascading-Cut}(H,z)$\End
+  \end{codebox}
+
+
+\item[Delete] Since it uses two previusly defined functions, the amortized
+  runningtime is easily calculated to $O(\text{lg }n)$.
+  \begin{codebox}
+    \Procname{$\proc{Fib-Heap-Delete}(H,x)$}
+    \li $\proc{Fib-Heap-Decrease-Key}(H,x,-\infty)$
+    \li $\proc{Fib-Heap-Extract-Min}(H)$
+  \end{codebox}
 \end{description}
+
+\todo[inline]{Wrwite something about $D(n)$ since it's used for all the proofs.}
