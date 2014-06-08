@@ -45,12 +45,12 @@ support the following two operations:
 \begin{tabular}{ccc}
 	Procedure & Binary heap(worst case) & Fibonacci heap (amortized) \\ \hline
 	Make-heap & $\Theta(1)$ & $\Theta(1)$ \\
-	Insert    & $\Theta(lg n)$ & $\Theta(1)$ \\
+	Insert    & $\Theta(lg\ n)$ & $\Theta(1)$ \\
 	Minimum   & $\Theta(1)$ & $\Theta(1)$ \\
-	Extract-Min & $\Theta(lg n)$ & $\mathbb{O}(lg n)$ \\
+	Extract-Min & $\Theta(lg\ n)$ & $\mathbb{O}(lg\ n)$ \\
 	Union	& $\Theta(n)$ & $\Theta(1)$ \\
-	Decrease-Key & $\Theta(lg n)$ & $\Theta(1)$ \\
-	Delete & $\Theta(lg n)$ & $\mathbb{O}(lg n)$
+	Decrease-Key & $\Theta(lg\ n)$ & $\Theta(1)$ \\
+	Delete & $\Theta(lg\ n)$ & $\mathbb{O}(lg\ n)$
 \end{tabular}
 \end{table}
 
@@ -68,6 +68,7 @@ ordinary binary (or k-ary) heaps for most applications.
 As such, Fibonacci heaps are pre-dominantly of theoretical
 interest.
 
+\subsection{Structure of Fibonacci heaps}
 A Fibonacci heap is a collection of rooted trees that are
 min-heap ordered. Each tree obeys the min-heap property: the
 key of a node is greater than or equal to the key of its
@@ -78,11 +79,11 @@ we can insert a node into any location or remove a node from
 anywhere in the list in $O(1)$ time. We can also concatenate two
 such lists in $O(1)$ time. 
 
-Each node also contains the number of children (x.degree) and
+Each node also contains the number of children (\textbf{x.degree}) and
 a boolean-valued attribute x.mark, to indicate whether it has
 lost a child since the last time $x$ was made the child of another
 node. Newly created nodes are unmarked, and a node becomes unmarked
-whenever it is made the child of another node.
+whenever it is made the child of another node. Root nodes are unmarked.
 
 We access a Fibonacci heap $H$ by a pointer $H.min$ to the
 root of a tree containing the minimum key; we call this node the
@@ -95,19 +96,137 @@ Finally, $H.n$ refers to the number of nodes currently in the heap.
 
 In the following, the potential function of $\Phi(H) = t(H) + 2m(H)$ is used,
 where $t(H)$ is the number of trees and $m(H)$ is the number of marked nodes.
+The potential function captures the state of a system at a given point, and
+we can then calculate an amortized time as the actual time plus a constant times
+the \textbf{change} in state `energy'. This provides a valid upper bound on running
+time.
 
-\subsection{Make-Heap}
+\subsection{Analysis: Running time of methods}
+\subsubsection{Make-Heap}
 Creates a fibonacci heap with no trees. This gives a potential energy of
 $\Phi(H) = 0$, since $t(H)=0$ and $m(H)=0$. The total running time is thus the
 actual cost of $O(1)$.
 
-\subsection{Insert}
-To determine the amortized cost, let $H$ be the input Fibonacci Heap
-and $H'$ be the resulting Fibonacci heap. Then, $t(H')=t(H)+1$ and
-$m(H')=m(H)$. The increase in potential is thus: $((t(H)+1) + 2m(H)) - (t(H) + 2m(H)) = 1$.
+\subsubsection{Insert}
+Insert simply inserts a node as a root-tree in the Fibonacci heap, increasing
+the number of trees by one. To determine the amortized cost, let $H$ be the
+input Fibonacci Heap and $H'$ be the resulting Fibonacci heap. Then,
+$t(H')=t(H)+1$ and $m(H')=m(H)$. The increase in potential is thus: $((t(H)+1)
++ 2m(H)) - (t(H) + 2m(H)) = 1$.
 
 Since the actual cost is $O(1)$, the amortized cost is $O(1) + 1 = O(1)$.
+
+\subsubsection{Find-Min}
+We store a pointer to the minimum node of a Fibonacci heap. As the potential
+is not changed (we alter no state in the tree), the amortized running time is
+the actual cost of $O(1)$.
+
+\subsubsection{Uniting two Fibonacci heaps}
+To unite two Fibonacci heaps, we concatenate the root lists of the two heaps
+$H_1$ and $H_2$ and then determine the new minimum node. The change in
+potential is:
+\begin{align*}
+	& \Phi(H) - (\Phi(H_1) + \Phi(H_2)) \\
+	&= (t(H)+2m(H)) - ((t(H_1)+2m(H_1)) + (t(H_2)+2m(H_2))) \\
+	&= 0
+\end{align*}
+Since $t(H) = t(H_1) + t(H_2)$ and $m(H) = m(H_1)+m(H_2)$. The amortized time
+is thus equal to the actual running time of $O(1)$.
+
 \subsection{ExtractMin}
-\subsection{Union / Merge}
-\subsection{DecreaseKey}
-\subsection{Delete}
+ExtractMin works by first making a root of each of the minimum nodes children
+and removing the minimum node from the root list. Then the root list is
+consolidated by linking roots of equal degree, until at most one root remains
+of each degree. To do this efficiently, an array is created that stores
+a current pointer to a root tree of a given degree.
+
+We then consolidate the root list, to reduce the number of trees in the
+Fibonacci heap. The following steps are repeatedly executed until every root
+in the root list has a distinct degree:
+%
+\begin{enumerate}
+	\item Find two roots $x$ and $y$ in the root list with the same degree. Without loss of generality, let $x.key \leq y.key$.
+	\item \textbf{Link} $y$ to $x$: remove $y$ from the root list,
+	and make $y$ a child of $x$. Then we increment the attribute
+	$x.degree$ and clear the mark on $y$.
+\end{enumerate}
+
+The array of degrees -> root pointers is used to look up whether there
+is another tree of the same degree as we have just increased $x$ to,
+and if there is they link. If not, the entry in the array is updated
+to point to $x$.
+
+The root list is then emptied and re-created based on the
+pointers in the array of degrees -> root pointers. Finally,
+we decrement $H.n$ by 1 and return a pointer to the deleted node.
+
+There are several things we must estimate the cost of:
+extracting the minimum node, the main for-loop through the root
+list and within that the while-loop that links together trees.
+
+The amortized cost of extracting the minimum node of an $n$-node
+Fibonacci heap is $O(D(n))$. Let $H$ denote the
+Fibonacci heap prior to the ExtractMin operation. The actual
+cost of extracting the minimum node contributes $O(D(n))$ work
+from processing at most $D(n)$ chilren of the minimum node.
+
+Upon calling consolidate, the size of the root list is at most $D(n) + t(H) -
+1$: the original $t(H)$ root-list nodes, minus the extracted root node, plus
+the children of the extracted node, at most $D(n)$. Every iteration of the
+inner while-loop, we know that one root is linked to another, and so the total
+number of iterations of the while loop over all iterations of the for loop is
+at most the number of roots in the root list. Hence, the total amount of work
+performed in the for loop is at most proportional to $D(n) + t(H)$. The total
+actual work in extracting the minimum node is therefore $O(D(n) + t(H))$. The
+potential before extracting the minimum node is $t(H) + 2m(H)$. The potential
+afterwards is at most $(D(n)+1)+2m(H)$, since at most $D(n)+1$ roots remain and
+no nodes get marked during this operation. The amortized cost is thus at most:
+
+\begin{align*}
+	& O(D(n)+t(H)) + ((D(n)+1) + 2m(H)) - (t(H)+2m(H)) \\
+	=& O(D(n)) + O(t(H)) - O(t(H)) \\
+	=& O(D(n))
+\end{align*}
+if we scale up the units of the potential to dominate the constant hidden in $t(H)$.
+We will see later that $D(n) = O(lg\ n)$, giving an amortized running time of $O(lg\ n)$
+for extracting the minimum node.
+
+\subsubsection{DecreaseKey}
+DecreaseKey on a node $x$ (with parent $y$) works as follows: Decrease the key
+of $x$. If $x$.key < $y$.key, cut $x$ and turn it into a root-node. Then perform
+a cascading cut on $y$ upwards, which will cut any node that is already marked,
+terminating when it reaches a root node or an unmarked node. Reaching an unmarked node
+will mark it. Finally, we check whether $x.key$ < $H.min.key$, and if so update $x$ to
+be the minimum node of $H$.
+
+This process means that a node can lose one child (causing it to be marked), but losing
+another will cause it to be cut as it was already marked from losing a child before.
+
+DecreaseKey takes $O(1)$ time, plus the time to perform the cascading cuts. Each recursive
+call of cascading cut also takes $O(1)$ time, giving $O(c)$ for $c$ cascading cuts. The actual
+time of DecreaseKey, including recursive calls, is thus $O(c)$.
+
+The call to cut $x$ creates a new tree rooted at $x$ and clears $x$'s mark bit (which may have
+been false already). Each call of cascading cut, except for the last one, cuts a marked node and
+clears its marked bit. Afterwards, the Fibonacci heap contains $t(H)+c$ trees (the original $t(H)$ trees,
+$c-1$ trees produced by cascading cuts and the tree rooted at $x$). It contains at most 
+$m(H)- c + 2$ marked nodes ($c-1$ nodes were unmarked by cascading cuts and the last call may have marked
+a node). The change in potential is therefore, at most:
+\[
+	((t(H)+c) + 2(m(H) - c + 2)) - (t(H) + 2m(H)) = 4 - c
+\]
+
+This leads to an amortized cost of at most:
+\[
+	O(c) + 4 - c = O(1)
+\]
+since, again, we can scale up the units of the potential to dominate the constant hidden in $O(c)$.
+
+\subsubsection{Delete}
+Deleting a node works by first setting its key to minus infinity, and then extracting the minimum.
+We already know that decreasing a key takes $O(1)$ amortized time, and extracting minimum takes
+$O(D(n))$ amortized time. As we will see that $D(n) = O(lg\ n)$, deleting a node runs in amortized
+time of $O(lg\ n)$
+
+\subsection{Bounding the maximum degree of a Fibonacci heap}
+\todo[inline]{Pages 523 - 526 of Lemma's and corollaries, need to be written and explained!}
