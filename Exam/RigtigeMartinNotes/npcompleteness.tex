@@ -1,0 +1,28 @@
+\subsection{NP-Completeness}
+Example of a problem in the $P$ class is an Euler Tour(a path in a graph that
+uses all edges exactly once, vertices can be visited multible times) of a graph,
+it can be done in $O(E)$. An $NP$ class example that is very similar is a
+Hamiltonian cycle. A Hamiltonian cycle is a path that visits all vertices once.
+
+We have three classes of problems in this subject:
+\begin{itemize*}
+\item[\textbf{P}] Problems that are solvable in polynomial time ($O(n^k)$ for
+  some constant $k$.)
+\item[\textbf{NP}] Problems that are verifiable on polynomial time, i.e. if we
+  have a certificate/solution, can we check it in polynomial time. All problems
+  in P will also be in NP.
+\item[\textbf{NPC}] A subclass of NPC problems that are ``at least as hard as
+  the hardest problems in NP'', these cannot be verified in polynomial time.
+\end{itemize*}
+
+\subsubsection{Decision problems vs. optimization problems}
+NP-completeness does not cover optimization problems, only decision problems. We
+can however use the relationship between optimization and decision problems to
+guage if a optimization problems is in fact NP-complete.
+
+The shortest-path problem is an opimization problem, but can converted (in
+polynomial time) to a decision problem if the question is posed like so: ``Does
+a path $p$ in the graph $G$ exist with only $k$ edges?'', then we iterate over
+$k$ and will be able to guage the shortest bath problem as a dicision problem.
+
+\todo[inline]{Continue from p. 1051}
