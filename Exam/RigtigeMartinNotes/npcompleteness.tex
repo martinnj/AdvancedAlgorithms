@@ -11,8 +11,10 @@ We have three classes of problems in this subject:
 \item[\textbf{NP}] Problems that are verifiable on polynomial time, i.e. if we
   have a certificate/solution, can we check it in polynomial time. All problems
   in P will also be in NP.
-\item[\textbf{NPC}] A subclass of NPC problems that are ``at least as hard as
-  the hardest problems in NP'', these cannot be verified in polynomial time.
+\item[\textbf{NP-Hard}] A subclass of NPC problems that are ``at least as hard
+  as the hardest problems in NP'', these cannot be verified in polynomial time.
+\item[\textbf{NPC}] Problems that are both in the set of NP problems and NP-hard
+  problems. (NP $\cap$ NP-Hard)
 \end{itemize*}
 
 \subsubsection{Decision problems vs. optimization problems}
@@ -25,4 +27,23 @@ polynomial time) to a decision problem if the question is posed like so: ``Does
 a path $p$ in the graph $G$ exist with only $k$ edges?'', then we iterate over
 $k$ and will be able to guage the shortest bath problem as a dicision problem.
 
-\todo[inline]{Continue from p. 1051}
+\subsubsection{Reduction}
+The notion of showing that one problem us no harder or no easier than another
+problem applies even when both problems are decision problems. This is used in
+almost all NP-Completeness proof as follows: Take an instance $\alpha$ of
+problem $A$, that is, a specific input for the problem $A$, so for shortest path
+we may choose a graph $G$, and vertices $u$ and $v$ as well as a $k$. Make a
+polynomial time transofmration from $\alpha$ to instance $\beta$ of problem $B$
+(which can be decided in polynomial time) with the following characteristics:
+\begin{enumerate*}
+\item Transformation takes polynomial time.
+\item The answers are the same. The answer for $\alpha$ is ``yes'', iff. the
+  answer for $\beta$ is ``yes'', same for ``no''.
+\end{enumerate*}
+Such an algorithm is called a reduction algorithm.
+
+We can now solve any instance of $A$ in polynomial time by converting $\alpha$
+to $\beta$ in polynomial time, running the polynomial time decision algorithm
+for $B$ and using the answer for $B$ as the answer for $A$.
+
+\todo[inline]{Continue from p. 1052-3 something.}
