@@ -47,21 +47,42 @@ to $\beta$ in polynomial time, running the polynomial time decision algorithm
 for $B$ and using the answer for $B$ as the answer for $A$.
 
 
-Since NP-Completeness is usually how showing how hard a problem is we can use polynomial time reduction algorithms in the opposite way to show that a problem is NP-Ciomplete. Lets show that for some problem $B$ there can be no polynomial time algorithm.
+Since NP-Completeness is usually how showing how hard a problem is we can use
+polynomial time reduction algorithms in the opposite way to show that a problem
+is NP-Ciomplete. Lets show that for some problem $B$ there can be no polynomial
+time algorithm.
 
-Suppose we have a dicision problem $A$, which we know that no polynomial time algorithm cat exist. Suppose we also have a polynomial time reduction algorithm that can reduce instances of $A$ into instances of $B$ instead. Now, suppose otherwise, if $B$ had a polynomial time algorithm, we would be able to reduce $A$ to $B$ and have a polynomial time algorithm for $A$, which we assummed could not exist, which is a contradiction.
+Suppose we have a dicision problem $A$, which we know that no polynomial time
+algorithm cat exist. Suppose we also have a polynomial time reduction algorithm
+that can reduce instances of $A$ into instances of $B$ instead. Now, suppose
+otherwise, if $B$ had a polynomial time algorithm, we would be able to reduce
+$A$ to $B$ and have a polynomial time algorithm for $A$, which we assummed could
+not exist, which is a contradiction.
 
 \subsubsection{Abstract Problems}
-We define the abstract problem $Q$ to be the binary relationship between an instance in the set $I$ and a solution.
-For our shortest path problem, the instance would be a triple of input $i = (G,u,v)$ and the solution $s$ would be a series of vertices. Since NP-Completenes is about decision problems, the input would instead be $i = (G,u,v,k)$ and the output would be $s = \{0,1\}$. Resulting in a deicions problem like so $\text{PAth}(i) = 1$(yes) if a path exists in $G$ between $u$ and $v$ using $k$ vertices. and $\text{PAth}(i) = 0$(no) otherwise. We thus rely on the ability to recast optimization problems as decision problems in order to make decisions about their NP-Completeness.
+We define the abstract problem $Q$ to be the binary relationship between an
+instance in the set $I$ and a solution.  For our shortest path problem, the
+instance would be a triple of input $i = (G,u,v)$ and the solution $s$ would be
+a series of vertices. Since NP-Completenes is about decision problems, the input
+would instead be $i = (G,u,v,k)$ and the output would be $s =
+\{0,1\}$. Resulting in a deicions problem like so $\text{PAth}(i) = 1$(yes) if a
+path exists in $G$ between $u$ and $v$ using $k$ vertices. and $\text{PAth}(i) =
+0$(no) otherwise. We thus rely on the ability to recast optimization problems as
+decision problems in order to make decisions about their NP-Completeness.
 
 
 \subsubsection{Formal Language Framework}
-$\Sigma$ is an alpjanet, a language $L$ over the alphabet $\Sigma$ is any combination of symbols from $\Sigma$.
-For instance if $\Sigma = \{0,1\}$ we can have $L = \{0,1,10,11,101,110,111 , ...\}$. We denote the empty string as $\epsilon$ and the empty language as $\emptyset$, and the language of all strings over $\Sigma$ as $\Sigma^*$.
-For instance if $\Sigma = \{0,1\}$ then $\Sigma^* = \{\epsilon,0,1,10,11,100,101,110,111,1000,...\}$. Every language $L$over $\Sigma$ is a subset of $\Sigma^*$.
+$\Sigma$ is an alpjanet, a language $L$ over the alphabet $\Sigma$ is any
+combination of symbols from $\Sigma$.  For instance if $\Sigma = \{0,1\}$ we can
+have $L = \{0,1,10,11,101,110,111 , ...\}$. We denote the empty string as
+$\epsilon$ and the empty language as $\emptyset$, and the language of all
+strings over $\Sigma$ as $\Sigma^*$.  For instance if $\Sigma = \{0,1\}$ then
+$\Sigma^* = \{\epsilon,0,1,10,11,100,101,110,111,1000,...\}$. Every language
+$L$over $\Sigma$ is a subset of $\Sigma^*$.
 
-We can perform several operations on languages, set operations such as union and intersect, or the complement of a lanaugege $L$ as $\overline{L} = \Sigma^* - L$. The concatenation $L_1L_2$ of two languages is
+We can perform several operations on languages, set operations such as union and
+intersect, or the complement of a lanaugege $L$ as $\overline{L} = \Sigma^* -
+L$. The concatenation $L_1L_2$ of two languages is
 \[
   L = \{x_1x_2 : x_1 \in L_1 \text{ and } x_2 \in L_2\}.
 \]
