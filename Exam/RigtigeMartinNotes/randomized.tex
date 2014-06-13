@@ -1,0 +1,63 @@
+\subsection{Randomized algorithms}
+
+When talking random variables there are generally 3 kinds:
+\begin{enumerate*}
+  \item Las Vegas algorithms
+  \item Monte Carlo algorithms with one-sided error
+  \item Monte Carlo algorithms with two-sided error
+\end{enumerate*}
+
+A Las Vegas algorithm is a randomized algorithm that have zero possibility of
+producing an invalid solution but where the running time is affected vy the
+randomization.
+
+A Monte Carlo algorithm is a randomized algorithm that might produce an
+incorrect solution. For decisions problems these can be one-sided or
+two-sided. A one sided algorithm is always correct for one of the answer
+(yes/no) but might be wrong on the other one. If it is two-sided then it might
+be wrong on both answers.
+
+
+\subsubsection{Markov \& Chebyshev's inequalities}
+\begin{description}
+\item[Markov inequality] Let $Y$ be a random variable assuming only non-negative
+  values. Then for all $t \in \mathbb{R}^+$,
+  \[
+    \text{Pr}[Y \geq t] \leq \frac{\text{E[Y]}}{t}.
+  \]
+  Equivalently,
+  \[
+    \text{Pr}[Y \geq k\text{E}[Y]] \leq \frac{1}{k}.
+  \]
+\item[Proof] Define a function $f(y)$:
+  \[
+   f(y) = \begin{cases}
+     1 & \text{iff } y \geq t\\
+     0 & \text{otherwise.}
+   \end{cases}
+  \]
+  Then $\text{Pr}[Y \geq t] = \text{E}[f(y)]$. Since $f(y) \leq y/t$ for all $y$,
+  \[
+    \text{E}[f(Y)] \leq \text{E}\left [\frac{Y}{t} \right ] = \frac{\text{E}[Y]}{t},
+  \]
+  and the theorem follows. \qed
+\end{description}
+
+\begin{description}
+\item[Chebyshevs inequality] Let $X$ be a random variable with expectation
+  $\mu_X$ and a standard deviation of $\sigma_X$. Then for any $t \in
+  \mathbb{R}^+$,
+  \[
+    \text{Pr}[|X - \mu_X| \geq t\sigma_X] \leq \frac{1}{t^2}
+  \]
+\item[Proof] Note that
+  \[
+    \text{Pr}[|X - \mu_X| \geq t\sigma_X] = \text{Pr}[(X - \mu_X)^2 \geq
+    t^2\sigma_X^2]
+  \]
+  The random variable $Y = (X - \mu_X)^2$ has expectation $\sigma_X^2$, and
+  applying the Markov inequality to $Y$ bounds this probability from above by
+  $1/t^2$. \qed
+\end{description}
+
+\todo[inline]{Write about lazy select or randomized quicksort}
