@@ -1,0 +1,41 @@
+\subsection{Exact Exponential Algorithms \& Fixed-Parameter Tractable Problems}
+
+\subsubsection{Exact Exponential Algorithms}
+The $O^*$ notation is similar to the $O$ notation, except it will supress
+runningtimes of polynomial itme. This means that factors that are not
+exponential are supressed. For example $O(kn^kk^n) = O(n^kk^n)$ but we have
+$O^*(kn^kk^n) = O^*(k^n)$.
+
+Roughly speaking, parameterized complexity seeks the possibility of obtaining
+algorithms whose running time can be bounded by a polynomial function of the
+input length and, usually, an exponential function of the parameter.
+
+% Parameterized Complexity add to our regular ``size'' or ``length'' dependent
+% complexity measures, by also expressing the complexity in terms of an
+% additional parameter. This parameter should be something the represents a
+% factor in the algorithm which is not dependent on the input itself.
+
+This section is basically about algotihms that solve problems in the NP group in
+exponential time but give the correct result and not just an approximation.
+
+\subsubsection{Fixed-Parameter Tractable Problems}
+
+\textbf{CNF satisfiablility}
+\begin{description}
+\item[Parameter ``Clause Size''] The maximum snumber of $k$ literals a clause
+  may contain. For $k = 2$ (2-CNF satisfiablility) the runningtime is polynomial
+  time solvable, however for $k = 3$ (3-CNF satisfiablility) is NP-Complete.
+
+\item[Parameter ``Number of Variables''] The number $n$ of different variables
+  allowed in the formula. Since there is essentially $2^n$ different truth
+  assignments, the problem can be solved in that number of steps, seeing that
+  the result of each assignment can be calculated in a number of steps equal to
+  the Number of clauses.
+
+\item[Parameter ``Number of Clauses''] If the number of clauses i na formulae is
+  bounded from above by $m$, the CNF problem can be solved in $1.24^m$ steps.
+
+\item[Parameter ``Formula Length''] If the total length (counting the number of
+  literal occurences in the formula) of the formula $F$ is bounded by above by
+  $\ell = |F|$, then the problem can be solved in $1.08^\ell$ steps.
+\end{description}
