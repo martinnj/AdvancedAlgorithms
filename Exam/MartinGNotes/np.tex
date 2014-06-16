@@ -59,6 +59,17 @@ the length of the path. In other words, if the optimization problem is easy, the
 Conversely, if the decision problem is hard, then the related optimization problem is hard as well.
 
 \subsubsection{Reductions}
-The above applies even when both problems are decision problems. Consider a decision problem $A$, which we would like
-to solve in polynomial time. We call the input to a particular problem an \textbf{instance}. For example, in PATH,
-an instance would be a particular graph $G$, particular vertices $u$ and $v$ of $G$, and a particular integer $k$.
+The above applies even when both problems are decision problems. We call
+the input to a particular problem an \textbf{instance}. For example, in PATH,
+an instance would be a particular graph $G$, particular vertices $u$ and $v$
+of $G$, and a particular integer $k$.
+
+If we have a decision problem $A$ which we would like to solve in polynomial time, a decision
+problem $B$ which we know we can solve in polynomial time and a transformation method that can
+transform input from the form that $A$ accepts into the form that $B$ accepts, then we can solve
+$A$ in polynomial time as follows:
+
+First transform the input into a form acceptable for problem $B$ (polynomial time). Then run $B$ and
+find an answer, in polynomial time. Then use that answer for $A$. Note that this assumes that when $B$
+answers `Yes' then so does $A$, and when $B$ answers `No' then so does $A$.
+If we have another decision problem $B$ which we know we can solve in polynomial time, which
