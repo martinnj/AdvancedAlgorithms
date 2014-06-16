@@ -111,3 +111,51 @@ The above algorithm runs in $O(V+E)$.
   \end{align*}
   thereby proving the theorem. \qed
 \end{description}
+
+
+\subsubsection{Traveling Salesman Problem}
+The TSP is also NP-Complete, the following is a method for approximating an
+optimal solution that is at most twice as long as the optimal tour.
+
+It creates a minimum spanning tree using Prims algorithm, and walks along this
+tree using a pre-order walk (parent first then child), and uses this as the
+solution.
+
+\begin{codebox}
+\Procname{$\proc{Approx-TSP-Tour}(G,c)$}
+\li select a vertex $r \in G.V$ to be a ``root'' vertex
+\li compute a minimum spanning tree $T$ for $G$ from root $r$ \\
+    using $\proc{MST-Prim}(G,c,r)$
+\li let $H$ be a list of vertices, ordered according to when\\
+    they are first visited in a preorder tree walk of $T$
+\li \Return the hamiltonian cycle $H$
+\end{codebox}
+
+$Q$ is a min-priority queue, $G$ is the graph, $r$ is the root and $w$ is the
+weight function.
+\begin{codebox}
+\Procname{$\proc{MST-Prim}(G,w,r)$}
+\li \For each $u \in G.V$ \Do
+\li   $u.key \gets \infty$
+\li   $u.\pi \gets \const{nul}$ \End
+\li $r.key \gets 0$
+\li $Q \gets G.V$
+\li \While $Q \neq \emptyset$ \Do
+\li   $u \gets \proc{Extract-Min}(Q)$
+\li   \For each $v \in G.adj[u]$ \Do
+\li     \If $v \in Q$ and $w(u,v) < v.key$ \Do
+\li       $v.\pi \gets u$
+\li       $v.key \gets w(u.v)$
+\end{codebox}
+
+\graphicc{1}{img/approxtsp.png}{A sample run of the approximate TSP algorithm,
+  subigure (d) is the resulting tour, and (e) is the optimal tour. Distances are
+  simple euclidian distances.}{fig:approxtsp}
+
+\begin{description}
+\item[Theorem 35.2] \texttt{Approx-TSP-Tour} is a polynomial-time
+  2-approximation algorithm for the traveling salesman problem, with the
+  triangle inequality.
+
+\item[Proof] See page 1114.
+\end{description}
