@@ -1,0 +1,75 @@
+\section{NP-Completeness: Disposition}
+\begin{enumerate}
+  \item P-Class, NP-Class, NPC-Class
+  \item Showing problems to be NP-Complete
+  \item Reductions and verifiability/certificates
+  \item P vs NP vs NPC
+\end{enumerate}
+
+\section{NP-Completeness: Notes}
+NP-Complete problems are a class of problems, whose status is ``unknown'', in that
+no polynomial-time algorithm has yet been discovered for an NP-Complete problem, nor
+has anyone yet been able to prove that such an algorithm can not exist. Therefore, the
+so-called $P \neq NP$ problems, whose status is unknown. Several of the problems are tantalizing
+because they seem quite similar to problems that we \textbf{can} solve in polynomial time. For example,
+finding a single-source shortest path is solvable in polynomial time, finding a single-source longest
+path is \textbf{not}. Finding an Euler tour (cycle that traverses each each exactly once, but is allowed
+to visit vertices more than once) is solvable in polynomial time, a hamiltonian cycle (simple cycle that
+contains each vertex) is not.
+
+\subsection{P, NP, NPC Problems}
+The class $P$ contains those problems that are solvable in polynomial time. More specifically, $P$ class
+problems are solvable in $O(n^k)$ for some constant $k$, where $n$ is the size of the input.
+
+The class $NP$ consists of those problems that are \textbf{verifiable} in polynomial time. That is, given
+a ``certificate'' of a solution, we can verify that the certificate is correct in polynomial time. For example,
+given a hamiltonian cycle $G = (V,E)$, a certificate could be a sequence of vertices $<v_1, v_2, v_3, \hdots, v_n>$
+of $|V|$ vertices. We can easily check in polynomial time that $(v_i, v_{i+1}) \in E$ for $i = 1,2,3,\hdots,|V|-1$
+and that $(v_{|V|},v_1) \in E$ as well.
+
+Any problem in $P$ is also in $NP$, since if a problem is in $P$ then it is solvable in polynomial time. And so
+we can get the solution directly in polynomial time. $P \subseteq NP$. The open question is whether or not $P$ is
+a proper subset of $NP$ (meaning $P \subset NP$).
+
+Informally, a problem is in the class $NPC$, and is called NP-Complete, if it is in NP and is at least as ``hard''
+as any other problem in NP. If \textit{any} NP-Complete problem can be solved in polynomial time, then \textit{every}
+NP-Complete problem can be solved in polynomial time.
+
+\subsection{Showing problems to be NP-Complete}
+When we want to show a problem to be NP-Complete, we make a statement about how hard the problem is (or how hard we
+think it is), instead of how easy it is. We are trying to prove that no efficient algorithm likely exists. There are
+\textbf{three} key concepts in showing a problem to be NP-Complete:
+%
+\subsubsection{Decision problems vs optimization problems}
+Many problems are \textbf{optimization problems}, where the solution has an
+associated legal value and we wish to find the best such value. For example,
+for the shortest path problem, we are given an undirected graph $G$ and
+vertices $u$ and $v$, and we wish to find a path from $u$ to $v$ that uses
+fewest edges. \textbf{However}, NP-Completeness applies to \textbf{decision problems}
+and not optimization problems, in which the answer is simply ``yes'' or ``no''.
+
+However, it is often quite easy to convert an optimization problem into a decision problem, by
+imposing a bound on the value we wish to optimize. For example: Given a directed graph $G$, vertices
+$u$ and $v$ and an integer $k$, does a path exist from $u$ to $v$ consisting of at most $k$ edges?
+
+Decision problems are in a sense ``easier'' than optimization problems, since if we can solve the optimization
+problem then we can often trivially answer the decision problem. For example, if we find a path that solves the
+optimization problem of shortest path, it is very easy to solve the decision problem posed above by simply checking
+the length of the path. In other words, if the optimization problem is easy, then the decision problem is easy as well.
+Conversely, if the decision problem is hard, then the related optimization problem is hard as well.
+
+\subsubsection{Reductions}
+The above applies even when both problems are decision problems. We call
+the input to a particular problem an \textbf{instance}. For example, in PATH,
+an instance would be a particular graph $G$, particular vertices $u$ and $v$
+of $G$, and a particular integer $k$.
+
+If we have a decision problem $A$ which we would like to solve in polynomial time, a decision
+problem $B$ which we know we can solve in polynomial time and a transformation method that can
+transform input from the form that $A$ accepts into the form that $B$ accepts, then we can solve
+$A$ in polynomial time as follows:
+
+First transform the input into a form acceptable for problem $B$ (polynomial time). Then run $B$ and
+find an answer, in polynomial time. Then use that answer for $A$. Note that this assumes that when $B$
+answers `Yes' then so does $A$, and when $B$ answers `No' then so does $A$.
+If we have another decision problem $B$ which we know we can solve in polynomial time, which
