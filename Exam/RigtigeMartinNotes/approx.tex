@@ -1,0 +1,113 @@
+\subsection{Approximation Algorithms}
+
+\subsubsection{Performance Ratios and Schemes}
+An algorithm for a problem have an approximation ratio of $\rho(n)$ if, for any
+input of size $n$, the cost $C$ of a solution produced by the algorithm is
+within a factor of $\rho(n)$ of the cost $C^*$ of an optimal solution:
+\[
+  \text{max}\left( \frac{C}{C^*}, \frac{C^*}{C} \right) \leq \rho(n).
+\]
+If an algorithm achieves an approximation ratio of $\rho(n)$, we call it a
+$\rho(n)$-approximation algoroithm. These notions apply to both
+cost-minimization and cost-maximization problems.
+
+For a miximization problem, $0 < C \leq C^*$, and the ratio $C^*/C$ gives the
+factor by which the cost of an optimal solution is larger than the cost of the
+approxmiation solution.
+
+Similarly, for a minimization problem, $0 < C^* \leq C$, and the ratio $C/C^*$
+gives the factor by which the cost of the approximate solution is larger than
+the cost of an optimal solution.
+
+Because we assume the costs are allways positive, the rations are always well
+defined, the ratio of an algorithm is never less than 1, since $C/C^* \leq 1$
+implies $C^*/C \geq 1$. Therefore a 1-approximation algorithm produce an optimal
+solition and an approximation algorithm with a large approximation ratio may
+return a solution far worse than optimal.
+
+
+Below some schemes are outlined which allow us to give a value $\epsilon$ along
+with the instance of the problem and achieve an approximation that have a
+quality depending on the value.
+\begin{description}
+\item[Approximation Scheme] for an optimization problem is an approximation
+  algorithm that takes as input, not only an instance of the problem, but also a
+  value $\epsilon > 0$ such that for any fied $\epsilon$ the scheme is a
+  $(1+\epsilon)$-approximation algorithm.
+
+\item[Polynomial-Time Approximation Scheme] is an approximation scheme if for
+  any fixed $\epsilon > 0$, the scheme runs in polynomia ltime in the size $n$
+  of it's input instance. The running time of such a scheme can increase rapidly
+  as $\epsilon$ decreases. For example, the running time of a polynomial-time
+  approximation scheme might be $O(n^{(2/\epsilon)})$. Ideally, if $\epsilon$
+  decrease by a constant factor, the running time to achieve the desired
+  approximation should not incrase by more than a constant factor. (Not
+  necessarily by the same factor $\epsilon$ was decreased with.)
+
+\item[Fully Polynomial-Time Approximation Scheme] means the approximation
+  algorithm runs in polynomial time in both $1/\epsilon$ and the size $n$ of the
+  input instance. I.e. $O((1/\epsilon)^2n^3)$. With such a scheme, a constant
+  factor decrease in $\epsilon$ comes with a constant factor increase in
+  runningtime.
+\end{description}
+
+
+\subsubsection{Vertex Cover example}
+
+A Vertex Cover of an undirected graph $G = (V,E)$ is a subset $V' \subseteq V$
+such that if $(u,v)$is an edge of $G$, then either $u \in V'$ or $v \in V'$ or
+both. The size of a vertex cover is the number of vertices in it.
+
+The Vertex Cover Problem is to find a vertex cover of minimum size in a given
+undirected graph, this is an optimization version of an NP-Complete decision
+problem.
+
+An approximation algorithm that will find a cover that is no more than twice the
+size of the optimal cover is written here:
+\begin{codebox}
+\Procname{$\proc{Approx-Vertex-Cover}(G)$}
+\li $C \gets \emptyset$
+\li $E' \gets = G.E$
+\li \While $E' \neq \emptyset$ \Do
+\li   let $(u,v)$ be an arbitrary edge of $E'$
+\li   $C = C \cup \{u,v\}$
+\li   remove from $E$ every edge incident on either $u$ or $v$ \End
+\li \Return $C$
+\end{codebox}
+The above algorithm runs in $O(V+E)$.
+
+\graphicc{1.0}{img/approxvertexcover.png}{Example run of the
+  \texttt{Approx-Vertex-Cover} algorithm.}{fig:approxvertexcover}
+
+\begin{description}
+\item[Theorem 35.1] \texttt{Approx-Vertex-Cover} is a polynomial-time
+  2-approximation algorithm.
+\item[Proof] It is already shown that the algorithm is a polynomial time
+  algorithm.
+
+  The set $C$ of vertices return must be a vertex cover since it loops until
+  every edge in $G.E$ have been covered by some vertex.
+
+  To see that the algorithm returns a vertex cover of at most twice the size of
+  an optimal cover, let $A$ denote the set og edges that line 4 selects.  To
+  cover all the edges in $A$, any vertex cover, in particular the optimal vertex
+  cover $C^*$, must include at least one endpoint of each edge in $A$. No two
+  edges share endpoints since when an edge is picked, all edges incident on its
+  endpoints are removed. Thus no two edges in $A$ are covered by the same vertex
+  from $C^*$, and we have the lower bound
+  \[
+    |C^*| \geq |A|
+  \]
+  on the size of an optimal vertex cover. Each execution of line 4 picks an edge
+  which neither of its endpoints are already in $C$, yielding an upper boind on
+  the size of the vertex cover returned
+  \[
+    |C| = 2|A|
+  \]
+  Combining the two bounds gives
+  \begin{align*}
+    |C| &= 2|A| \\
+        &\leq 2|C*|
+  \end{align*}
+  thereby proving the theorem. \qed
+\end{description}
