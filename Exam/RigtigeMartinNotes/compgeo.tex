@@ -1,0 +1,21 @@
+\subsection{Computational Geometry}
+Let $P = \{p_1, p_2, ..., p_n\}$ be a set of points in the plane. To be able to properly define the
+triangulation of the plane we first define the ``maximal planar subdivision'' as a subdivision $\mathcal{S}$
+such that no edges that connects two vertices can be added without destroying the planarity.
+
+A triangulation of $P$ is now defined as a maximal planar subdivision whose vertex set is $P$.
+
+\begin{description}
+\item[Theorem] Let $P$ be a set of $n$ points in the plane, not all collinear, and let $k$ denote the number of points in $P$ that lie on the boundary of the convex hull
+  of $P$. Then any triangulation of $P$ has $2n−2−k$ triangles and $3n−3−k$ edges.
+
+\item[Proof] Let $\mathcal{T}$ be a trinagulation of $P$, and let $m$ denote the number of triangles of $\mathcal{T}$.
+  Note that the number of faces of the triangulation, which we denote by $n_f$, is $m+1$. Every triangle has three edges, and the unbounded face has $k$ edges.
+  Furthermore, every edge is incident to exactly two faces. Hence the total number of edges of $\mathcal{T}$ is $n_e = (3m+k)/2$. Euler's formula tells us that
+  \[
+    n-n_e+n_f = 2
+  \]
+  Plugging the values for $n_e$ and $n_f$ into the fomula, we get $m=2n-2-k$, which in turn implies $n_e = 3n-3-k$. \qed
+\end{description}
+
+\todo[inline]{Help me :( I have no idea what to do x)}
