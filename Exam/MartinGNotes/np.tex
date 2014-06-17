@@ -71,5 +71,34 @@ $A$ in polynomial time as follows:
 
 First transform the input into a form acceptable for problem $B$ (polynomial time). Then run $B$ and
 find an answer, in polynomial time. Then use that answer for $A$. Note that this assumes that when $B$
-answers `Yes' then so does $A$, and when $B$ answers `No' then so does $A$.
-If we have another decision problem $B$ which we know we can solve in polynomial time, which
+answers `Yes' then so does $A$, and when $B$ answers `No' then so does $A$. We can use this method to prove
+the opposite: That no polynomial-time algorithm can exist for problem $B$, if none exists for problem $A$.
+
+Proof by contradiction. We wish to prove that no polynomial-time algorithm
+exists for a problem $B$. Suppose we have a decision problem $A$ for which we
+already know no polynomial-time algorithm can exist. Suppose further that we
+have a polynomial-time reduction transforming instances of $A$ to instances of
+$B$. Let us suppose that $B$ has a polynomial time algorithm. Then, using the
+method covered above, we would have a way to solve problem $A$ in polynomial
+time, thus contradicting our initial assumption that there is no polynomial-
+time algorithm for $A$.
+
+For NP-Completeness, we cannot \textbf{know} that no polynomial-time solution
+exists for $A$, but we prove that problem $B$ is NP-Complete on the assumption
+that problem $A$ is also NP-Complete.
+
+\subsubsection{Encodings}
+In order to be able to converse in an encoding-independent fashion, we shall
+generally assume that problem instances are encoded in any reasonable, concise
+fashion, unless we specifically say otherwise. To be precise, we shall assume
+that the encoding of an integer is polynomially related to its binary
+representation, and that the encoding of a finite set is polynomially related
+to its encoding as a list of its elements, enclosed in braces and separated by
+commas.
+
+Henceforth, we shall generally assume that all problem instances are binary
+strings encoded using the standard encoding, unless we explicitly specify the
+contrary. We shall also typically neglect the distinction between abstract and
+concrete problems.
+
+TODO: Some actual proofs? Oh god NPC....

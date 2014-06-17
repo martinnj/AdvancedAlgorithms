@@ -1,0 +1,101 @@
+\section{Randomized Algorithms: Disposition}
+\begin{enumerate}
+	\item Randomized Quicksort
+	\item Las Vegas, Monte Carlo
+	\item 1-sided vs. 2-sided
+	\item Bounding running times
+	\item Markov \& Chebyshev's inequalities
+	\item Randomized Selection
+\end{enumerate}
+
+\section{Randomized Algorithms: Notes}
+
+\subsection{Randomized quicksort}
+In randomized quicksort, we wish to sort a set of numbers $S$ into ascending
+order. We first select a pivot $y$ from $S$ at random. Subsequently, each
+remaining element is compared to $y$ and put into $S_1$ if smaller, $S_2$
+otherwise. We recursively sort $S_1$ and $S_2$ in the same manner, and then
+output $S_1$ followed by $y$ followed by $S_2$.
+
+The running time of randomized quicksort is analyzed in terms of the number of
+comparisons made, as this dominates the running time of any (reasonably designed)
+algorithm. In particular, we wish to find the \textit{expected} number of comparisons
+made.
+
+For $1 \leq i \leq n$, let $S_{(i)}$ denote the element of rank $i$ (the $i$th smallest element)
+in the set $S$. Thus, $S_{(1)}$ denotes the smallest element and $S_{(n)}$ the largest. Define the
+random variable $X_{ij}$ to assume the value $1$ if $S_{(i)}$ and $S_{(j)}$ are compared in an execution
+and the value $0$ otherwise.
+
+The total number of comparisons is then $\sum_{i=1}^n \sum_{j>i} X_{ij}$. The expected number of comparisons is
+then $\mathbb{E}[\sum_{i=1}^n \sum_{j>i} X_{ij}] = \sum_{i=1}^n \sum_{j>i} \mathbb{E}[X_{ij}]$ by Linearity
+of Expectation.
+
+Let $p_{ij}$ denote the probability that $S_{(i)}$ and $S_{(j)}$ are compared in an execution. $X_{ij}$ can
+assume the values $0$ and $1$, so:
+
+\[
+	\mathbb{E}[X_{ij}] = p_{ij} \times 1 + (1 - p_{ij}) \times 0 = p_{ij}
+\]
+
+To facilitate determining $p_{ij}$, we view the execution of randomized quicksort as a binary search tree $T$, where
+each node is a distinct element of $S$. The root of the tree is the pivot $y$ we choose initially; the left sub-tree
+contains elements in $S_1$ and the right sub-tree elements in $S_2$. The structure of the sub-trees is determined
+recursively by subsequent runs of randomized quicksort. Importantly, the root of the tree ($y$) is compared to elements
+in $S_1$ and $S_2$, but elements in $S_1$ are never compared to elements in $S_2$. Thus, there is a comparison between
+an $S_{(i)}$ and $S_{(j)}$ only if one is the ancestor of the other.
+
+This makes $T$ a random binary search tree. We are for this analysis interested in the level-order traversal of the
+nodes of $T$. Such a traversal is a permutation $\pi$ obtained by visiting the nodes of $T$ in increasing order of
+the level numbers, and in a left-to-right order within each level; recall that the $i$th level of the tree is the set
+of all nodes at distance exactly $i$ from the root node.
+
+To compute $p_{ij}$ we make use of two observations:
+
+\begin{enumerate}
+	\item There is a comparison between $S_{(i)}$ and $S_{(j)}$ if and only if $S_{(i)}$ or $S_{(j)}$ occur
+	earlier in the permutation $\pi$ than any element $S_{(l)}$ such that $i < l < j$. Intuitively, they are
+	only compared if there is some pivot node $l$ that puts $i$ in $S_1$ and $j$ in $S_2$. To see this, let
+	$S_{(k)}$ be the earliest in $\pi$ from among all elements of rank between $i$ and $j$. If $k \notin \{i,j\}$
+	then $S_{(i)}$ will belong to the left sub-tree of $S_{(k)}$ while $S_{(j)}$ will belong to the right sub-tree
+	of $S_{(k)}$, implying that there is no comparison between $S_{(i)}$ and $S_{(j)}$. Conversely, if
+	$k \in \{i,j\}$ then it must be that there is a parent-child relationship between $S_{(i)}$ and $S_{(j)}$
+	implying that the two are compared.
+
+	\item Any of the elements $S_{(i)}, S_{(i+1)}, \hdots, S_{(j)}$ is equally likely to be chosen as the pivot and
+	hence appear first in $\pi$. Thus, the probability that the first element is either $S_{(i)}$ or $S_{(j)}$ is
+	exactly $2 / (j - i + 1)$.
+\end{enumerate}
+
+This establishes that $p_{ij} = 2/(j - i + 1)$. The expected number of comparisons is thus:
+%
+\begin{align*}
+	\sum_{i=1}^n \sum_{j>i} p_{ij} &= \sum_{i=1}^n \sum_{j>i} \frac{2}{j-i+1} \\
+	&\leq \sum_{i=1}^n \sum_{k=1}^{n-i+1} \frac{2}{k} \\
+	&\leq 2\sum_{i=1}^n \sum_{k=1}^{n} \frac{1}{k}
+\end{align*}
+%
+It follows that the expected number of comparisons is bounded by $2nH_n$, where $H_n$ is the \textit{nth}
+Harmonic number, defined by $H_n = \sum_{k=1}^n 1/k$. We know that $H_n \sim ln\ n + \Theta(1)$, making the
+expected running time of randomized quicksort $O(n\ lg\ n)$
+
+\subsection{Las Vegas \& Monte-Carlo}
+An algorithm that \textit{always} gives the correct solution, but whose running time is variable or perhaps even
+unbounded, is a \textbf{Las Vegas} algorithm. In contrast, an algorithm that may sometimes produce an incorrect
+solution (although we can often bound the probability of this), but we know will always terminate, is a
+\textbf{Monte-Carlo} algorithm. One useful property of a Monte-Carlo algorithm is that we can reduce the risk of
+failure to be arbitrarily small by running the experiment repeatedly with independent random choices each time.
+
+For decision problems (yes or no problems), there are two kinds of Monte-Carlo
+algorithms: those with one-sided error and those with two-sided error. A
+Monte-Carlo algorithm is said to have a two-sided error if there is a non-zero
+probability that it errs when it outputs either \texttt{YES} or \texttt{NO}. It is said
+to have one-sided error if the probability that it errs is zero for at least one of the
+possible outputs (\texttt{YES} / \texttt{NO}).
+
+By definition, a Las Vegas algorithm is a Monte-Carlo algorithm with error
+probability $0$. We say that a Las Vegas algorithm is an \textit{efficient}
+Las Vegas algorithm if on any input its expected running time is bounded by a
+polynomial function of the input size. Similarly, we say that a Monte-Carlo algorithm
+is an \textit{efficient} Monte-Carlo algorithm if on any input its worst-case running
+time is bounded by a polynomial function of the input size.
