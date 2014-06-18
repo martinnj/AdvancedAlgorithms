@@ -90,9 +90,75 @@ because slender triangles make for bad triangulations for terrain.
 
 
 
+\subsubsection{Delaunay Triangulation}
+
+\begin{codebox}
+\Procname{$\proc{DelaunayTriangulation}(P)$}
+\li Let $p_0$ be the lexicographically higest point og $P$ (largest $x$ and $y$ coordinate.)
+\li Let $p_{-1}$ and $p_{-2}$ be two points in $\mathbb{R}^2$ sufficiently far away such \\
+    that $P$ is contained in the triangle $p_0p_{-1}p_{-2}$
+\li Initialize $\mathcal{T}$ as the triangulation consisting of $p_0p_{-1}p_{-2}$.
+\li Compute a random permutation $p_1,p_2,...,p_n$ of $P$\textbackslash$\{p_0\}$.
+\li \For $r \gets 1$ \To $n$ \Do
+\li   \Comment{Insert $p_r$ into $\mathcal{T}$}
+\li   Find a triangle $p_ip_jp_k \in \mathcal{T}$ containing $p_r$
+\li   \If $p_r$ lies on the interior of the triangle \Do
+\li     Add edges from $p_r$ to the three vertices $p_ip_jp_k$, splitting it into three triangles.
+\li     $\proc{LegalizeEdge}(p_r, \overline{p_ip_j}, \mathcal{T})$
+\li     $\proc{LegalizeEdge}(p_r, \overline{p_jp_k}, \mathcal{T})$
+\li     $\proc{LegalizeEdge}(p_r, \overline{p_kp_i}, \mathcal{T})$
+\li   \Else \Comment{$p_r$ must lie on an edge, say $\overline{p_ip_j}$}
+\li     Add edges from $p_r$ to $p_k$ and to the third vertex $p_l$ of the other triangles that is \\
+        incident to $\overline{p_ip_j}$, thereby splitting the two triangles incident to \\
+        $\overline{p_ip_j}$ into four triangles.
+\li     $\proc{LegalizeEdge}(p_r, \overline{p_ip_l}, \mathcal{T})$
+\li     $\proc{LegalizeEdge}(p_r, \overline{p_lp_j}, \mathcal{T})$
+\li     $\proc{LegalizeEdge}(p_r, \overline{p_jp_k}, \mathcal{T})$
+\li     $\proc{LegalizeEdge}(p_r, \overline{p_kp_i}, \mathcal{T})$ \End \End
+\li Discard  $p_{-1}$ and $p_{-2}$ and all their incident edges from $\mathcal{T}$.
+\li \Return $\mathcal{T}$
+\end{codebox}
+
+\begin{codebox}
+\Procname{$\proc{LegalizeEdge}(p_r, \overline{p_ip_j}, \mathcal{T})$}
+\li \If $\overline{p_ip_j}$ is illegal \Do
+\li   Let $p_ip_jp_k$ be the truangle adjacent to $p_rp_ip_j$ along $\overline{p_ip_j}$.
+\li   Replace $\overline{p_ip_j}$ with $\overline{p_rp_k}$.
+\li   $\proc{LegalizeEdge}(p_r, \overline{p_ip_k}, \mathcal{T})$
+\li   $\proc{LegalizeEdge}(p_r, \overline{p_kp_j}, \mathcal{T})$
+\end{codebox}
+
+\graphicc{0.8}{img/compgeo2.png}{An example insertion of $p_r$ and a calls to
+  legalize edge.}{fig:compgeo2}
 
 
+\begin{description}
+\item[Lemma 9.10] Every new edge created in \texttt{DelaunayTriangulation} or in
+  \texttt{LegalizeEdge} during the insertion of $p_r$, is an edge of the
+  Delaunay graph of $\{p_{-2},p_{-1},p_0,...,p_r\}$
 
+\item[Proof] Consider first the edges $\overline{p_rp_i}$,
+  $\overline{p_rp_j}$,$\overline{p_rp_k}$ (and perhaps $\overline{p_rp_l}$)
+  created by splitting $p_ip_jp_k$ (and maybe $p_ip_jp_l$).  Since $p_ip_jp_k$
+  is a triangle in the Delaunay triangulation before the addition of $p_r$, the
+  circumcirle $C$ of $p_ip_jp_k$ contains no point $p_t$ with $t<r$ in its
+  interior.  By shrinking $C$ we can find a circle $C'$ through $p_i$ and $p_r$
+  contained in $C$.  Because $C' \subset C$ we know that $C'$ is empty. This
+  implies that $\overline{p_rp_i}$ is an edge of the Delaunay graph after the
+  addition of $p_r$. The same holds for $\overline{p_rp_j}$ and
+  $\overline{p_rp_k}$ (and $\overline{p_rp_l}$ if it exists).
 
+Now consider and edge flipped by \texttt{LegalizeEdge}. Such an edge flip always
+replaces an edge $\overline{p_ip_j}$ of a triangle $p_ip_jp_l$ by and edge
+$\overline{p_rp_l}$ incident to $p_r$.  Since $p_ip_jp_l$ was a Delaunay
+triangle before the addition of $p_r$ and becauseits circumcircle $C$ contains
+$p_r$ -- otherwise $\overline{p_ip_j}$ would not be illegal -- we can shrink the
+circumcircle to obtain an empty circle $C'$ with only $p_r$ and $p_l$ on its
+boundary. Hence $\overline{p_rp_l}$ is an edge of the Delaunay graph after the
+addition \qed
 
-\todo[inline]{Help me :( I have no idea what to do x)}
+\graphicc{0.4}{img/compgeo3.png}{Helpfull illustration for the proof. :)}{fig:compgeo3}
+
+\end{description}
+
+\todo[inline]{Look op the stuff on p. 202 of the comp geo paper, it's prett smart with pointers and trees.}
