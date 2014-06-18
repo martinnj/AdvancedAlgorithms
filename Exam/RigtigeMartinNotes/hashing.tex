@@ -101,3 +101,22 @@ For a hiven pair $(a,b) \in [p]^2$, define $(q,r) \in [p]^2$ by
   pair $(a,b)\in [p]^2$. We have $p^2$ pairs of each kind so the correspondence
   must be 1-1.\qed
 \end{description}
+
+Since $x \not\equiv y$, by Fact 2.1
+\begin{align}
+  r = q \Longleftrightarrow a = 0. \label{eq:h7}
+\end{align}
+Thus we pick $(a,b) \in [p]_+ \times [p]$, we get $r \not\equiv q$.
+
+Returning to the proof of (\ref{eq:h2}), we get a collision if and only if $q
+\equiv r (\mod m)$, and we know that $q \neq r$. For a given $r$ there is at
+most $\lceil p/m\rceil$ values of $q$ with $q \equiv r (\mod m)$; namely $r$,
+$r+m$, 4r+2m 4, ... Ruling out $q = r$ leaves us at most $\lceil p/m \rceil - 1$
+valus of $q$ for each of the $p$ values of $r$. Noting that
+\[
+  \lceil p/m\rceil - 1 \leq  \frac{(p+m-1)}{m}-1 = \frac{p-1}{m},
+\]
+we get that the total number of collision pairs $(q,r)$, $r \neq q$, is bounded
+by at most $p(p-1)/m$. Since each of the $(pp-1)$ pairs from $[p]_+ \times [p]$
+are equally likely, we conclide that the collision probability is bounded by
+$1/m$, as required for universality.
