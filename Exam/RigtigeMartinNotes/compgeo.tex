@@ -13,7 +13,7 @@ vertex set is $P$.
   convex hull of $P$. Then any triangulation of $P$ has $2n−2−k$ triangles and
   $3n−3−k$ edges.
 
-\item[Proof] Let $\mathcal{T}$ be a trinagulation of $P$, and let $m$ denote the
+\item[Proof] Let $\mathcal{T}$ be a triangulation of $P$, and let $m$ denote the
   number of triangles of $\mathcal{T}$.  Note that the number of faces of the
   triangulation, which we denote by $n_f$, is $m+1$. Every triangle has three
   edges, and the unbounded face has $k$ edges.  Furthermore, every edge is
@@ -22,8 +22,77 @@ vertex set is $P$.
   \[
     n-n_e+n_f = 2
   \]
-  Plugging the values for $n_e$ and $n_f$ into the fomula, we get $m=2n-2-k$,
+  Plugging the values for $n_e$ and $n_f$ into the formula, we get $m=2n-2-k$,
   which in turn implies $n_e = 3n-3-k$. \qed
 \end{description}
+
+
+Let $\mathcal{T}$ be a triangulation of $P$, and suppose it has $m$
+triangles. Consider the $3m$ angles of $\mathcal{T}$, sorted by increasing
+value.  Let $\alpha_1, \alpha_2, ..., \alpha_{3m}$ be the resulting sequence of
+angles. We call $A(\mathcal{T}) = (\alpha_1, \alpha_2, ..., \alpha_{3m})$ the
+angle vector of $\mathcal{T}$.  Let $\mathcal{T}'$ be another triangulation of
+the same point set $P$. We say that $A(\mathcal{T}) > A(\mathcal{T}')$ if
+$A(\mathcal{T})$ if there exists and index $i$ with $1 \leq i \leq 3m$ such that
+\[
+\alpha_j = \alpha_j' \text{ for all } j < i, \text{\quad and \quad} \alpha_i >
+\alpha_i'
+\]
+A triangulation $\mathcal{T}$ is called angle-optimal if $A(\mathcal{T}) \geq
+A(\mathcal{T}')$ for all triangulations $\mathcal{T}'$ of $P$.  These are good
+because slender triangles make for bad triangulations for terrain.
+
+\textit{Denote the smaller angle defined by three points $p,q,r,$ as
+  $\measuredangle pqr$.}
+
+\begin{description}
+\item[Thales Theorem] Let $C$be a circle, $\ell$ be a line intersecting $C$ in
+  points $a$ and $b$. Let $p, q, r$ and $s$ be points lying on the same side fo
+  $\ell$. Suppose that $p$ and $q$ lie on $C$, that $r$ lies inside $C$ nad that
+  $s$ lies outside $C$.  Then
+  \[
+    \measuredangle arb > \measuredangle apb = \measuredangle aqb > \measuredangle asb.
+  \]
+  \graphicc{0.4}{img/compgeo0.png}{The circle $C$ and the points drwan for
+    clarity.}{fig:compgeo0}
+
+\item[Illegal edge] Consider an edge $e = \overline{p_ip_j}$ of a triangulation
+  $\mathcal{T}$. If $e$ is not on the unbounded face, it is incident on two
+  triangles, $p_ip_jp_k$ and $p_ip_jp_l$. If these triangles form a convex
+  quadrilateral, we can obtain a new triangulation $\mathcal{T}'$ by flipping
+  the edge. This is done by removing $\overline{p_ip_j}$ and adding
+  $\overline{p_kp_l}$. This changes the anglevectors, but only the entries
+  associated with the two triangles.  An edgeis considered illegal if flipping
+  it increase $A(\mathcal{T})$ such that
+  \[
+    \underset{1\leq i \leq 6}{\min} \alpha_i < \underset{1\leq i\leq 6}{\min} \alpha_i'.
+  \]
+  An edge is illegal if we can locally increase the smallest angle simply by flipping it.
+
+\item[Observation 9.3] Let $\mathcal{T}$ be a triangulation with an illegal edge
+  $e$. Let $\mathcal{T}'$ be the triangulation obtained from $\mathcal{T}$ by
+  flipping $e$. Then $A(\mathcal{T}) > A(\mathcal{T}')$.
+
+\item[Lemma 9.4] Let edge $\overline{p_ip_j}$ be incident on to triangles
+  $p_ip_jp_k$ and $p_ip_jp_k$, and let $C$ be the circle through $p_i$, $p_j$
+  and $p_k$. The dege $\overline{p_ip_j}$ is illegal iff. the point $p_l$ lies
+  in the interior of $C$.  Furthermore, if the points $p_i, p_j, p_k$ and $p_l$
+  form a convex quadrilateral and do not lie on a common circle, then exactly on
+  of $\overline{p_ip_j}$ and $\overline{p_kp_l}$ is an illegal edge.
+  \graphicc{0.4}{img/compgeo1.png}{Visualization of Lemma 9.4.}{fig:compgeo1}
+
+\item[Legal Triangulation] A legal triangulation is simple a triangulation that
+  contain no illegal edges. We note that any legal triangulation must also be an
+  angle-optimal triangulation. Computing a legal triangulation is simple given
+  any triangulation.  simply flip illegal edges until non remain. This is very
+  slow though.
+\end{description}
+
+
+
+
+
+
+
 
 \todo[inline]{Help me :( I have no idea what to do x)}

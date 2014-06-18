@@ -120,3 +120,16 @@ we get that the total number of collision pairs $(q,r)$, $r \neq q$, is bounded
 by at most $p(p-1)/m$. Since each of the $(pp-1)$ pairs from $[p]_+ \times [p]$
 are equally likely, we conclide that the collision probability is bounded by
 $1/m$, as required for universality.
+
+
+\subsection{Strong Universality}
+For $h : [u] \rightarrow [m]$ we consider pair-wise events of the form for given
+distinct keys $x,y \in [u]$ and possibly non-distinct hash values $q,r \in [m]$,
+we have $h(x) = q$ and $h(y) = r$. We say a random hash function $h : [u]
+\rightarrow [m]$ is storngly universal if the probability of every pair-wise
+event is $1/m^2$. If $h$ is Strongly Universal it is also universal since:
+\[
+  \Pr[h(x) = h(y)] = \sum_{q\in [m]} \Pr[h(x) = q \land h(y) = q] = m/m^2  = 1/m.
+\]
+
+\todo[inline]{Continue from page 6 of the hashing paper.}
