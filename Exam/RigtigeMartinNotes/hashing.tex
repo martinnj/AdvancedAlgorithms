@@ -1,0 +1,27 @@
+\subsection{Hashing}
+
+\subsubsection{Universal Hashing}
+We wish to generate a function $h : U \rightarrow [m]$ from a key universe $U$
+to a set of hash values $[m] = \{ 0, ..., m-1 \}$.  We want $h$ to be universal,
+so that for any given distinct keys $x,y \in U$, when $h$ is picked at random
+(independant from $x$ and $y$), we have a low collision probability:
+\[
+  \underset{h}{\Pr}[h(x) = h(y)] \leq 1/m.
+\]
+For many applications it suffices for some constant $c = O(1)$, we have
+\[
+  \underset{h}{\Pr}[h(x) = h(y)] \leq c/m.
+\]
+Then $h$ is called $c$-universal.
+
+\subsubsection{Simple Hash Tables w. Chaining}
+We have a set $S \subseteq U$ of keys that we wish to store and be able to retrieve in expected constant time.
+Let $n = |S|$ and $m \geq n$. We then pick a universal hash function $h : U \rightarrow [m]$, and create an array $L$ og $m$ lists/chains so that for $i\in[m]$,
+$L[i]$ is the list of keys that has  to $i$.
+To see if a key $x\in U$ is in $S$, we check if $x$ is in the list $L[h(x)]$. This takes time propotional to $1+|L[h(x)]|$.
+We add one for the constant time to look up the list, and then add the number of elements in the list itself since we need to walk through them.
+
+If $z \notin S$ and $h$ is universal, then the expected number of elements in $L[h(x)]$ is
+\[
+  E
+\]
