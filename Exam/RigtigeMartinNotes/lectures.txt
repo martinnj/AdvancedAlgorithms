@@ -1,0 +1,24 @@
+22/4: Max flow (CWN), CLRS Sections 26.1 - 26.2
+24/4: Max flow (CWN), CLRS Sections 26.2 - 26.3
+
+29/4: Fibonacci heaps (CWN), CLRS Chapter 19
+
+6/5: NP-completeness (CWN), CLRS Chapter 34 (first half)
+8/5: NP-completeness (CWN), CLRS Chapter 34 (second half)
+(without the full details of the reduction from vertex-cover to Hamiltonian Path)
+
+13/5: Randomized algorithms (MT) - Motwani & Raghavan (see course material).
+Chapter 1, beginning plus sections 1.1-2. Chapter 3, Sections 3.2-3.
+
+15/5: Hashing (MT) - "Fast hashing" by Thorup (see course material).
+Sections 1, 2, and part of 3, up to and including Section 3.3. Proof in Section 3.3 only done
+cursory as it is similar to that in Section 2.
+
+20/5: Exact exponential algorithms (Noy Rotbart) - Fomin & Kratsch, chapter 1.
+Fixed-parameter tractable problems -  Selected notes from invitation to fixed parameter algorithms.
+
+22/5: Approximation algorithms (MT) - Chapter 35 (first half: 35.1,2,3).
+27/5: Approximation algorithms (MT) - Chapter 35 (second half)
+
+3/6: Computational geometry (PW) - Chapter 9 (except 9.4 and 9.5) from the book "Computational Geometry: Algorithms and Applications", third edition. The chapter can be found under "Course Material -> Delaunay triangulation reading material"
+10/6: Linear programming and optimization (PW) - TBA
