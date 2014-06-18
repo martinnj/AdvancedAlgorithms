@@ -15,13 +15,89 @@ For many applications it suffices for some constant $c = O(1)$, we have
 Then $h$ is called $c$-universal.
 
 \subsubsection{Simple Hash Tables w. Chaining}
-We have a set $S \subseteq U$ of keys that we wish to store and be able to retrieve in expected constant time.
-Let $n = |S|$ and $m \geq n$. We then pick a universal hash function $h : U \rightarrow [m]$, and create an array $L$ og $m$ lists/chains so that for $i\in[m]$,
-$L[i]$ is the list of keys that has  to $i$.
-To see if a key $x\in U$ is in $S$, we check if $x$ is in the list $L[h(x)]$. This takes time propotional to $1+|L[h(x)]|$.
-We add one for the constant time to look up the list, and then add the number of elements in the list itself since we need to walk through them.
+We have a set $S \subseteq U$ of keys that we wish to store and be able to
+retrieve in expected constant time.  Let $n = |S|$ and $m \geq n$. We then pick
+a universal hash function $h : U \rightarrow [m]$, and create an array $L$ og
+$m$ lists/chains so that for $i\in[m]$, $L[i]$ is the list of keys that has to
+$i$.  To see if a key $x\in U$ is in $S$, we check if $x$ is in the list
+$L[h(x)]$. This takes time propotional to $1+|L[h(x)]|$.  We add one for the
+constant time to look up the list, and then add the number of elements in the
+list itself since we need to walk through them.
 
-If $z \notin S$ and $h$ is universal, then the expected number of elements in $L[h(x)]$ is
+If $x \notin S$ and $h$ is universal, then the expected number of elements in
+$L[h(x)]$ is
 \[
-  E
+  E[|L[h(x)]|] = \sum_{y \in S} \Pr[h(y) = h(x)] = n/m \leq 1
 \]
+
+\subsubsection{Signature Hashes}
+Another application is to assign a unique signature $s(x)$ to each key. For this
+we want $s(x) \neq s(y)$ for all distinct keys $x,y \in S$.  We pick a universal
+hash function $s: U \rightarrow [n^3]$. The probability of collision is
+calculated assign
+\[
+  \underset{s}{\Pr}[\exists\{x,y\}\subseteq S : s(x) = s(y)] \leq \sum_{y\in S}
+  \underset{s}{\Pr}[s(x) = s(y)] = \binom{n}{2}/n^3 < 1/(2n)
+\]
+The first inequality is a ``union bound'', the probability of that at least one
+of multiple events happen is at most the sum of their probabilities.
+
+\subsubsection{Multiply-mod-prime}
+Multiply-mod-prime is an implementation of a hashing function, note that if $m
+\geq u$ we can let $h$ be the identity function, since we won't need randomness
+to avoid collision, so we assyme $m < u$.
+
+Chose a prime number $p \geq u$. Uniformly random pick $a \in [p]_+ = \{1, ...,
+p-1\}$ and $b \in [p] = \{ 0, ..., p-1\}$, and define $h_{a,b}(x) : [u]
+\rightarrow [m]$ as
+\begin{align}
+  h_{a,b}(x) = ((ax+b) mod p) mod m) \label{eq:h1}
+\end{align}
+Given distinct $x,y \in [u] \subseteq [p]$, we argue that for random $a$ and
+$b$, the following is true,
+\begin{align}
+  \underset{a\in [p]_+,b\in [p]}{\Pr}[h_{a,b}(x) = h_{a,b}(y)] \leq
+  1/m. \label{eq:h2}
+\end{align}
+For most of the proof we consider all $a \in [p]$, including $a=0$. Ruling out
+$a=0$, will be used in the end to get a tight bound from (\ref{eq:h2}).
+
+\begin{description}
+\item[Fact 2.1] If $p$ is prime and $\alpha, \beta \in [p]_+$ then $\alpha \beta
+  \not\equiv 0$ (mod $p$).
+\end{description}
+
+For a hiven pair $(a,b) \in [p]^2$, define $(q,r) \in [p]^2$ by
+\begin{align}
+  ax+b\mod p &= q \label{eq:h3} \\
+  ay+b\mod p &= r \label{eq:h4}
+\end{align}
+
+\begin{description}
+\item[Lemma 2.2] Equations (\ref{eq:h3}) and (\ref{eq:h4}) define a 1-1
+  correspondence between pairs $(a,b)\in [p]^2$ and pairs $(r,q)\in[p]^2$.
+\item[Proof] For a given pair $(q,r) \in [p]^2$, we will show that there is at
+  most one pair $(a,b) \in [p]^2$, satisfying (\ref{eq:h3}) and (\ref{eq:h4}).
+  Subtracting (\ref{eq:h3}) from (\ref{eq:h4}) modulo $p$, we get
+  \begin{align}
+    (ay+b) - (ax+b) \equiv a(y-x) \equiv q-r \quad (\mod p), \label{eq:h5}
+  \end{align}
+  We claim that there is at most one $a$ satisfying (\ref{eq:h5}). Suppose that
+  there is another $a'$ satisfying (\ref{eq:h5}).  Subtracting the equations
+  with $a$ and $a'$, we get
+  \begin{align*}
+    (a-a')(y-x) \equiv 0 (\mod p),
+  \end{align*}
+  but since $a-a'$ and $y-x$ are both non-zero modulo $p$, this contradicts Fact
+  2.1. There is thus at most one $a$ satisfying (\ref{eq:h5}) for given
+  $(q,r)$. With this $a$, we need $b$ to satisfy (\ref{eq:h3}), and this
+  determines $b$ as
+  \begin{align}
+    b = ax-q\mod p. \label{eq:h6}
+  \end{align}
+  Thus, satisfying (\ref{eq:h3}) and (\ref{eq:h4}), each pair $(q,r)\in [p]^2$
+  thus corresponds to at most one pair $(a,b)\in [p]^2$. On the other hand,
+  (\ref{eq:h3}) and (\ref{eq:h4}) define a unique pair $(r,q)\in[p]^2$ for each
+  pair $(a,b)\in [p]^2$. We have $p^2$ pairs of each kind so the correspondence
+  must be 1-1.\qed
+\end{description}
