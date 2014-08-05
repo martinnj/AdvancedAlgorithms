@@ -60,4 +60,73 @@ be wrong on both answers.
   $1/t^2$. \qed
 \end{description}
 
-\todo[inline]{Write about lazy select or randomized quicksort}
+
+\subsubsection{Randomized Quicksort}
+\begin{description}
+\item[Input:] A set of numbers, $S$.
+\item[Output:] The elements of $S$ sorted in increasing order.
+\item[1.] Choose an element $y$ uniformly at random from $S$: Every element in
+  $S$ have equal probability of being chosen.
+\item[2.] By comparing each element of $S$ with y, determine the set $S_1$ of
+  elements smaller than $y$ and the set $S_2$ of elements larger than $y$.
+\item[3.] Recursively sort $S_1$ and $S_2$. Output the sorted version of $S_1$
+  followed by $y$, then the sorted version of $S_2$.
+\end{description}
+
+To find the running time of the algorithm we need to find the expected number of
+comparisons done in step 2. For $1 \leq i \leq n$, let $S_{(i)}$ denote the
+element of rank $i$ (the $i$th smallest element) in the set $S$.  Thus $S_{(1)}$
+denotes the smallest element of $S$, and $S_{(n)}$ denotes the largest.  Define
+a random variable $X_{ij}$ to assume the value 1 if $S_{(i)}$ and $S_{(j)}$ are
+compared in an execution, and the value 0 otherwise.  Thus, $X_{(ij)}$ is a
+count of comparisons between $S_{(i)}$ and $S_{(j)}$, and so the total number of
+comparisons is $\sum^n_{i=1}\sum_{j>i} X_{ij}$. We want the expected number of
+comparisons which is:
+\begin{align}
+\mathbb{E}[\sum^n_{i=1}\sum_{j>i} X_{ij}] = \sum^n_{i=1}\sum_{j>i}
+\mathbb{E}[X_{ij}] \label{eq:rand1.2}
+\end{align}
+Let $p_{ij}$ denote the probability that $S_{(i)}$ and $S_{(j)}$ are compared in
+an execution.  Since $X_{ij}$ only assumes the values 0 and 1,
+\begin{align}
+  \mathbb{E}[X_{ij}] = p_{ij} \times 1 + (1 - p_{ij}) \times 0 = p_{ij} \label{eq:rand1.3}
+\end{align}
+
+To faciltiate the determination of $p_{ij}$, we view the execution of the
+algorithm as a binary tree $T$, each node is labeled as an element of $S$, with
+$y$ as the root, and the left subtree being $S_1$ and the right subtree being
+$S_2$.  The root $y$ is compared to the elements in the two sub-trees, but no
+comparison is performed between elements in different subtrees.  Thus there is a
+comparison between $S_{(i)}$ and $S_{(j)}$ iff one of the elements is an
+ancestor of the other.
+
+The in-order traversal of $T$ will visit the elements of $S$ in sorted order,
+and that is the output of the algorithm.
+
+The level-order traversal (left to right then one level down and repeat) yields
+a permutation $\pi$.  To compute $p_{ij}$ we make two observations:
+\begin{enumerate*}
+\item There is a comparison between $S_{(i)}$ and $S_{(j)}$ iff $S_{(i)}$ or
+  $S_{(j)}$ occurs earlier in the permutation $\pi$ than any element
+  $S_{(\ell)}$ such that $i < \ell < j$. To seee this let $S_{(k)}$ be the
+  earliest in $\pi$ from among all elements of rank between $i$ and $j$.  If $k
+  \notin \{ i,j \}$, then $S_{(i)}$ wil lbelong to the left sub-tree of
+  $S_{(k)}$ while $S_{(j)}$ will belong to the right. implying that there is no
+  comparison between the two.  Conversely if $k \in \{i,j\}$ , there is an
+  ancesto-descendant relationship between $S_{(i)}$ and $S_{(j)}$, implying
+  comparisons.
+
+\item Any of the elements $S_{(i)}$, $S_{(ji+1}$, ..., $S_{(j)}$ is equally
+  likely to be the first element chosen as partition element, and hence appear
+  first in $\pi$.  Thus the probability that this first element is either
+  $S_{(i)}$ or $S_{(j)}$ is exactly $\frac{2}{j-i+1}$.
+\end{enumerate*}
+
+We have established that $p_{ij} = \frac{2}{j-i+1}$ and by equations \ref{eq:rand1.2} and \ref{eq:rand1.3} the expected number of comparisons is given by:
+\begin{align*}
+\sum^n_{i=1} \sum_{j>i} p_{ij} &= \sum^n_{i=1} \sum_{j>i} \frac{2}{j-i+1} \\
+ &\leq \sum^n_{i=1} \sum^{n-i+1}_{k=1} \frac{2}{k} \\
+ &\leq 2\sum^n_{i=1} \sum^{n}_{k=1} \frac{1}{k}
+\end{align*}
+
+It follow that the expected number of comparisons is bounded above by $2nH_n$, where $H_n$ is the n'th harmonic number, defined by: $H_n = \sum^n_{k=1} 1/k$.
