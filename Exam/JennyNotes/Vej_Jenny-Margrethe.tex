@@ -333,10 +333,56 @@ If $f$ is a flow in $G$ and $f'$ is a flow in the corresponding residual network
   \end{cases}
 \end{align}
 
+\newpage
 \textbf{\textit{Lemma 26.1}}\\
 Let $G = (V, E)$ be a flow network with source $s$ and sink $t$, and let $f$ be a flow in $G$. Let $G_f$ be the residual network of $G$ induced by $f$, and let $f'$ be a flow in $G_f$. Then the function $f \uparrow f'$ defined in the function (5) is a flow in $G$ with value $|$$f \uparrow f'$$|$ $=$ $|$$f$$|$ + $|$$f'$$|$.\\
 
-\textbf{\textit{Jeg aner ikke, om det er vigtigt med beviset for lemmaet... Find ud af det inden eksamen! Uanset hvad, er det nok godt at kunne det}}
+\textbf{\textit{Prove for Lemma 26.1}}\\
+First we check that $f \uparrow f'$ obeys capacity constraints for each edge in E and flow conservation for edges in $V-\{s, t\}$. Let us start with capacity constrains - we observe that if $(u, v) \in E$ then $c_f(v, u) = f(u, v)$. Therefore, we have $f'(v, u) \leq c_f(v, u) = f(u, v)$, and hence 
+\begin{align*}
+(f \uparrow f')(u, v) &= f(u, v) + f'(u, v) - f'(v, u) \qquad \text{(by equation (5))}\\
+&\geq f(u, v) + f'(u, v) - f'(u, v) \qquad \text{(because} f'(v, u) \leq f(u, v))\\
+&= f'(u, v)\\
+&\geq 0 
+\end{align*}
+
+In addition we have, 
+\begin{align*}
+(f \uparrow f')(u, v) &= f(u, v) + f'(u, v) - f'(v, u) \qquad \text{(by equation (5))}\\
+&\leq f(u, v) + f'(u, v) \qquad \text{(because flows are nonnegative)}\\
+&\leq f(u, v) + c_f(u, v) \qquad \text{(capacity constraint)}\\
+&= f(u, v) + c(u, v) - f(u, v) \qquad \text{(definition of } c_f)\\
+&= c(u, v) 
+\end{align*}
+
+For flow conservation, because both $f$ and $f'$ obey flow conservation, we have that for all $u \in V - \{s, t\}$,
+\begin{align*}
+\sum_{v \in V} (f \uparrow f')(u, v) &= \sum_{v \in V} (f(u, v) + f'(u, v) - f'(v, u))\\
+&= \sum_{v \in V} f(u, v) + \sum_{v \in V} f'(u, v) - \sum_{v \in V} f'(v, u)\\
+&= \sum_{v \in V} f(v, u) + \sum_{v \in V} f'(v, u) - \sum_{v \in V} f'(u, v)\\
+&= \sum_{v \in V} (f(v, u) + f'(v, u) - f'(u, v))\\
+&= \sum_{v \in V} (f \uparrow f')(v, u)
+\end{align*}
+where the third line follows from the second by flow conservation. \\
+
+Finally, we compute the value of $f \uparrow f'$. We remember that for any vertex $v \in V$ we can have either $(s, v)$ or $(v, s)$ but never both, because we disallow antiparallel edges in $G$. We define two sets: $V_1 = \{v : (s, v) \in E\}$ and $V_2 = \{v : (v, s) \in E\}$. Clearly $V_1$ $\cup$ $V_2 \subseteq V$ and $V_1 \cap V_2 = \emptyset$. So let us compute
+\begin{align*}
+| f \uparrow f' | &= \sum_{v \in V} (f \uparrow f')(s, v) - \sum_{v \in V} (f \uparrow f')(v, s)\\
+&= \sum_{v \in V_1} (f \uparrow f') (s, v) - \sum_{v \in V_2} (f \uparrow f') (v, s)
+\end{align*}
+where the second line follows because $(f \uparrow f')(w, x)$ is $0$ if $(w, x) \notin E$. We now apply the definition of $f \uparrow f'$ to this, and then reorder and group terms to obtain
+\begin{align*}
+|f \uparrow f'| &= \sum_{v \in V_1}(f(s, v) - f'(v, s)) - \sum_{v \in V_2} (f(v, s) + f'(v, s))\\
+&= \sum_{v \in V_1} f(s, v) + \sum_{v \in V_1} f'(s, v) - \sum_{v \in V_1} f'(v, s) - \sum_{v \in V_2} f(v, s) - \sum_{v \in V_2} f'(v, s) - \sum_{v \in V_2} f'(s, v)\\
+&= \sum_{v \in V_1} f(s, v) - \sum_{v \in V_2} f(v, s) + \sum_{v \in V_1} f'(s, v) + \sum_{v \in V_2} f'(s, v) - \sum_{v \in V_1} f'(v, s) - \sum_{v \in V_2} f'(v, s)\\
+&= \sum_{v \in V_1} f(s, v) - \sum_{v \in V_2} f(v, s) + \sum_{v \in V_1 \cup V_2} f'(s, v) - \sum_{v \in V_1 \cup V_2} f'(v, s)
+\end{align*}
+In the last line we can extend all four summations to sum over $V$, since each additional term has value $0$. Therefore we end up with 
+\begin{align*}
+|f \uparrow f'| &= \sum_{v \in V}(f(s, v) - \sum_{v \in V}(f(v, s) + \sum_{v \in V}(f'(s, v) - \sum_{v \in V}(f'(v, s)\\
+&= |f| + |f'|
+\end{align*}
+
 %
 \subsubsection{Augmenting paths}
 \subsubsection{Cuts of Flow Networks}
