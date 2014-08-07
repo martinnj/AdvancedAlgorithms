@@ -17,8 +17,8 @@ Then $h$ is called $c$-universal.
 \subsubsection{Simple Hash Tables w. Chaining}
 We have a set $S \subseteq U$ of keys that we wish to store and be able to
 retrieve in expected constant time.  Let $n = |S|$ and $m \geq n$. We then pick
-a universal hash function $h : U \rightarrow [m]$, and create an array $L$ og
-$m$ lists/chains so that for $i\in[m]$, $L[i]$ is the list of keys that has to
+a universal hash function $h : U \rightarrow [m]$, and create an array $L$ of
+$m$ lists/chains so that for $i\in[m]$, $L[i]$ is the list of keys that hash to
 $i$.  To see if a key $x\in U$ is in $S$, we check if $x$ is in the list
 $L[h(x)]$. This takes time propotional to $1+|L[h(x)]|$.  We add one for the
 constant time to look up the list, and then add the number of elements in the
@@ -34,7 +34,7 @@ $L[h(x)]$ is
 Another application is to assign a unique signature $s(x)$ to each key. For this
 we want $s(x) \neq s(y)$ for all distinct keys $x,y \in S$.  We pick a universal
 hash function $s: U \rightarrow [n^3]$. The probability of collision is
-calculated assign
+calculated as
 \[
   \underset{s}{\Pr}[\exists\{x,y\}\subseteq S : s(x) = s(y)] \leq \sum_{y\in S}
   \underset{s}{\Pr}[s(x) = s(y)] = \binom{n}{2}/n^3 < 1/(2n)
@@ -67,7 +67,7 @@ $a=0$, will be used in the end to get a tight bound from (\ref{eq:h2}).
   \not\equiv 0$ (mod $p$).
 \end{description}
 
-For a hiven pair $(a,b) \in [p]^2$, define $(q,r) \in [p]^2$ by
+For a given pair $(a,b) \in [p]^2$, define $(q,r) \in [p]^2$ by
 \begin{align}
   ax+b\mod p &= q \label{eq:h3} \\
   ay+b\mod p &= r \label{eq:h4}
@@ -122,7 +122,7 @@ are equally likely, we conclide that the collision probability is bounded by
 $1/m$, as required for universality.
 
 
-\subsection{Strong Universality}
+\subsubsection{Strong Universality}
 For $h : [u] \rightarrow [m]$ we consider pair-wise events of the form for given
 distinct keys $x,y \in [u]$ and possibly non-distinct hash values $q,r \in [m]$,
 we have $h(x) = q$ and $h(y) = r$. We say a random hash function $h : [u]
