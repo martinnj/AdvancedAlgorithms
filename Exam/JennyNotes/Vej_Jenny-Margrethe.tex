@@ -1,9 +1,9 @@
 \RequirePackage[l2tabu, orthodox]{nag}
-\documentclass[12pt,a4paper]{article}
+\documentclass[12pt]{article}
 \usepackage[utf8]{inputenc} 
 \usepackage[T1]{fontenc}
 \usepackage[english]{babel} 
-\usepackage{geometry}
+\usepackage[margin=2.5cm]{geometry}
 \geometry{a4paper}
 \usepackage{longtable}
 
@@ -44,6 +44,8 @@
 
 \setlength\parindent{0pt} % Makes \noindent standard
 \usepackage{graphicx} 
+\usepackage{caption}
+\usepackage{subcaption}
 \usepackage{float} 
 \usepackage{wrapfig} % Allows in-line images if needed
 \usepackage{hyperref}
@@ -77,6 +79,24 @@
 
 \linespread{1.2} 
 \graphicspath{{./figures/}} 
+
+% fancy drawings
+\usepackage{pgf}
+\usepackage{epigraph}
+
+% \epigraphsize{\small}% Default
+\setlength\epigraphwidth{8cm}
+\setlength\epigraphrule{0pt}
+
+\usepackage{etoolbox}
+
+\makeatletter
+\patchcmd{\epigraph}{\@epitext{#1}}{\itshape\@epitext{#1}}{}{}
+\makeatother
+
+%\usepackage{boxproof}
+%\usepackage{nomencl}
+\usepackage{natbib}
 
 \newcommand{\fasto}{\textsc{Fasto} }
 \newcommand{\mips}{\textsc{Mips} }
@@ -127,8 +147,8 @@ Wuuuh, Max Flow!! You Rock! Kick some ass!
 \subsubsection{Flow Networks and Flow}
 Let $G = (V, E)$ be a flow network with a capacity function $c$. Let $s$ be the source of the network, and let $t$ be the sink. A flow in $G$ is a real-valued function $f : V \times V \rightarrow \mathbb{R}$ that satisfies the following two properties:\\
 
-\textbf{Capacity Constraints:} For all $u, v \in V$, we require $0 \leq f(u, v) \leq c(u, v)$\\
-\textbf{Flow Conservation:} For all $u \in V - \{s, t\}$, we require
+\textbf{Capacity Constraints:} For all $u, v \in V$, we require $0 \leq f(u, v)\footnote{We call the nonnegative quantity $f(u, v)$ the flow from vertex $u$ to vertex $v$} \leq c(u, v)\footnote{Capacity Function $c$}$\\
+\textbf{Flow Conservation\footnote{Vertices are conduit junctions, and other than the source and sink, material flows through the vertices without collecting in them. In other words, the rate at which material enters a vertex must equal the rate at which it leaves the vertex. This property is called Flow Conservation}:} For all $u \in V - \{s, t\}$, we require
 %%
 \begin{align}
 \sum_{v \in V} f(v, u) = \sum_{v \in V} f(u, v)
@@ -137,13 +157,15 @@ Let $G = (V, E)$ be a flow network with a capacity function $c$. Let $s$ be the 
 When $(u, v) \notin E$, there can be no flow from $u$ to $v$, and $f(u, v) = 0$. The value $|f|$ of a flow $f$ is defined as 
 %%
 \begin{align}
-|f| = \sum_{v \in V} f(s, u) - \sum_{v \in V} f(v, s)
+|f| = \sum_{v \in V} f(s, u) - \sum_{v \in V} f(v, s),
 \end{align}
+
+Typically, a flow network will not have any edges into the source, and the flow into the source, given by the summation $\sum_{v \in V} f(v, s)$, will be 0.
 %%
 \subsubsection{An example of a flow}
-For example the transporting example from the book. A firm wants to transport goods from 1 place to anther, using a third part driver. \\
+For example the transporting example from the book [\cite{CLRS}, p. 710]. A firm wants to transport goods from one place to anther, using a third part driver. \\
 
-Guessing this particular section is not thaaaaat important for the exam. ;o)
+Guessing this particular section is not thaaaaat important for the exam. $\ddot\smile$
 
 \subsubsection{Modelling problems with antiparallel edges}
 Antiparallel edges is 2 edges going to/from $(v, u)$ - so 2 edges between 2 vertices but with opposite directions. To come around that, we transform our network into an equivalent one containing no antiparallel edges (adding an extra vertex for that, so we can split one of the edges). The resulting network is equivalent to the original one, due to the fact, that you do not add or subtract anything from the capacity. It is the same:\\
@@ -177,7 +199,7 @@ Antiparallel edges is 2 edges going to/from $(v, u)$ - so 2 edges between 2 vert
 \end{minipage}
 
 \subsubsection{Networks with multiple sources and sinks}
-A maximum flow problem may have several sources and sinks, rather than just one of each. To fix that, we just add a supersource and a supersink with infinity capacity from $s$ to each of the multiple sources.
+A maximum flow problem may have several sources and sinks, rather than just one of each. To fix that, we just add a supersource and a supersink with infinity capacity from $s$ to each of the multiple sources (and to $t$).
 %%
 \subsection{The Ford-Fulkerson Method}
 
@@ -195,15 +217,127 @@ A maximum flow problem may have several sources and sinks, rather than just one 
 \subsubsection{Residual Network}
 Suppose that we have a flow network $G = (V, E)$ with source $s$ and sink $t$. Let $f$ be a flow in $G$, and consider a pair of vertices $u, v \in V$. We define the residual capacity $c_f(u, v)$ by
 
-\[
+\begin{align}
  c_f(u,v) =
   \begin{cases}
   	c(u,v) - f(u,v) & \text{if } (u,v) \in E, \\
   	f(v,u) & \text{if } (v,u) \in E, \\
   	0 & \text{otherwise}
   \end{cases}
-\]
+\end{align}
 
+As an example of equation (3), if $c(u, v) = 16$ and $f(u, v) = 11$, then we can increase $f(u, v)$ by up to $c_f(u, v) = 5$ units before we exceed the capacity constraint on edge $(u, v)$ We also wish to allow an algorithm to return up to 11 units of flow from $v$ to $u$, and hence $c_f(v, u) = 11$\\
+
+Given a flow network $G = (V, E)$ and a flow $f$, the residual network of $G$ induced by $f$ is $G_f = (V, E_f)$, where
+\begin{align}
+	E_f = \{(u, v) \in V \cdot V : c_f(u, v) > 0\}
+\end{align} 
+
+Example:\\
+\begin{minipage}{.5\textwidth}
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick,font=\scriptsize]
+  \tikzstyle{every state}=[fill=none,text=black]
+
+  \node[state] (s) {$s$};
+  \node[state] (v1) [above right of=s] {$v_1$};
+  \node[state] (v2) [below right of=s] {$v_2$};
+  \node[state] (v3) [right of=v1] {$v_3$};
+  \node[state] (v4) [right of=v2] {$v_4$};
+  \node[state] (t) [below right of=v3] {$t$};
+  
+  \path 	(s)	edge node {$16$} (v1)
+  			edge node {$13$} (v2)
+		(v1)	edge node {$12$} (v3)
+		(v2)	edge node {$4$} (v1)
+			edge node {$14$} (v4)
+		(v3)	edge node {$9$} (v2)
+			edge node {$20$} (t)
+		(v4)	edge node {$7$} (v3)
+			edge node {$4$} (t);
+\end{tikzpicture} 
+\caption{\footnotesize{Flow Network $G$}}
+\end{figure}
+\end{minipage}%
+\begin{minipage}{.5\textwidth}
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick,font=\scriptsize]
+  \tikzstyle{every state}=[fill=none,text=black]
+
+  \node[state] (s) {$s$};
+  \node[state] (v1) [above right of=s] {$v_1$};
+  \node[state] (v2) [below right of=s] {$v_2$};
+  \node[state] (v3) [right of=v1] {$v_3$};
+  \node[state] (v4) [right of=v2] {$v_4$};
+  \node[state] (t) [below right of=v3] {$t$};
+  
+  \path 	(s)	edge node {$11/16$} (v1)
+  			edge node {$8/13$} (v2)
+		(v1)	edge node {$12/12$} (v3)
+		(v2)	edge node {$1/4$} (v1)
+			edge node {$11/14$} (v4)
+		(v3)	edge node {$4/9$} (v2)
+			edge node {$15/20$} (t)
+		(v4)	edge node {$7/7$} (v3)
+			edge node {$4/4$} (t);
+\end{tikzpicture} 
+\caption{\footnotesize{Flow $f$ in $G$}}
+\end{figure}
+\end{minipage}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=4cm,
+                    semithick,font=\scriptsize]
+  \tikzstyle{every state}=[fill=none,text=black]
+
+  \node[state] (s) {$s$};
+  \node[state] (v1) [above right of=s] {$v_1$};
+  \node[state] (v2) [below right of=s] {$v_2$};
+  \node[state] (v3) [right of=v1] {$v_3$};
+  \node[state] (v4) [right of=v2] {$v_4$};
+  \node[state] (t) [below right of=v3] {$t$};
+  
+  \path 	(s)	edge [bend left] node {$5$} (v1)
+  			edge node {$5$} (v2)
+		(v1)	edge node {$11$} (s)
+			edge node {$1$} (v2)
+		(v2)	edge [bend left] node {$3$} (v1)
+			edge [bend left] node {$8$} (s)
+			edge node {$4$} (v3)
+			edge node {$3$} (v4)
+		(v3)	edge node {$12$} (v1)
+			edge [bend left] node {$5$} (v2)
+			edge node {$7$} (v4)
+			edge [bend left] node {$5$} (t)
+		(v4)	edge [bend left] node {$11$} (v2)
+		(t)	edge node {$4$} (v4)
+			edge node {$15$} (v3);
+\end{tikzpicture} 
+\caption{\footnotesize{Residual Network $G_f$}}
+\end{figure}
+
+The residual network $G_f$ is similar to a flow network with capacities given by $c_f$. It does not satisfy the definition of a flow network because it may contain both an edge $(u, v)$ and its reversal $(v, u)$. Other than this difference, a residual network has the same properties as a flow network, and we can define a flow in the residual network as one that satisfies the definition of a flow, but with respect to capacities $c_f$ in the network $G_f$.\\
+
+If $f$ is a flow in $G$ and $f'$ is a flow in the corresponding residual network $G_f$, we define $f \uparrow f'$, the \textbf{augmentation} of flow $f$ by $f'$, to be the function from $V \cdot V$ to $\mathbb{R}$, defined by
+
+\begin{align}
+ (f \uparrow f')(u, v) =
+  \begin{cases}
+  	f(u, v) + f'(u, v) - f'(v, u) \text{if } (u,v) \in E, \\
+  	0 & \text{otherwise}
+  \end{cases}
+\end{align}
+
+\textbf{\textit{Lemma 26.1}}\\
+Let $G = (V, E)$ be a flow network with source $s$ and sink $t$, and let $f$ be a flow in $G$. Let $G_f$ be the residual network of $G$ induced by $f$, and let $f'$ be a flow in $G_f$. Then the function $f \uparrow f'$ defined in the function (5) is a flow in $G$ with value $|$$f \uparrow f'$$|$ $=$ $|$$f$$|$ + $|$$f'$$|$.\\
+
+\textbf{\textit{Jeg aner ikke, om det er vigtigt med beviset for lemmaet... Find ud af det inden eksamen! Uanset hvad, er det nok godt at kunne det}}
+%
 \subsubsection{Augmenting paths}
 \subsubsection{Cuts of Flow Networks}
 \subsubsection{The basic Ford-Fulkerson Algorithm}
@@ -311,6 +445,13 @@ Most hash functions assume that the universe of keys is the set $\mathbb{N} = \{
 \newpage
 
 \section{Linear Programming and Optimisation}
+[\cite{monoids}]
+
+\newpage
+\bibliographystyle{plainnat}
+%\bibliographystyle{unsrt}
+\bibliography{bibliography}
+
 
 %-----------------------------------------------------------------------------
 \end{document}
