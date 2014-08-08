@@ -379,20 +379,123 @@ where the second line follows because $(f \uparrow f')(w, x)$ is $0$ if $(w, x) 
 \end{align*}
 In the last line we can extend all four summations to sum over $V$, since each additional term has value $0$. Therefore we end up with 
 \begin{align*}
-|f \uparrow f'| &= \sum_{v \in V}(f(s, v) - \sum_{v \in V}(f(v, s) + \sum_{v \in V}(f'(s, v) - \sum_{v \in V}(f'(v, s)\\
+|f \uparrow f'| &= \sum_{v \in V}(f(s, v)) - \sum_{v \in V}(f(v, s)) + \sum_{v \in V}(f'(s, v)) - \sum_{v \in V}(f'(v, s))\\
 &= |f| + |f'|
 \end{align*}
 
 %
 \subsubsection{Augmenting paths}
-\subsubsection{Cuts of Flow Networks}
-\subsubsection{The basic Ford-Fulkerson Algorithm}
-\subsubsection{Analysis of Ford-Fulkerson}
-\subsubsection{The Edmond-Karp Algorithm}
+A augmenting path is a simpe path, $p$ from $s$ to $t$ in $G_f$. \\
+The capacity of an augmenting path is the one of a critical edge on $p$. We can write this as $c_f(p) = min\{c_f(u, v) : (u, v) \in p\}$. The flow in $G_f$ from path $p$ can be defined as
 
+\begin{align}
+ f_p(u, v) =
+  \begin{cases}
+  	c_p(p) & if (u, v) \in p \\
+  	0 & \text{otherwise}
+  \end{cases}
+\end{align}
+
+It is now obvious that for any augmenting path $p$ we have $f \uparrow f_p$ as a flow in $G$ with $|f \uparrow f_p| = |f| + |f_p| > |f|$
+%
+\subsubsection{Cuts of Flow Networks}
+A cut $(S, T)$, of a flow network $G = (V, E)$ is a partition of $V$ into $S$ and $T = V - S$ such that $s \in S$ and $t \in T$. We define both the flow across a cut and the capacity of a cut:
+
+\begin{align}
+f(S, T) &= \sum_{u \in S} \sum_{v \in T} f(u, v) - \sum_{u \in S} \sum_{v \in T} f(v, u)\\
+c(S, T) &= \sum_{u \in S} \sum_{v \in T} c(u, v)
+\end{align}
+
+A minimum cut is a cut with minimal capacity of all cuts. \\
+For any cus $(S, T)$ we have $f(S, T) = |f|$. The prove for this is:\\
+
+First we look at the flow definition:
+\begin{align*}
+|f| &= \sum_{v \in V} f(s, v) - \sum_{v \in V} f(v, s)\\
+&= \sum_{v \in V} f(s, v) - \sum_{v \in V} f(v, s) + \sum_{u \in S - \{s\}} \left ( \sum_{v \in V} f(u, v) - \sum_{f(v, u)}\right)
+\end{align*}
+
+Besides that, see page 722 - the main ideas is: 
+
+\begin{enumerate}
+	\item Expand the right-hand summation 
+	\item Regroup into summations over $v \in V$ with edges going into $v$ and another group with edged going out of $v$
+	\item Split all $v \in V$ into $v \in S$ and $v \in T$. Uses $S \cup T = V$
+	\item Cancel out therms and we get what we want
+\end{enumerate}
+
+This means that $|f|$ (the value of $f$) is bounded above by the capacity of all cuts. Especially the flow is bounded above by the capacity of a minimum cut. This leeds us to the Max-flow min-cut theorem. Max-flow min-cut \textit{duality} (Pawel er fan af dette ord) is that the following are equivalent:
+
+\begin{enumerate}
+	\item $f$ is a maximum flow in $G$
+	\item The residual network $G_f$ contains no augmenting paths 
+	\item $|f| = c(S, T)$ for some cut $(S, T)$ of $G$
+\end{enumerate}
+
+\textbf{\textit{Proof}}\\
+(1) $\Rightarrow$ (2): If we assume $f$ has a max flow, and that there is an augmenting path $p$ in $G_f$. \\
+Let $f_p$ denote the max flow along $p$ - then $|f \uparrow f_p| = |f| + |f_p| > |f|$ (hence, $f \uparrow f_p$ would be a flow in $G$ wit a bigger value $\rightarrow$ contradiction)\\
+
+(2) $\Rightarrow$ (3): We define $S = \{v \in V :$ there exists a path from $s$ to $v$ in $G_f\}$ and $T = V\setminus S (S, T)$ $\rightarrow$ is a cut. Now we would like to show $f(S, T) = c(S, T)$. \\
+
+Consider edge $(u, v) \in E$ with $u\in S$ and $v \in T$ $\rightarrow$ $f(u, v) = c(u, v)$\\
+Consider edge $(v, u) \in E$ with $u\in S$ and $v \in T$ $\rightarrow$ $f(v, u) = 0$\\
+
+Then \begin{align*}
+f(S, T) &= \sum_{u \in S, v \in T} f(u, v) - \sum_{u \in S, v \in T} f(v, u)\\
+&= \sum_{u \in S, v \in T} = \sum_{u \in S, v \in T} c(u, v)\\
+&= c(S, T)
+\end{align*}
+
+(3) $\Rightarrow$ (1): We let $f$ be a flow in $G$, $|f'| \leq c(S, T) = |f| \Rightarrow f$ is a max flow. (In other words - we cannot have $|f| > c(S, T)$)
+%
+\subsubsection{The basic Ford-Fulkerson Algorithm}
+I have decided this page in the book can not be that important due to all the stuff above (The Ford-Fulkerson Algorithm is basically just an expansion on the Ford-Fulkerson Method from above)- the stuff above must be the important part (including the analysis below) for Ford-Fulkerson. But read it and remember it for the overall understanding of the topic. 
+%
+\subsubsection{Analysis of Ford-Fulkerson}
+The running time depends on how we find the augmenting path $p$. If we assume an appropriate data structure where we can represent the directed graph, the time to find an appropriate path can be linear in the number of edges, if using breadth-first\footnote{In graph theory, breadth-first search (BFS) is a strategy for searching in a graph when search is limited to essentially two operations: (a) visit and inspect a node of a graph; (b) gain access to visit the nodes that neighbour the currently visited node. The BFS begins at a root node and inspects all the neighbouring nodes. Then for each of those neighbour nodes in turn, it inspects their neighbour nodes which were unvisited, and so on} or depth-first\footnote{Depth-first search (DFS) is an algorithm for traversing or searching tree or graph data structures. One starts at the root (selecting some arbitrary node as the root in the case of a graph) and explores as far as possible along each branch before backtracking.} search. \\
+
+This gives os $O(E)$ work per iteration of the while loop, and at most the same number of iterations as the value of the maximum flow (since we increase by at least one unit per iteration). The total running time is therefore $O(E |f^*|)$ where $|f^*|$ is the maximum flow. 
+%
+\subsubsection{The Edmond-Karp Algorithm}
+We can improve the bound on Ford-Fulkerson by finding the augmenting path $p$ with breadth-first search. That is, we choose the augmenting path as a shortest path from $s$ to $t$ in the residual network, where each edge has unit distance (weight). Doing this to the Ford-Fulkerson Method is called the Edmonds-Karp algorithm. \\
+
+This gives us $O(VE^2)$ as running time. \\
+
+First step on proving this is to see that the minimum path length (amount of edges) in $G_f$ increases monotonically. Let $\delta_f(s, v)$ be the minimum path length from $s$ to $v$ in $G_f$. Then we look at the smallest $\delta_{f'}(s, v)$ that changed when augmenting $f$ with $f'$. Let $u$ be the vertex before $v$ in the path from $s$ to $v$. We must have $\delta_{f'}(s, u) = \delta_{f'}(s, v) - 1$. We also have $\delta_f(s, u) = \delta_{f'}(s, u)$. Therefore $(u, v) \neq E_f$. We must therefore have had $\delta_f(s, v) = \delta_f(s, u) - 1$ which leads to contradiction. \\
+
+We can use this to show that an edge can at most be critical $\frac{|V|}{2}$ times. \\
+
+Simply look at $\delta_f(s, v) = \delta_f(s, u) +1$ when $(u, v)$ is critical. In order for the edge to return to the residual network we must have $(v, u)$ be critical. This can only happen when $\delta_{f'}(s, u) = \delta_{f'}(s, v) + 1$. Since $\delta_{f'}(s, v) + 1 \geq \delta_f(s, v) + 1 = \delta_f(s, u) +2$ the result follows. \\
+
+Each augmenting path has at least one critical edge and only $O(VE)$ times can there be a critical edge. This gives the running time. 
+%
 \subsection{Maximum bipartite matching}
+This topic sucks! Jeg har basically bare kopieret noter fra Søren D. Men fatter sgu ikke så meget af det. Derfor er det heller ikke med i min disposition. Håber på, jeg aldrig bliver spurgt ind til det. 
+
 \subsubsection{The Maximum-bipartite-mathing problem}
+A matching is a subset $M \subseteq E$ such that for all vertices $v \in V$ at most one edge in $M$ is incident to $v$. A maximum matching is a matching $M$ that has $|M| \geq |M'|$ for any other matching $M'$.
+%
 \subsubsection{Finding a maximum bipartite matching}
+We can create a graph $G'$ with nodes $V' = V \cup \{s, t\}$ and edges
+\begin{align*}
+E' = \{(s, u) : u \in L\} \cup \{(u, v) : (u, v) \in E \} \cup \{(u, t) : u \in R\}
+\end{align*}
+
+All capacities $c(u, v) = 1$. It is clear that $|E'| = O(|E|)$ because we assume each node $v \in L \cup R$ has one edge incident in $E$. \\
+
+We wanna show that a flow $f$ in $G'$ corresponds to a matching $M$ in $G$. First we say that a flow is integer-valued if $f(u,v)$ is integer for all $(u,v) \in V 	\cdot V$. The claim is that if $M$ is a matching in $G$ it corresponds to a flow $f$ in $G'$ with $|f| = |M|$ and the other way around.\\
+
+To proof this, we say for a matching $M$ create a flow $f(u, v) = f(s, u) = f(u, t) = 1$ for all $(u, v) \in M$. It is easy to see that the constraints are satisfied and that $|f| = |M|$. For a flow $f$ we create a matching
+\begin{align*}
+	M = \{(u, v) : u \in L, v \in R, \text{and} f(u, v) > 0 
+\end{align*}
+Because $f$ is integer-valued this is okay. To see that this is a matching use that $(s, u) = 1$ and flow conservation means the sum over $(u, v) = 1$ (or $0$). We can also use this to show that $|M| = |f|$. \\
+
+We also need to show that when $c(u, v)$ is integral for all $(u, v)$ the maximum flow found by Ford-Fulkerson will be integer-valued. This is done easily by induction over the iteration. Base case is trivial cause $|f| = 0$.\\
+We can now proof by contradiction that a maximum flow corresponds to a maximum matching.
+
+\subsection{Disposition}
 
 \newpage
 
