@@ -132,4 +132,30 @@ event is $1/m^2$. If $h$ is Strongly Universal it is also universal since:
   \Pr[h(x) = h(y)] = \sum_{q\in [m]} \Pr[h(x) = q \land h(y) = q] = m/m^2  = 1/m.
 \]
 
-\todo[inline]{Continue from page 6 of the hashing paper.}
+\begin{description}
+\item[Observation 3.1] An equivelent difition of strong universality is that
+  each key is hashed inoformly into $[m]$, and that distinct keys are hashed
+  independently.
+\item[Proof] Assuming strong universality and consider distinct keys $x,y \in
+  U$. For any hash value $q \in [m]$, $\textbf{Pr}[h(x)=q] = \sum_{r\in [m]}
+  \textbf{Pr}[h(x) = q \land h(y) = r] = m/m^2 = 1/m$, so $h(x)$ is uniform in
+  $[m]$, and the same holds for $h(y)$. Moreover, for any hash value $r\in[m]$,
+  \begin{align*}
+    \textbf{Pr}[h(x)=q|h(y)=r] &= \frac{\textbf{Pr}[h(x)=q\land (y)=r]}{\textbf{Pr}[h(y)=r]} \\
+    &= \frac{(1/m^2)}{(1/m)} = 1/m = \textbf{Pr}[h(x)=q],
+  \end{align*}
+  so $h(x)$ is independent of $h(y)$. For the converse direction when $h(x)$ and
+  $h(y)$ are independant,$\textbf{Pr}[h(x)=q \land h(y)=r] = \textbf{Pr}[h(x)=q]
+  \cdot \textbf{Pr}[h(y)=r]$ and when $h(x)$ and $h(y)$ are uniform,
+  $\textbf{Pr}[h(x)=q] = \textbf{Pr}[h(y)=r]=1/m$, so $\textbf{Pr}[h(x)=q] \cdot
+  \textbf{Pr}[h(y)=r] = 1/m^2$. \qed
+\end{description}
+
+Storng universality can also be called 2-independence. We may also accept a
+relaxed notion of strong universality, we say a rnadom hash function $h:
+\rightarrow[m]$ is strongly s-universal if (1) every key $x$ hash ``close to''
+uniformly in the sense that for every hash value $q \in [m]$, we have
+$\textbf{Pr}[h(x)=q] \leq c/m$, and (2) every pair of distinct keys hash
+independently.
+
+\todo[inline]{Continue from page 7 of the hashing paper?}
