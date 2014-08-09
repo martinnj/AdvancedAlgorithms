@@ -502,8 +502,7 @@ We also need to show that when $c(u, v)$ is integral for all $(u, v)$ the maximu
 Okaaaaaay! This is awesome! Kick some serious ass!
 
 \subsection{Structure of Fibonacci Heaps}
-A Fibonacci Heap is a collection of rooted trees that are min-heap ordered. That is, each tree obeys the min-heap property: the key of a node is greater than or equal to the key of its parent. 
-
+A Fibonacci Heap is a collection of rooted trees that are min-heap ordered. That is, each tree obeys the min-heap property: the key of a node is greater than or equal to the key of its parent. Each node contains a pointer to its parent and a pointer to any one of its children. The children are linked together in a circular, doubly linked list. In a circular, doubly linked list we can insert a node into any location or remove a node from anywhere in the list in $O(1)$ time. We can also concatenate two such lists in $O(1)$ time.
 \begin{figure} [H]
     \begin{center}
         \includegraphics[width=\textwidth]{Images/Hmin.png}
