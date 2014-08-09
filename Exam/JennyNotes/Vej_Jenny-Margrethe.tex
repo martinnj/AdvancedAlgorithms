@@ -341,7 +341,7 @@ Let $G = (V, E)$ be a flow network with source $s$ and sink $t$, and let $f$ be 
 First we check that $f \uparrow f'$ obeys capacity constraints for each edge in E and flow conservation for edges in $V-\{s, t\}$. Let us start with capacity constrains - we observe that if $(u, v) \in E$ then $c_f(v, u) = f(u, v)$. Therefore, we have $f'(v, u) \leq c_f(v, u) = f(u, v)$, and hence 
 \begin{align*}
 (f \uparrow f')(u, v) &= f(u, v) + f'(u, v) - f'(v, u) \qquad \text{(by equation (5))}\\
-&\geq f(u, v) + f'(u, v) - f'(u, v) \qquad \text{(because} f'(v, u) \leq f(u, v))\\
+&\geq f(u, v) + f'(u, v) - f(u, v) \qquad \text{(because} f'(v, u) \leq f(u, v))\\
 &= f'(u, v)\\
 &\geq 0 
 \end{align*}
@@ -372,14 +372,14 @@ Finally, we compute the value of $f \uparrow f'$. We remember that for any verte
 \end{align*}
 where the second line follows because $(f \uparrow f')(w, x)$ is $0$ if $(w, x) \notin E$. We now apply the definition of $f \uparrow f'$ to this, and then reorder and group terms to obtain
 \begin{align*}
-|f \uparrow f'| &= \sum_{v \in V_1}(f(s, v) - f'(v, s)) - \sum_{v \in V_2} (f(v, s) + f'(v, s))\\
-&= \sum_{v \in V_1} f(s, v) + \sum_{v \in V_1} f'(s, v) - \sum_{v \in V_1} f'(v, s) - \sum_{v \in V_2} f(v, s) - \sum_{v \in V_2} f'(v, s) - \sum_{v \in V_2} f'(s, v)\\
+|f \uparrow f'| &= \sum_{v \in V_1}(f(s, v) + f'(s, v) - f'(v, s)) - \sum_{v \in V_2} (f(v, s) + f'(v, s) - f'(s, v))\\
+&= \sum_{v \in V_1} f(s, v) + \sum_{v \in V_1} f'(s, v) - \sum_{v \in V_1} f'(v, s) - \sum_{v \in V_2} f(v, s) - \sum_{v \in V_2} f'(v, s) + \sum_{v \in V_2} f'(s, v)\\
 &= \sum_{v \in V_1} f(s, v) - \sum_{v \in V_2} f(v, s) + \sum_{v \in V_1} f'(s, v) + \sum_{v \in V_2} f'(s, v) - \sum_{v \in V_1} f'(v, s) - \sum_{v \in V_2} f'(v, s)\\
 &= \sum_{v \in V_1} f(s, v) - \sum_{v \in V_2} f(v, s) + \sum_{v \in V_1 \cup V_2} f'(s, v) - \sum_{v \in V_1 \cup V_2} f'(v, s)
 \end{align*}
 In the last line we can extend all four summations to sum over $V$, since each additional term has value $0$. Therefore we end up with 
 \begin{align*}
-|f \uparrow f'| &= \sum_{v \in V}(f(s, v)) - \sum_{v \in V}(f(v, s)) + \sum_{v \in V}(f'(s, v)) - \sum_{v \in V}(f'(v, s))\\
+|f \uparrow f'| &= \sum_{v \in V}f(s, v) - \sum_{v \in V}f(v, s) + \sum_{v \in V}f'(s, v) - \sum_{v \in V}f'(v, s)\\
 &= |f| + |f'|
 \end{align*}
 
@@ -407,7 +407,7 @@ c(S, T) &= \sum_{u \in S} \sum_{v \in T} c(u, v)
 \end{align}
 
 A minimum cut is a cut with minimal capacity of all cuts. \\
-For any cus $(S, T)$ we have $f(S, T) = |f|$. The prove for this is:\\
+For any cut $(S, T)$ we have $f(S, T) = |f|$. The prove for this is:\\
 
 First we look at the flow definition:
 \begin{align*}
@@ -442,8 +442,8 @@ Consider edge $(u, v) \in E$ with $u\in S$ and $v \in T$ $\rightarrow$ $f(u, v) 
 Consider edge $(v, u) \in E$ with $u\in S$ and $v \in T$ $\rightarrow$ $f(v, u) = 0$\\
 
 Then \begin{align*}
-f(S, T) &= \sum_{u \in S, v \in T} f(u, v) - \sum_{u \in S, v \in T} f(v, u)\\
-&= \sum_{u \in S, v \in T} = \sum_{u \in S, v \in T} c(u, v)\\
+f(S, T) &= \sum_{u \in S} \sum_{v \in T} f(u, v) - \sum_{u \in S} \sum_{v \in T} f(v, u)\\
+&= \sum_{u \in S} \sum_{v \in T} c(u, v) - \sum_{u \in S} \sum_{v \in T} 0\\
 &= c(S, T)
 \end{align*}
 
@@ -493,9 +493,26 @@ To proof this, we say for a matching $M$ create a flow $f(u, v) = f(s, u) = f(u,
 Because $f$ is integer-valued this is okay. To see that this is a matching use that $(s, u) = 1$ and flow conservation means the sum over $(u, v) = 1$ (or $0$). We can also use this to show that $|M| = |f|$. \\
 
 We also need to show that when $c(u, v)$ is integral for all $(u, v)$ the maximum flow found by Ford-Fulkerson will be integer-valued. This is done easily by induction over the iteration. Base case is trivial cause $|f| = 0$.\\
-We can now proof by contradiction that a maximum flow corresponds to a maximum matching.
+
+We can now proof by contradiction that a maximum flow corresponds to a maximum matching.
 
 \subsection{Disposition}
+The following disposition is what you can manage in 15 minutes. 
+\begin{itemize}
+	\item Flow Network $G$
+	\item Flow $|f|$
+		\begin{itemize}
+			\item Capacity Constraints
+			\item Flow Conservation
+		\end{itemize}
+	\item Ford-Fulkerson Method
+		\begin{itemize}
+			\item Residual Network \& Augmenting Paths
+			\item Max-Flow Min-Cut Theorem (with prove)
+			\item Running time (perhaps mention Edmonds-Karp - at least have an understanding of the prove, but you have no time to go through the prove)
+		\end{itemize}
+\end{itemize}
+
 \newpage
 
 \section{Fibonacci Heaps}
