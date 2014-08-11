@@ -71,7 +71,7 @@ size of the optimal cover is written here:
 \li \While $E' \neq \emptyset$ \Do
 \li   let $(u,v)$ be an arbitrary edge of $E'$
 \li   $C = C \cup \{u,v\}$
-\li   remove from $E$ every edge incident on either $u$ or $v$ \End
+\li   remove from $E'$ every edge incident on either $u$ or $v$ \End
 \li \Return $C$
 \end{codebox}
 The above algorithm runs in $O(V+E)$.
@@ -89,7 +89,7 @@ The above algorithm runs in $O(V+E)$.
   every edge in $G.E$ have been covered by some vertex.
 
   To see that the algorithm returns a vertex cover of at most twice the size of
-  an optimal cover, let $A$ denote the set og edges that line 4 selects.  To
+  an optimal cover, let $A$ denote the set of edges that line 4 selects.  To
   cover all the edges in $A$, any vertex cover, in particular the optimal vertex
   cover $C^*$, must include at least one endpoint of each edge in $A$. No two
   edges share endpoints since when an edge is picked, all edges incident on its
@@ -117,7 +117,7 @@ The above algorithm runs in $O(V+E)$.
 The TSP is also NP-Complete, the following is a method for approximating an
 optimal solution that is at most twice as long as the optimal tour.
 
-It creates a minimum spanning tree using Prims algorithm, and walks along this
+It creates a minimum spanning tree using Prims algorithm(see below), and walks along this
 tree using a pre-order walk (parent first then child), and uses this as the
 solution.
 
@@ -132,7 +132,7 @@ solution.
 \end{codebox}
 
 $Q$ is a min-priority queue, $G$ is the graph, $r$ is the root and $w$ is the
-weight function.
+weight function. (It basically keeps adding the cheapest edge it can find.)
 \begin{codebox}
 \Procname{$\proc{MST-Prim}(G,w,r)$}
 \li \For each $u \in G.V$ \Do
@@ -211,7 +211,7 @@ inequality, we cannot approximate a tour in polynomial-time unless $P=NP$.
   to the problem would mean $P=NP$.
 
   Let $G = (V,E)$ be an instance of the Hamiltonian-cycle problem. We wish to
-  determine efficiently whether $G$contains a Hamiltonian cycle by making use of
+  determine efficiently whether $G$ contains a Hamiltonian cycle by making use of
   the hypothesized approximation algorithm $A$.  We turn $G$ into an instance of
   the traveling-salesman problem as follows. Let $G' = (V,E')$ be a complete
   graph on $V$; that is,
