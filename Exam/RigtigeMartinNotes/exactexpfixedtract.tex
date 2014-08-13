@@ -1,24 +1,38 @@
 \subsection{Exact Exponential Algorithms \& Fixed-Parameter Tractable Problems}
 
 \subsubsection{Exact Exponential Algorithms}
-The $O^*$ notation is similar to the $O$ notation, except it will supress
-runningtimes of polynomial itme. This means that factors that are not
-exponential are supressed. For example $O(kn^kk^n) = O(n^kk^n)$ but we have
+The $O^*$ notation is similar to the $O$ notation, except it will suppress
+running-times of polynomial itme. This means that factors that are not
+exponential are suppressed. For example $O(kn^kk^n) = O(n^kk^n)$ but we have
 $O^*(kn^kk^n) = O^*(k^n)$.
 
-Roughly speaking, parameterized complexity seeks the possibility of obtaining
-algorithms whose running time can be bounded by a polynomial function of the
-input length and, usually, an exponential function of the parameter.
+\noindent \textbf{Size vs length:} When we talk about the running time we usually talk about
+the time in relation to the input size of length. For instance: Given a graph, the input size
+will be $O(V + E)$ while the length will be the number of bits it takes to encode the input with any reasonable encoding.
 
-% Parameterized Complexity add to our regular ``size'' or ``length'' dependent
-% complexity measures, by also expressing the complexity in terms of an
-% additional parameter. This parameter should be something the represents a
-% factor in the algorithm which is not dependent on the input itself.
+For the travelling salesman problem (er permutation problem) the input is a set of $n$ cities, where we want to find
+the correct permutation. In this case candidate solutions are sets of $n$ cities, of which there is $n!$. Thus
+the trivial algorithm runs in $O^*(n!)$.
 
-This section is basically about algotihms that solve problems in the NP group in
-exponential time but give the correct result and not just an approximation.
+\noindent \textbf{Travelling Salesman using Dynamic Programming} \\
+For a subset of cities $S \subset \{1,2,...,n\}$ that includes $1$, and $j \in S$, let $C(S,j)$ be
+the length of the shortest path visiting each node in $S$ exactly once, starting at $1$ and ending at $j$.
+When $|S| > 1$, we define $C(S,1) = \infty$ since the path cannot start and end at $1$.
+
+We can express $C(S,j)$ in smaller sub-problems. We start at $1$ and end at $j$; for the second to last
+city we have to pick some $i \in S$, so the overall path length is the distance from $1$ to $i$; namely,
+$C(S-\{j\},i)$ plus the length of the final edge $d_{ij}$. We pick the best such $i$:
+\[
+  C(S,j) = \underset{i\in S:i\neq j}{\text{min}} C(S-\{j\},i)+d_{ij}
+\]
+
+
+
 
 \subsubsection{Fixed-Parameter Tractable Problems}
+Roughly speaking, parameterized complexity seeks the possibility of obtaining
+algorithms whose running time can be bounded by a polynomial function of the
+input length and, usually, an exponential function of a parameter which is independent of the input.
 
 \textbf{CNF satisfiablility}
 \begin{description}
