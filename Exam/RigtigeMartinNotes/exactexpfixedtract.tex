@@ -25,8 +25,22 @@ $C(S-\{j\},i)$ plus the length of the final edge $d_{ij}$. We pick the best such
 \[
   C(S,j) = \underset{i\in S:i\neq j}{\text{min}} C(S-\{j\},i)+d_{ij}
 \]
+The sub problems will be ordered by $|S|$.
 
+\begin{codebox}
+\Procname{$\proc{ExactTSP}(\{c_1,c_2,...c_n\},d)$}
+\li $C(\{1\},1) \gets 0$
+\li \For $s \gets 2$ \To $n$ \Do
+\li   \For all subsets $S \subset \{c_1,c_2,...c_n\}$ of sizes $s$ and containing $1$ \Do
+\li     $C(S,1) \gets \infty$
+\li     \For all $j \in S, j\neq 1$ \Do
+\li       $C(S,j) = \text{min}\{C(S-\{j\},i) + d_{ij} : i \in S, i \neq j\}$ \End\End\End
+\li \Return $\text{min}_jC(\{1,...,n\},j) + d_{j1}$
+\end{codebox}
 
+There are at most $2^nn$ sub-problems, and each one takes linear time giving a final running time of $O(n^22^n)$ or $O^*(2^n)$.
+
+\graphicc{1}{img/exacttsp.png}{A run of the exact TSP algorithm}{fig:exacttspsample}
 
 
 \subsubsection{Fixed-Parameter Tractable Problems}
@@ -34,11 +48,19 @@ Roughly speaking, parameterized complexity seeks the possibility of obtaining
 algorithms whose running time can be bounded by a polynomial function of the
 input length and, usually, an exponential function of a parameter which is independent of the input.
 
-\textbf{CNF satisfiablility}
+We strive to understand a problem and its sub-problems in terms of parameters and their effects on the
+running time, ideally the goal is to be able to form statements such as ``If some parameter $k$ is
+small in problem $X$ then $X$ can be solved efficiently''. For instance in the vertex cover problem, we know that the solution
+should be as few vertices as possible, so if $k$ is the solution size the exponential factor of the running time is less than $1.28^k$.
+
+\noindent\textbf{CNF satisfiability}\\
+A CNF problem is a conjunction of $m$ clauses where each clause consists of a disjunction of literals.
+There there be $n$ different variables occurring in the formulae.
+
 \begin{description}
-\item[Parameter ``Clause Size''] The maximum snumber of $k$ literals a clause
-  may contain. For $k = 2$ (2-CNF satisfiablility) the runningtime is polynomial
-  time solvable, however for $k = 3$ (3-CNF satisfiablility) is NP-Complete.
+\item[Parameter ``Clause Size''] The maximum number of $k$ literals a clause
+  may contain. For $k = 2$ (2-CNF satisfiability) the running time is polynomial
+  time solvable, however for $k = 3$ (3-CNF satisfiability) is NP-Complete.
 
 \item[Parameter ``Number of Variables''] The number $n$ of different variables
   allowed in the formula. Since there is essentially $2^n$ different truth
@@ -46,12 +68,33 @@ input length and, usually, an exponential function of a parameter which is indep
   the result of each assignment can be calculated in a number of steps equal to
   the Number of clauses.
 
-\item[Parameter ``Number of Clauses''] If the number of clauses i na formulae is
+\item[Parameter ``Number of Clauses''] If the number of clauses in a formulae is
   bounded from above by $m$, the CNF problem can be solved in $1.24^m$ steps.
 
 \item[Parameter ``Formula Length''] If the total length (counting the number of
-  literal occurences in the formula) of the formula $F$ is bounded by above by
+  literal occurrences in the formula) of the formula $F$ is bounded by above by
   $\ell = |F|$, then the problem can be solved in $1.08^\ell$ steps.
 \end{description}
+
+
+\noindent \textbf{Maximum CNF Satisfiability}\\
+An optimization version of the above problem. Here we want to satisfy as many clauses as possible and
+not just the entire formulae. This problem shares the same parameters, but gives different effects.
+
+\begin{description}
+\item[Parameter ``Clause Size''] Even for $k = 2$ the problem is still NP-Complete.
+
+\item[Parameter ``Number of Variables''] Like the decision problem, this one can be solved in $2^n$
+  steps, where $n$ is the number of variables in the formulae. For $k=3$ it is still an open problem to obtain a better bound.
+  Recently advances were made for $k=2$ allowing it to be solved in $1.74^n$ steps.
+
+\item[Parameter ``Number of Clauses''] IFw e can bound the number of clauses above by $m$, the Maximum
+Satisfiability problem can be solved in $1.33^m$ steps, and the Maximum 2 Satisfiability problem can be solved in $1.15^m$ steps.
+
+\item[Parameter ``Formula Length''] If the total length (counting the number of
+  literal occurrences in the formula) of the formula $F$ is bounded by above by
+  $\ell$, Maximum Satisfiability problem can be solved in $1.11^\ell$ steps, and the Maximum 2 Satisfiability problem can be solved in $1.08^\ell$ steps.
+\end{description}
+
 
 \todo[inline]{VRÆÆÆÆÆÆÆÆLLLLL :(}
