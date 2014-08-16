@@ -1,0 +1,192 @@
+\section{NP-Completeness}
+Who wouldn't love to be examinated in this? GO NUTS! YOU CAN DEFINITELY DO IT!!
+
+\subsubsection{NP-Completeness and the classes P and NP}
+Informal description of the three classes - more formal later:\\
+
+\textbf{P:} This class consist of those problems that are solvable in polynomial time. More specifically, they are problems that can be solved in time $O(n^k)$ for some constant $k$, where $n$ is the size of the input to the problem. \\
+
+\textbf{NP:} The class NP consists of those problems that are ``verifiable'' in polynomial time, meaning that if we were somehow given a ``certificate'' of a solution, then we could verify that the certificate is correct in time polynomial in the size of the input to the problem. \\
+
+Any problem in P is also in NP, since if a problem is in P then we can solve it in polynomial time without even being supplied a certificate.\\
+
+\textbf{NPC:} A problem is in the NPC class if it is in NP and as ``hard'' as any problem in NP. If any NP-Complete problem can be solved in polynomial time, then every problem in NP has a polynomial-time algorithm. 
+
+\subsubsection{Overview of showing problems to be NP-Complete}
+We rely in three key concepts in showing a problem to be NP-Complete:
+
+\begin{enumerate}
+	\item Decision problems vs. optimisation problems 
+	\item Reductions
+	\item A first NP-Complete problem
+\end{enumerate}
+
+\subsection{Polynomial Time}
+We begin our study of NP-completeness by formalising our notion of polynomial- time solvable problems. We generally regard these problems as tractable, but for philosophical, not mathematical, reasons. We can offer three supporting arguments.
+
+\begin{enumerate}
+	\item Very few practical problems require time on the order of a high-degree polynomial, for example $\Theta(n^{100})$
+	\item Second, for many reasonable models of computation, a problem that can be solved in polynomial time in one model can be solved in polynomial time in another 
+	\item Third, the class of polynomial-time solvable problems has nice closure proper- ties, since polynomials are closed under addition, multiplication, and composition
+\end{enumerate}
+
+\subsubsection{Abstract Problems}
+To understand the class of polynomial-time solvable problems, we must first have a formal notion of what a ``problem'' is. We define an abstract problem $Q$ to be a binary relation on a set $I$ of problem instances and a set $S$ of problem solutions. This formulation of an abstract problem is more general than we need for our purposes, since the theory of NP-completeness restricts attention to decision problems: those having a yes/no solution. In this case, we can view an abstract decision problem as a function that maps the instance set $I$ to the solution set \{0, 1\}.
+
+\subsubsection{Encodings}
+In order for a computer program to solve an abstract problem, we must represent problem instances in a way that the program understands. An encoding of a set $S$ of abstract objects is a mapping $e$ from $S$ to the set of binary strings.\\
+
+Thus, a computer algorithm that ``solves'' some abstract decision problem actually takes an encoding of a problem instance as input. We call a problem whose instance set is the set of binary strings a concrete problem. We say that an algorithm solves a concrete problem in time $O(T(n))$ if, when it is provided a problem instance $i$ of length $n = |i|$, the algorithm can produce the solution in $O(T(n))$ time. A concrete problem is polynomial-time solvable, therefore, if there exists an algorithm to solve it in time $O(T(n))$ for some constant $k$.\\
+We can now formally define the complexity class $P$ as the set of concrete decision problems that are polynomial-time solvable.\\
+
+We would like to extend the definition of polynomial-time solvability from concrete problems to abstract problems by using encodings as the bridge, but we would like the definition to be independent of any particular encoding. That is, the efficiency of solving a problem should not depend on how the problem is encoded. Unfortunately, it depends quite heavily on the encoding if the algorithm runs in either polynomial or superpolynomial time. \\
+
+We cannot really talk about solving an abstract problem without first specifying an encoding. Nevertheless, in practice, if we rule out ``expensive'' encodings such as unary ones, the actual encoding of a problem makes little difference to whether the problem can be solved in polynomial time.\\
+
+\textbf{\textit{Lemma 34.1}} Let $Q$ be an abstract decision problem on an instance set $I$, and let $e_1$ and $e_2$ be polynomially related encodings on $I$. Then, $e_1(Q) \in P$ if and only if $e_2(Q) \in P$.\footnote{I have decided not to focus on all the small proves, but on the proves I think could be relevant for my disposition. The prove for the Lemma 34.1 is on page 1057 in the book}\\
+
+Thus, whether an abstract problem has its instances encoded in binary or base 3 does not affect its ``complexity'', that is, whether it is polynomial-time solvable or not; but if instances are encoded in unary, its complexity may change. We shall assume that the encoding of an integer is polynomially related to its binary representation, and that the encoding of a finite set is polynomially related to its encoding as a list of its elements, enclosed in braces and separated by commas. To denote the standard encoding of an object, we shall enclose the object in angle braces. Thus, $\langle G \rangle$ denotes the standard encoding of a graph $G$.
+
+\subsubsection{A Formal-Language Framework}
+By focusing on decision problems, we can take advantage of the machinery of formal-language theory. Let us review some definitions from that theory. An alphabet $\Sigma$ is a finite set of symbols. A language $L$ over $\Sigma$ is any set of strings made up of symbols from $\Sigma$.\\
+
+We denote the empty string by $\epsilon$, the empty language by $\emptyset$, and the language of all strings over $\Sigma$ by $\Sigma^*$. Every language $L$ over $\Sigma$ is a subset of $\Sigma^*$. \\
+
+\textit{The next part in the book is talking about the operations we can do on the languages. I have decided not to make any notes to that. }
+
+\subsection{Polynomial-time Verification}
+\subsubsection{Hamiltonian cycles}
+The problem of finding a hamiltonian cycle in an undirected graph has been studied for over a hundred years. Formally, a hamiltonian cycle of an undirected graph $G = (V, E)$ is a simple cycle that contains each vertex in $V$. The Hamiltonian-cycle problem is NP-Complete, which we will prove later. 
+
+\subsubsection{Verification Algorithms}
+We define a verification algorithm as being a two-argument algorithm $A$, where one argument is an ordinary input string $x$ and the other is a binary string $y$ called a certificate. A two-argument algorithm $A$ verifies an input string $x$ if there exists a certificate $y$ such that $A(x, y) = 1$. The language verified by a verification algorithm $A$ is\\
+$L = \{x \in \{0, 1\}^* :\text{ there exists} y \in \{0, 1\}^* \text{ such that} A(x, y) = 1 \}$.
+
+\subsubsection{The complexity Class NP}
+The complexity class NP is the class of languages that can be verified by a polynomial-time algorithm. More precisely, a language $L$ belongs to NP if and only if there exist a two-input polynomial-time algorithm $A$ and a constant $c$ such that\\
+
+$ L = \{x \in \{0, 1\}^* : \text{ there exists a certificate} y \text{ with} |y| = O(|x|^c) \text{ such that} A(x, y) = 1$\\
+
+We say that algorithm $A$ verifies language $L$ in polynomial time. 
+
+\subsection{NP-Completeness and Reductability}
+Perhaps the most compelling reason why theoretical computer scientists believe that $P \neq NP$ comes from the existence of the class of ``NP-complete'' problems. This class has the intriguing property that if any NP-complete problem can be solved in polynomial time, then every problem in NP has a polynomial-time solution, that is, $P = NP$.
+
+\subsubsection{Reductability}
+\textbf{\textit{Lemma 34.3}} \\
+If $L_1, L_2 \subseteq \{0, 1\}^* \text{ are languages such that } L_1 \leq_p L_2, \text{ then } L_2 \in P \text{ implies } L_1 \in P $
+
+\subsubsection{NP-completeness}
+Polynomial-time reductions provide a formal means for showing that one problem is at least as hard as another, to within a polynomial-time factor. That is, if $L_1 \leq_p L_2$, then $L_1$ is not more than a polynomial factor harder than $L_2$, which is why the ``less than or equal to'' notation for reduction is mnemonic. We can now define the set of NP-complete languages, which are the hardest problems in NP.A language $L \subseteq \{0, 1\}^*$ is NP-complete if
+
+\begin{enumerate}
+	\item $L \in$ NP, and
+	\item $L' \leq_p L$ for every $L' \in$ NP
+\end{enumerate}
+
+If a language $L$ satisfies property 2, but not necessarily property 1, we say that $L$ is NP-hard. We also define NPC to be the class of NP-complete languages.\\
+As the following theorem shows, NP-completeness is at the crux of deciding whether P is in fact equal to NP.\\
+
+\textbf{\textit{Theorem 34.4}} \\
+If any NP-complete problem is polynomial-time solvable, then P = NP. Equivalently, if any problem in NP is not polynomial-time solvable, then no NP-complete problem is polynomial-time solvable.
+
+\subsubsection{Circuit Satisfiability}
+We now focus on demonstrating the existence of an NP-complete problem: the circuit-satisfiability problem. Boolean combinational circuits are built from boolean combinational elements that are interconnected by wires. A boolean combinational element is any circuit element that has a constant number of boolean inputs and outputs and that performs a well-defined function.\\
+
+The boolean combinational elements that we use in the circuit-satisfiability problem compute simple boolean functions, and they are known as logic gates. The three basic logic gates that we use in the circuit-satisfiability problem is the NOT gate ($\neg$), the AND gate ($\wedge$) and the OR gate ($\vee$). \\
+
+A boolean combinational circuit consists of one or more boolean combinational elements interconnected by wires. A wire can connect the output of one element to the input of another, thereby providing the output value of the first element as an input value of the second.\\
+
+Boolean combinational circuits contain no cycles. In other words, suppose we create a directed graph $G = (V, E)$ with one vertex for each combinational element and with $k$ directed edges for each wire whose fan-out is $k$; the graph contains a directed edge $(u, v)$ if a wire connects the output of element $u$ to an input of element $v$. Then $G$ must be acyclic.\\
+
+The circuit-satisfiability problem is, ``Given a boolean combinational circuit composed of AND, OR, and NOT gates, is it satisfiable?'' In order to pose this question formally, however, we must agree on a standard encoding for circuits.\\
+
+\textbf{\textit{Lemma 34.5}} The circuit-satisfiability problem belongs to the class NP\\
+\textbf{\textit{Lemma 34.6}} The circuit-satisfiability problem is NP-hard\\
+\textbf{\textit{Theorem 34.7}} The circuit-satisfiability problem is NP-complete \\
+
+ The proves for the last lemmas and theorem is in the book - I do not think I have to prove it for the exam. At least I hope not. 
+
+\subsection{NP-completeness proofs}
+In this section, we shall show how to prove that languages are NP-Complete without directly reducing every language in NP to the given language. The following lemma is the basis of our method for showing that a language is NP-Complete. \\
+
+\textbf{\textit{Lemma 34.8}} If $L$ is a language such that $L' \leq_p L$ for some $L' \in NPC$, then $L$ is NP-hard. If, in addition, $L \in$ NP, then $L \in$ NPC.\\
+
+By reducing a known NP-Complete language $L'$ to $L$, we implicitly reduce every language in NP to $L$. Thus Lemma 34.8 gives us a method for proving that a language $L$ is NP-Complete: 
+
+\begin{enumerate}
+	\item Prove $L \in$ NP
+	\item Select a known NP-Complete language $L'$
+	\item Describe an algorithm that computes a function $f$ mapping every instance $x \in \{0, 1\}^*$ of $L'$ to an instance $f(x)$ of $L$
+	\item Prove that the function $f$ satisfies $x \in L'$ if and only if $f(x) \in L$ for all $x \in \{0, 1\}^*$
+	\item Prove that the algorithm computing $f$ runs in polynomial time
+\end{enumerate}
+
+(Steps 2–5 show that $L$ is NP-hard.) This methodology of reducing from a single known NP-Complete language is far simpler than the more complicated process of showing directly how to reduce from every language in NP.
+
+\subsubsection{Formula satisfiability}
+Meeeh - skim it again and that is it.
+
+\subsection{NP-Complete Problems}
+This section is examples of NP-Complete problems. I have chosen to make notes to only 2 (maybe only one, if I give up before time).
+
+\subsubsection{The Clique Problem}
+To long (but read what the problem is)
+
+\subsubsection{The Vertex Cover Problem}
+A vertex cover of an undirected graph $G = (V, E)$ is a subset $V' \subseteq V$ such that if $(u, v) \in E$, then $u \in V'$ or $v \in V'$ (or both). That is, each vertex ``covers'' its incident edges, and a vertex cover for $G$ is a set of vertices that covers all the edges in $E$. The size of a vertex cover is the number of vertices in it.\\
+
+\textbf{\textit{Theorem 34.12}}
+The Vertex-Cover Problem is NP-Complete\\
+
+\textbf{\textit{Prove:}}
+
+\textit{- First} we prove that VERTEX-COVER $\in$ NP. We have a graph $G = (V, E)$ and an integer $k$. The certificate we choose is the vertex cover $V' \subseteq V$ itself. The verification algorithm affirms that $IV'I = k$ and then it checks, for each edge $(u, v) \in E$, that $u \in V'$ or $v \in V'$. We can easily verify the certificate in polynomial time. \\
+
+\textit{- Next} we prove that the Vertex-Cover Problem is NP-hard by showing that CLIQUE $\leq_p$ VERTEX-COVER. (THIS IS NOT DONE RIGHT NOW - CAN NOT HANDLE CLIQUE 30 MINUTES TO MINDNIGHT ON A FRIDAY)
+
+\subsubsection{The Hamiltonian-Cycle Problem}
+To long (but read what the problem is)
+
+\subsubsection{The Traveling-Salesman Problem}
+In the traveling-salesman problem, which is closely related to the Hamiltonian-Cycle Problem, a salesman must visit $n$ cities. We model this problem with a complete graph with $n$ vertices, and the salesman wants to make a tour, or Hamiltonian Cycle, visiting each city exactly once, and finishing in the city he starts from. 
+
+\begin{align*}
+TSP = \{\langle G, c, k \rangle : 	\text{ } &G = (V, E) \text{ is a complete graph}\\
+&c \text{ is a function from } V \text{ x } V \rightarrow \mathbb{Z}\\
+&k \in \mathbb{Z}\\
+&G \text{ has a traveling-salesman tour with cost at most } k \}
+\end{align*}
+
+\textbf{\textit{Theorem 34.14}}
+The Traveling-Salesman Problem is NP-Complete\\
+
+\textbf{\textit{Prove:}}\\
+\textit{- First} we show that TSP belongs to NP. Given an instance of the problem, we use as a certificate the sequence of $n$ vertices in the tour. The verification algorithm checks that this sequence contains each vertex exactly once, sums up the edge costs, and checks whether the sum is at most $k$. This process can certainly be done in polynomial time.\\
+
+\textit{- Second} we show that TSP is NP-Hard by showing that HAM-CYCLE $\leq_p$ TSP. Let $G = (V, E)$ be an instance of HAM-CYCLE. We construct an instance of TSP as follows. We form the complete graph $G' = (V, E')$, where $E' = \{(i, j) : i, j \in V$ and $i \neq j\}$.\\
+
+The instance of TSP is then $\langle G', c, 0 \rangle$, which we can easily create in polynomial time. \\
+
+\textit{- Last} We show that graph $G$ has a hamiltonian cycle if and only if graph $G'$ has a tour of cost at most 0. Suppose that graph $G$ has a hamiltonian cycle $h$. Each edge in $h$ belongs to $E$ and thus has cost 0 in $G'$. Thus, $h$ is a tour in $G'$ with cost 0. Conversely, suppose that graph $G'$ has a tour $h'$ of cost at most 0. Since the costs of the edges in $E'$ are 0 and 1, the cost of tour $h'$ is exactly 0 and each edge on the tour must have cost 0. Therefore, $h'$ contains only edges in $E$. We conclude that $h'$ is a hamiltonian cycle in graph $G$.
+
+
+\subsubsection{The Subset-Sum Problem}
+To long (but read what the problem is)
+
+\subsection{Disposition}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

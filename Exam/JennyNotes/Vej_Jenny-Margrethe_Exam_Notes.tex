@@ -1,0 +1,246 @@
+\RequirePackage[l2tabu, orthodox]{nag}
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc} 
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel} 
+\usepackage[margin=2.5cm]{geometry}
+\geometry{a4paper}
+\usepackage{longtable}
+
+
+%----------------------------KODE START---------------------------------------
+\usepackage{listings}
+\usepackage{color}
+\usepackage[usenames,dvipsnames]{xcolor}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\lstset{
+  basicstyle=\footnotesize,
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  stepnumber=1,
+  numbersep=10pt,
+  backgroundcolor=\color{white},
+  showspaces=false,               % show spaces adding particular underscores
+  showstringspaces=false,         % underline spaces within strings
+  showtabs=false,                 % show tabs within strings adding particular underscores
+  frame=single,                   % adds a frame around the code
+  rulecolor=\color{black},        
+  tabsize=4,
+  captionpos=b,                   % sets the caption-position to bottom
+  breaklines=true,                % sets automatic line breaking
+  breakatwhitespace=false,        % sets if automatic breaks should only happen at whitespace
+  title=\lstname,                   % show the filename of files included with \lstinputlisting;
+                                  % also try caption instead of title
+  keywordstyle=\color{mauve},          % keyword style
+  commentstyle=\color{Maroon},       % comment style
+  stringstyle=\color{BlueViolet},         % string literal style
+  escapeinside={\%*}{*)},            % if you want to add LaTeX within your code
+  morekeywords={*,...},              % if you want to add more keywords to the set
+  deletekeywords={...}              % if you want to delete keywords from the given language
+}
+%----------------------------KODE SLUT----------------------------------------
+
+
+\setlength\parindent{0pt} % Makes \noindent standard
+\usepackage{graphicx} 
+\usepackage{sidecap}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float} 
+\usepackage{wrapfig} % Allows in-line images if needed
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{mathtools}
+\hypersetup{colorlinks=false,hidelinks, citecolor=black, urlcolor=black}
+\usepackage{csquotes}
+\usepackage{comment}
+
+\usepackage[dot, autosize, outputdir="dotgraphs/"]{dot2texi}
+\usepackage{tikz}
+\usetikzlibrary{shapes}
+\usepackage{url}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{longtable}
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{4}
+\usepackage[titletoc]{appendix} % Names appendices "Appendix A"
+                                % instead of just A in Contents
+\usepackage[bottom]{footmisc}
+\usepackage{pdfpages}
+\usepackage{algorithm}% http://ctan.org/pkg/algorithms
+\usepackage{algpseudocode}% http://ctan.org/pkg/algorithmicx
+
+
+%\usepackage{lmodern}
+\usetikzlibrary{arrows,automata}
+\usepackage{verbatim}
+
+\linespread{1.2} 
+\graphicspath{{./figures/}} 
+
+% fancy drawings
+\usepackage{pgf}
+\usepackage{epigraph}
+
+% \epigraphsize{\small}% Default
+\setlength\epigraphwidth{8cm}
+\setlength\epigraphrule{0pt}
+
+\usepackage{etoolbox}
+
+\makeatletter
+\patchcmd{\epigraph}{\@epitext{#1}}{\itshape\@epitext{#1}}{}{}
+\makeatother
+
+%\usepackage{boxproof}
+%\usepackage{nomencl}
+\usepackage{natbib}
+
+\newcommand{\fasto}{\textsc{Fasto} }
+\newcommand{\mips}{\textsc{Mips} }
+\newcommand{\mars}{Mars }
+\makeatletter
+\def\BState{\State\hskip-\ALG@thistlm}
+\makeatother
+
+%-----------------------------------------------------------------------------
+\begin{document}
+\begin{titlepage}
+
+\centering 
+
+\textsc{\Large Advanced Algorithms and Datastructures}\\[0.5cm] 
+\textsc{\large Exam Notes}\\[0.5cm] 
+
+\vfill
+
+\emph{Author:}
+\\
+Jenny-Margrethe \textsc{Vej} -- 250986 -- rwj935
+\vspace{20mm}
+
+{\large Block 4, April-June, 2014}\\[3cm] 
+
+\end{titlepage}
+%-----------------------------------------------------------------------------
+
+\tableofcontents
+\newpage
+
+%-----------------------------------------------------------------------------
+
+%%Completely done 
+\input{MaxFlow}
+\newpage
+
+%%Missing the last 4 pages in the chapter in the book and the disposition
+\input{FibHeaps}
+\newpage
+
+%%
+\input{NP-Complete}
+\newpage
+
+%%Haven't looked at those below here
+\section{Randomised Algorithms}
+\newpage
+
+\section{Hashing}
+OMG LOLZ'n SHIZZLES! You'r gonna nail this shit!
+
+\subsection{Direct-address tables}
+We have a scenario where we want to maintain a dynamic set of some sort. Each element has a key drawn from a universe $U = \{0, 1, ..., m-1\}$ where $m$ is not too large, and no two elements have the same key. \\
+
+Representing it by a direct-address table, or array $T[0...m-1]$, each slot or position corresponds to a key  in $U$. If there is an element $x$ with the key $k$, then $T[k]$ contains a pointer to $x$ - otherwise $T[k]$ is empty represented by $NIL$\\
+
+Illustration in the book on page 254
+\begin{algorithm}
+\begin{algorithmic}[1]
+\State{DIRECT-ADDRESS-SEARCH}{$(T, k)$}
+   \State \textbf{return} $T[k]$\\
+   
+\State{DIRECT-ADDRESS-INSERT}{$T, x$}
+   \State \textbf{return} $T[key[x]] \leftarrow x$\\
+
+\State{DIRECT-ADDRESS-DELETE}{$T, x$}
+   \State \textbf{return} $T[key[x]] \leftarrow NIL$
+\end{algorithmic}
+\end{algorithm}
+
+Downsides of direct addressing: If the universe $U$ is large, storing a table $T$ of size $|U|$ may be impractical or even impossible, given the memory available on a typical computer. Furthermore, the set $K$ of keys actually stored may be so small relative to $U$ that most of the space allocated for $T$ would be wasted. 
+
+\subsection{Hash tables}
+To overcome the downsides of direct addressing, we can use hash tables. When $K$ is much smaller than $U$, a hash table requires much less space than a direct-address table. It can also reduce storage requirements to $\Phi (|K|)$. \\
+
+This bound is for average-case time whereas for direct addressing it holds for the worst-case time. \\
+
+With direct addressing, an element with $k$ is stored in slot $k$. With hashing, this element is stores in slot $h(k)$; that is, we use a hash function $h$ to compute the slot from the key $k$. There is one hitch: 2 keys may hash to the same slot - called a collision. See page 256 for illustrations. \\
+
+A hash function $h$ must be deterministic in that a given input $k$ should always produce the same output $h(k)$. \\
+
+\textbf{Collision resolution by chaining}\\
+In chaining we place all the elements that hash to the same slot into the same linked list. See figure on page 257.
+
+\begin{algorithm}
+\begin{algorithmic}[1]
+\State{DIRECT-HASH-SEARCH}{$(T, x)$}
+   \State \textbf{search} for an element with key $k$ in list $T(T, k)$\\
+   
+\State{DIRECT-HASH-INSERT}{$T, x$}
+   \State \textbf{insert} $x$ at the head of the list $T[h(x.key)]$\\
+
+\State{DIRECT-HASH-DELETE}{$T, x$}
+   \State \textbf{delete} $x$ from the list $T[h(x.key)]$
+\end{algorithmic}
+\end{algorithm}
+
+\textbf{Analysis of hashing with chaining}\\
+Given a hash table $T$ with $m$ slots that stores $n$ elements, we define the load factor $\alpha$ for $T$ as $n/m$ which is the same as the average number of elements stores in a chain. \\
+
+Worst case performing: $\Phi (n)$ + the time to compute the hash function (all $n$ keys hash to the same slot, creating a list of length $n$. \\
+
+Average case performing of hashing depends on how well the hash function $h$ distributes the set of keys to be stores among the $m$ slots, on the average. \\
+
+\textbf{\textit{Theorem 11.1}}
+In a hash table in which collisions are resolved by chaining, an unsuccessful search takes an average-case time $\Phi (1 + \alpha)$, under the assumption of simple uniform hashing. (OBS: Beviset herfor står på side 259!! LÆS OG FORSTÅ)\\
+
+\textbf{\textit{Theorem 11.2}} 
+In a hash table in which collisions are resolved by chaining, a successful search takes average-case time $\Phi (1 + \alpha)$, under the assumption of simple uniform hashing. (OBS: Beviset herfor står på side 259-260!! LÆS OG FORSTÅ)
+
+\subsection{Hash functions}
+\textbf{What makes a good hash function?} \\
+A good hash function satisfies (approximately) the assumption of simple uniform hashing: each key is equally likely to hash to any of the $m$ slots, independently of where any other key has hashed to. In practice, we can often employ heuristic techniques to create a hash function that performs well. \\
+
+\textbf{Interpreting keys as natural numbers}\\
+Most hash functions assume that the universe of keys is the set $\mathbb{N} = \{0, 1, 2, ...\}$ of natural numbers. 
+
+\subsubsection{The division method}
+\subsubsection{The multiplication method}
+\subsubsection{Universal hashing}
+\subsection{Open addressing}
+\subsection{Perfect hashing}
+\newpage
+
+\section{Exact Exponential Algorithms}
+\newpage
+
+\section{Approximation Algorithms}
+\newpage
+
+\section{Computational Geometry}
+\newpage
+
+\section{Linear Programming and Optimisation}
+[\cite{monoids}]
+
+\newpage
+\bibliographystyle{plainnat}
+%\bibliographystyle{unsrt}
+\bibliography{bibliography}
+
+
+%-----------------------------------------------------------------------------
+\end{document}
