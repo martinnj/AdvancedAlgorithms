@@ -71,7 +71,7 @@ size of the optimal cover is written here:
 \li \While $E' \neq \emptyset$ \Do
 \li   let $(u,v)$ be an arbitrary edge of $E'$
 \li   $C = C \cup \{u,v\}$
-\li   remove from $E$ every edge incident on either $u$ or $v$ \End
+\li   remove from $E'$ every edge incident on either $u$ or $v$ \End
 \li \Return $C$
 \end{codebox}
 The above algorithm runs in $O(V+E)$.
@@ -89,7 +89,7 @@ The above algorithm runs in $O(V+E)$.
   every edge in $G.E$ have been covered by some vertex.
 
   To see that the algorithm returns a vertex cover of at most twice the size of
-  an optimal cover, let $A$ denote the set og edges that line 4 selects.  To
+  an optimal cover, let $A$ denote the set of edges that line 4 selects.  To
   cover all the edges in $A$, any vertex cover, in particular the optimal vertex
   cover $C^*$, must include at least one endpoint of each edge in $A$. No two
   edges share endpoints since when an edge is picked, all edges incident on its
@@ -117,7 +117,7 @@ The above algorithm runs in $O(V+E)$.
 The TSP is also NP-Complete, the following is a method for approximating an
 optimal solution that is at most twice as long as the optimal tour.
 
-It creates a minimum spanning tree using Prims algorithm, and walks along this
+It creates a minimum spanning tree using Prims algorithm(see below), and walks along this
 tree using a pre-order walk (parent first then child), and uses this as the
 solution.
 
@@ -132,7 +132,7 @@ solution.
 \end{codebox}
 
 $Q$ is a min-priority queue, $G$ is the graph, $r$ is the root and $w$ is the
-weight function.
+weight function. (It basically keeps adding the cheapest edge it can find.)
 \begin{codebox}
 \Procname{$\proc{MST-Prim}(G,w,r)$}
 \li \For each $u \in G.V$ \Do
@@ -148,6 +148,9 @@ weight function.
 \li       $v.key \gets w(u.v)$
 \end{codebox}
 
+The \texttt{Approx-TSP-Tour} Algorithm runs in $\Theta(V^2)$. It's tightly bound
+by the inner loop in MST-Prim.
+
 \graphicc{1}{img/approxtsp.png}{A sample run of the approximate TSP algorithm,
   subigure (d) is the resulting tour, and (e) is the optimal tour. Distances are
   simple euclidian distances.}{fig:approxtsp}
@@ -157,5 +160,95 @@ weight function.
   2-approximation algorithm for the traveling salesman problem, with the
   triangle inequality.
 
-\item[Proof] See page 1114.
+\item[Proof] We've already seen that the algorithm runs on polynomial time.  LEt
+  $H^*$ denote an optimal tour of a given set of vertices. We obtain a spanning
+  tree be deleting any edge from a tour and each edge cost is nonnegative. The
+  weight of the MST $T$ calculated in line 2 of \texttt{Approx-TSP-Tour} is a
+  lower bound for the cost of an optimal tour:
+  \begin{align}
+    c(T) &\leq c(H^*) \label{eq:vtch}
+  \end{align}
+  A full walk list a vertex when it's first visited and on all subsequent
+  revisits, lets call a full walk of our tree $W$.  Since the full walk
+  traverses every edge of $T$ exactly twice, we have
+  \begin{align}
+    c(W) &= 2c(T) \label{eq:cw2ct}
+  \end{align}
+  Combinging Equation \ref{eq:vtch} and \ref{eq:cw2ct} imply that
+  \begin{align}
+    c(W) &\leq 2c(H^*) \label{eq:cw2ch}
+  \end{align}
+  and so the cost of $W$ is within a factor of 2 of the cost of an optimal tour.
+  A full walk of $T$ is usually not a tour though, since it might visit some
+  vertices several times.  By the triangle inequality, we can delete any such
+  revisit though without increasing the cost. Doing this for all revisits gives
+  a set of vertices corresponding to the-preorder walk of $T$.  Let $H$ be the
+  cycle that describes the preorder walk. It is a hamiltonian cycle since every
+  vertex is visited once, and it is the cycle computed by
+  \texttt{Approx-TSP-Tour}. Since $H$ is created be removing vertices from $W$
+  we have
+  \begin{align}
+    c(H) &\leq c(W) \label{eq:chcw}
+  \end{align}
+  combining \ref{eq:cw2ch} and \ref{eq:chcw}, gives $c(H) \leq 2c(H^*)$, which
+  completes the proof.  \qed
+\end{description}
+
+If we drop the assumption that the cost function $c$ satisfies the triangle
+inequality, we cannot approximate a tour in polynomial-time unless $P=NP$.
+
+\begin{description}
+\item[Theorem 35.3] If $P\neq NP$, then for any constant $\rho \geq 1$, there is
+  no polynomial-time approximation algorithm with approximation ratio $\rho$ for
+  the general traveling salesman problem.
+
+\item[Proof] This will be a proof by contradiction. Suppose to the contrary that
+  for some number $\rho \geq 1$, there is a polynomial-time approximation
+  algorithm $A$ with approximation ratio $\rho$. Without loss of generality we
+  assume that $\rho$ is an integer, by rounding up if necessary.  We shall then
+  show how to use $A$ to solve instances of the Hamiltonian-cycle problem in
+  polynomial time. Since the Hamiltonian-cycle problem is NP-Complete a solution
+  to the problem would mean $P=NP$.
+
+  Let $G = (V,E)$ be an instance of the Hamiltonian-cycle problem. We wish to
+  determine efficiently whether $G$ contains a Hamiltonian cycle by making use of
+  the hypothesized approximation algorithm $A$.  We turn $G$ into an instance of
+  the traveling-salesman problem as follows. Let $G' = (V,E')$ be a complete
+  graph on $V$; that is,
+  \[
+    E' = \{(u,v) : u,v \in V \text{ and } u\neq v\}.
+  \]
+  Assign an integer cost to each edge in $E'$ as follows:
+  \[
+    c(u,v) = \begin{cases}
+      1         & \text{if } (u,v) \in E,\\
+      \rho|V|+1 & otherwise.
+    \end{cases}
+  \]
+  We can create representations of $G'$ and $c$ from a representation of $G$ in
+  time polynomial in $|V|$ and $|E|$.
+
+  Now consider the traveling-salesman problem $(G',c)$. If the original graph
+  $G$ has a hamiltonian cycle $H$, then the cost function $c$ assigns to each
+  edge of $H$ a cost of 1, and so $(G',c)$ contains a tour of cost $|V|$. On the
+  other hand, if $G$ does not contain a hamiltonian cycle, then any tour of $G'$
+  must use some edge not in $E$.  But any tour that uses an edge not in $E$ has
+  a cost of at least
+  \begin{align*}
+    (\rho|V|+1)+(|V|-1) &= \rho|V|+|V| \\
+                        &> \rho|V|.
+  \end{align*}
+  Because edges not in $G$ are so costly, there s a gap of at least $\rho|V|$
+  between the cost of a tour that is a hamiltonian cycle in $G$ (cost $|V|$) and
+  the cost of any other tour (cost at least $\rho|V|+|V|$). Therefore, the cost
+  of a tour that is not a hamiltonian cyclein $G$ is at least a factor of
+  $\rho+1$ greater than the cost of a tour that is a hamiltonian cycle in $G$.
+
+  Now, suppose that we apply the approximation algorithm $A$ to the
+  traveling-salesman problem $(G',c)$. Because $A$ is guaranteed to return a
+  tour of cost no more than $\rho$ times the cost of an optimal tour, if $G$
+  contains a hamiltonian cycle, then $A$ must return it. If $G$ has no
+  hamiltonian cycle, then $A$ returns a tour of cost more than
+  $\rho|V|$. THerefore, we can use $A$ to solve the hamiltonian-cycle problem,
+  in polynomial time. \qed
 \end{description}

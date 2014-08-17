@@ -1,9 +1,9 @@
 \RequirePackage[l2tabu, orthodox]{nag}
-\documentclass[12pt,a4paper]{article}
+\documentclass[12pt]{article}
 \usepackage[utf8]{inputenc} 
 \usepackage[T1]{fontenc}
 \usepackage[english]{babel} 
-\usepackage{geometry}
+\usepackage[margin=2.5cm]{geometry}
 \geometry{a4paper}
 \usepackage{longtable}
 
@@ -44,6 +44,9 @@
 
 \setlength\parindent{0pt} % Makes \noindent standard
 \usepackage{graphicx} 
+\usepackage{sidecap}
+\usepackage{caption}
+\usepackage{subcaption}
 \usepackage{float} 
 \usepackage{wrapfig} % Allows in-line images if needed
 \usepackage{hyperref}
@@ -77,6 +80,24 @@
 
 \linespread{1.2} 
 \graphicspath{{./figures/}} 
+
+% fancy drawings
+\usepackage{pgf}
+\usepackage{epigraph}
+
+% \epigraphsize{\small}% Default
+\setlength\epigraphwidth{8cm}
+\setlength\epigraphrule{0pt}
+
+\usepackage{etoolbox}
+
+\makeatletter
+\patchcmd{\epigraph}{\@epitext{#1}}{\itshape\@epitext{#1}}{}{}
+\makeatother
+
+%\usepackage{boxproof}
+%\usepackage{nomencl}
+\usepackage{natbib}
 
 \newcommand{\fasto}{\textsc{Fasto} }
 \newcommand{\mips}{\textsc{Mips} }
@@ -127,8 +148,8 @@ Wuuuh, Max Flow!! You Rock! Kick some ass!
 \subsubsection{Flow Networks and Flow}
 Let $G = (V, E)$ be a flow network with a capacity function $c$. Let $s$ be the source of the network, and let $t$ be the sink. A flow in $G$ is a real-valued function $f : V \times V \rightarrow \mathbb{R}$ that satisfies the following two properties:\\
 
-\textbf{Capacity Constraints:} For all $u, v \in V$, we require $0 \leq f(u, v) \leq c(u, v)$\\
-\textbf{Flow Conservation:} For all $u \in V - \{s, t\}$, we require
+\textbf{Capacity Constraints:} For all $u, v \in V$, we require $0 \leq f(u, v)\footnote{We call the nonnegative quantity $f(u, v)$ the flow from vertex $u$ to vertex $v$} \leq c(u, v)\footnote{Capacity Function $c$}$\\
+\textbf{Flow Conservation\footnote{Vertices are conduit junctions, and other than the source and sink, material flows through the vertices without collecting in them. In other words, the rate at which material enters a vertex must equal the rate at which it leaves the vertex. This property is called Flow Conservation}:} For all $u \in V - \{s, t\}$, we require
 %%
 \begin{align}
 \sum_{v \in V} f(v, u) = \sum_{v \in V} f(u, v)
@@ -137,13 +158,15 @@ Let $G = (V, E)$ be a flow network with a capacity function $c$. Let $s$ be the 
 When $(u, v) \notin E$, there can be no flow from $u$ to $v$, and $f(u, v) = 0$. The value $|f|$ of a flow $f$ is defined as 
 %%
 \begin{align}
-|f| = \sum_{v \in V} f(s, u) - \sum_{v \in V} f(v, s)
+|f| = \sum_{v \in V} f(s, u) - \sum_{v \in V} f(v, s),
 \end{align}
+
+Typically, a flow network will not have any edges into the source, and the flow into the source, given by the summation $\sum_{v \in V} f(v, s)$, will be 0.
 %%
 \subsubsection{An example of a flow}
-For example the transporting example from the book. A firm wants to transport goods from 1 place to anther, using a third part driver. \\
+For example the transporting example from the book [\cite{CLRS}, p. 710]. A firm wants to transport goods from one place to anther, using a third part driver. \\
 
-Guessing this particular section is not thaaaaat important for the exam. ;o)
+Guessing this particular section is not thaaaaat important for the exam. $\ddot\smile$
 
 \subsubsection{Modelling problems with antiparallel edges}
 Antiparallel edges is 2 edges going to/from $(v, u)$ - so 2 edges between 2 vertices but with opposite directions. To come around that, we transform our network into an equivalent one containing no antiparallel edges (adding an extra vertex for that, so we can split one of the edges). The resulting network is equivalent to the original one, due to the fact, that you do not add or subtract anything from the capacity. It is the same:\\
@@ -177,7 +200,7 @@ Antiparallel edges is 2 edges going to/from $(v, u)$ - so 2 edges between 2 vert
 \end{minipage}
 
 \subsubsection{Networks with multiple sources and sinks}
-A maximum flow problem may have several sources and sinks, rather than just one of each. To fix that, we just add a supersource and a supersink with infinity capacity from $s$ to each of the multiple sources.
+A maximum flow problem may have several sources and sinks, rather than just one of each. To fix that, we just add a supersource and a supersink with infinity capacity from $s$ to each of the multiple sources (and to $t$).
 %%
 \subsection{The Ford-Fulkerson Method}
 
@@ -195,28 +218,452 @@ A maximum flow problem may have several sources and sinks, rather than just one 
 \subsubsection{Residual Network}
 Suppose that we have a flow network $G = (V, E)$ with source $s$ and sink $t$. Let $f$ be a flow in $G$, and consider a pair of vertices $u, v \in V$. We define the residual capacity $c_f(u, v)$ by
 
-\[
+\begin{align}
  c_f(u,v) =
   \begin{cases}
   	c(u,v) - f(u,v) & \text{if } (u,v) \in E, \\
   	f(v,u) & \text{if } (v,u) \in E, \\
   	0 & \text{otherwise}
   \end{cases}
-\]
+\end{align}
 
+As an example of equation (3), if $c(u, v) = 16$ and $f(u, v) = 11$, then we can increase $f(u, v)$ by up to $c_f(u, v) = 5$ units before we exceed the capacity constraint on edge $(u, v)$ We also wish to allow an algorithm to return up to 11 units of flow from $v$ to $u$, and hence $c_f(v, u) = 11$\\
+
+Given a flow network $G = (V, E)$ and a flow $f$, the residual network of $G$ induced by $f$ is $G_f = (V, E_f)$, where
+\begin{align}
+	E_f = \{(u, v) \in V \cdot V : c_f(u, v) > 0\}
+\end{align} 
+
+Example:\\
+\begin{minipage}{.5\textwidth}
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick,font=\scriptsize]
+  \tikzstyle{every state}=[fill=none,text=black]
+
+  \node[state] (s) {$s$};
+  \node[state] (v1) [above right of=s] {$v_1$};
+  \node[state] (v2) [below right of=s] {$v_2$};
+  \node[state] (v3) [right of=v1] {$v_3$};
+  \node[state] (v4) [right of=v2] {$v_4$};
+  \node[state] (t) [below right of=v3] {$t$};
+  
+  \path 	(s)	edge node {$16$} (v1)
+  			edge node {$13$} (v2)
+		(v1)	edge node {$12$} (v3)
+		(v2)	edge node {$4$} (v1)
+			edge node {$14$} (v4)
+		(v3)	edge node {$9$} (v2)
+			edge node {$20$} (t)
+		(v4)	edge node {$7$} (v3)
+			edge node {$4$} (t);
+\end{tikzpicture} 
+\caption{\footnotesize{Flow Network $G$}}
+\end{figure}
+\end{minipage}%
+\begin{minipage}{.5\textwidth}
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.9cm,
+                    semithick,font=\scriptsize]
+  \tikzstyle{every state}=[fill=none,text=black]
+
+  \node[state] (s) {$s$};
+  \node[state] (v1) [above right of=s] {$v_1$};
+  \node[state] (v2) [below right of=s] {$v_2$};
+  \node[state] (v3) [right of=v1] {$v_3$};
+  \node[state] (v4) [right of=v2] {$v_4$};
+  \node[state] (t) [below right of=v3] {$t$};
+  
+  \path 	(s)	edge node {$11/16$} (v1)
+  			edge node {$8/13$} (v2)
+		(v1)	edge node {$12/12$} (v3)
+		(v2)	edge node {$1/4$} (v1)
+			edge node {$11/14$} (v4)
+		(v3)	edge node {$4/9$} (v2)
+			edge node {$15/20$} (t)
+		(v4)	edge node {$7/7$} (v3)
+			edge node {$4/4$} (t);
+\end{tikzpicture} 
+\caption{\footnotesize{Flow $f$ in $G$}}
+\end{figure}
+\end{minipage}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=4cm,
+                    semithick,font=\scriptsize]
+  \tikzstyle{every state}=[fill=none,text=black]
+
+  \node[state] (s) {$s$};
+  \node[state] (v1) [above right of=s] {$v_1$};
+  \node[state] (v2) [below right of=s] {$v_2$};
+  \node[state] (v3) [right of=v1] {$v_3$};
+  \node[state] (v4) [right of=v2] {$v_4$};
+  \node[state] (t) [below right of=v3] {$t$};
+  
+  \path 	(s)	edge [bend left] node {$5$} (v1)
+  			edge node {$5$} (v2)
+		(v1)	edge node {$11$} (s)
+			edge node {$1$} (v2)
+		(v2)	edge [bend left] node {$3$} (v1)
+			edge [bend left] node {$8$} (s)
+			edge node {$4$} (v3)
+			edge node {$3$} (v4)
+		(v3)	edge node {$12$} (v1)
+			edge [bend left] node {$5$} (v2)
+			edge node {$7$} (v4)
+			edge [bend left] node {$5$} (t)
+		(v4)	edge [bend left] node {$11$} (v2)
+		(t)	edge node {$4$} (v4)
+			edge node {$15$} (v3);
+\end{tikzpicture} 
+\caption{\footnotesize{Residual Network $G_f$}}
+\end{figure}
+
+The residual network $G_f$ is similar to a flow network with capacities given by $c_f$. It does not satisfy the definition of a flow network because it may contain both an edge $(u, v)$ and its reversal $(v, u)$. Other than this difference, a residual network has the same properties as a flow network, and we can define a flow in the residual network as one that satisfies the definition of a flow, but with respect to capacities $c_f$ in the network $G_f$.\\
+
+If $f$ is a flow in $G$ and $f'$ is a flow in the corresponding residual network $G_f$, we define $f \uparrow f'$, the \textbf{augmentation} of flow $f$ by $f'$, to be the function from $V \cdot V$ to $\mathbb{R}$, defined by
+
+\begin{align}
+ (f \uparrow f')(u, v) =
+  \begin{cases}
+  	f(u, v) + f'(u, v) - f'(v, u) \text{if } (u,v) \in E, \\
+  	0 & \text{otherwise}
+  \end{cases}
+\end{align}
+
+\newpage
+\textbf{\textit{Lemma 26.1}}\\
+Let $G = (V, E)$ be a flow network with source $s$ and sink $t$, and let $f$ be a flow in $G$. Let $G_f$ be the residual network of $G$ induced by $f$, and let $f'$ be a flow in $G_f$. Then the function $f \uparrow f'$ defined in the function (5) is a flow in $G$ with value $|$$f \uparrow f'$$|$ $=$ $|$$f$$|$ + $|$$f'$$|$.\\
+
+\textbf{\textit{Prove for Lemma 26.1}}\\
+First we check that $f \uparrow f'$ obeys capacity constraints for each edge in E and flow conservation for edges in $V-\{s, t\}$. Let us start with capacity constrains - we observe that if $(u, v) \in E$ then $c_f(v, u) = f(u, v)$. Therefore, we have $f'(v, u) \leq c_f(v, u) = f(u, v)$, and hence 
+\begin{align*}
+(f \uparrow f')(u, v) &= f(u, v) + f'(u, v) - f'(v, u) \qquad \text{(by equation (5))}\\
+&\geq f(u, v) + f'(u, v) - f(u, v) \qquad \text{(because} f'(v, u) \leq f(u, v))\\
+&= f'(u, v)\\
+&\geq 0 
+\end{align*}
+
+In addition we have, 
+\begin{align*}
+(f \uparrow f')(u, v) &= f(u, v) + f'(u, v) - f'(v, u) \qquad \text{(by equation (5))}\\
+&\leq f(u, v) + f'(u, v) \qquad \text{(because flows are nonnegative)}\\
+&\leq f(u, v) + c_f(u, v) \qquad \text{(capacity constraint)}\\
+&= f(u, v) + c(u, v) - f(u, v) \qquad \text{(definition of } c_f)\\
+&= c(u, v) 
+\end{align*}
+
+For flow conservation, because both $f$ and $f'$ obey flow conservation, we have that for all $u \in V - \{s, t\}$,
+\begin{align*}
+\sum_{v \in V} (f \uparrow f')(u, v) &= \sum_{v \in V} (f(u, v) + f'(u, v) - f'(v, u))\\
+&= \sum_{v \in V} f(u, v) + \sum_{v \in V} f'(u, v) - \sum_{v \in V} f'(v, u)\\
+&= \sum_{v \in V} f(v, u) + \sum_{v \in V} f'(v, u) - \sum_{v \in V} f'(u, v)\\
+&= \sum_{v \in V} (f(v, u) + f'(v, u) - f'(u, v))\\
+&= \sum_{v \in V} (f \uparrow f')(v, u)
+\end{align*}
+where the third line follows from the second by flow conservation. \\
+
+Finally, we compute the value of $f \uparrow f'$. We remember that for any vertex $v \in V$ we can have either $(s, v)$ or $(v, s)$ but never both, because we disallow antiparallel edges in $G$. We define two sets: $V_1 = \{v : (s, v) \in E\}$ and $V_2 = \{v : (v, s) \in E\}$. Clearly $V_1$ $\cup$ $V_2 \subseteq V$ and $V_1 \cap V_2 = \emptyset$. So let us compute
+\begin{align*}
+| f \uparrow f' | &= \sum_{v \in V} (f \uparrow f')(s, v) - \sum_{v \in V} (f \uparrow f')(v, s)\\
+&= \sum_{v \in V_1} (f \uparrow f') (s, v) - \sum_{v \in V_2} (f \uparrow f') (v, s)
+\end{align*}
+where the second line follows because $(f \uparrow f')(w, x)$ is $0$ if $(w, x) \notin E$. We now apply the definition of $f \uparrow f'$ to this, and then reorder and group terms to obtain
+\begin{align*}
+|f \uparrow f'| &= \sum_{v \in V_1}(f(s, v) + f'(s, v) - f'(v, s)) - \sum_{v \in V_2} (f(v, s) + f'(v, s) - f'(s, v))\\
+&= \sum_{v \in V_1} f(s, v) + \sum_{v \in V_1} f'(s, v) - \sum_{v \in V_1} f'(v, s) - \sum_{v \in V_2} f(v, s) - \sum_{v \in V_2} f'(v, s) + \sum_{v \in V_2} f'(s, v)\\
+&= \sum_{v \in V_1} f(s, v) - \sum_{v \in V_2} f(v, s) + \sum_{v \in V_1} f'(s, v) + \sum_{v \in V_2} f'(s, v) - \sum_{v \in V_1} f'(v, s) - \sum_{v \in V_2} f'(v, s)\\
+&= \sum_{v \in V_1} f(s, v) - \sum_{v \in V_2} f(v, s) + \sum_{v \in V_1 \cup V_2} f'(s, v) - \sum_{v \in V_1 \cup V_2} f'(v, s)
+\end{align*}
+In the last line we can extend all four summations to sum over $V$, since each additional term has value $0$. Therefore we end up with 
+\begin{align*}
+|f \uparrow f'| &= \sum_{v \in V}f(s, v) - \sum_{v \in V}f(v, s) + \sum_{v \in V}f'(s, v) - \sum_{v \in V}f'(v, s)\\
+&= |f| + |f'|
+\end{align*}
+
+%
 \subsubsection{Augmenting paths}
-\subsubsection{Cuts of Flow Networks}
-\subsubsection{The basic Ford-Fulkerson Algorithm}
-\subsubsection{Analysis of Ford-Fulkerson}
-\subsubsection{The Edmond-Karp Algorithm}
+A augmenting path is a simpe path, $p$ from $s$ to $t$ in $G_f$. \\
+The capacity of an augmenting path is the one of a critical edge on $p$. We can write this as $c_f(p) = min\{c_f(u, v) : (u, v) \in p\}$. The flow in $G_f$ from path $p$ can be defined as
 
+\begin{align}
+ f_p(u, v) =
+  \begin{cases}
+  	c_p(p) & if (u, v) \in p \\
+  	0 & \text{otherwise}
+  \end{cases}
+\end{align}
+
+It is now obvious that for any augmenting path $p$ we have $f \uparrow f_p$ as a flow in $G$ with $|f \uparrow f_p| = |f| + |f_p| > |f|$
+%
+\subsubsection{Cuts of Flow Networks}
+A cut $(S, T)$, of a flow network $G = (V, E)$ is a partition of $V$ into $S$ and $T = V - S$ such that $s \in S$ and $t \in T$. We define both the flow across a cut and the capacity of a cut:
+
+\begin{align}
+f(S, T) &= \sum_{u \in S} \sum_{v \in T} f(u, v) - \sum_{u \in S} \sum_{v \in T} f(v, u)\\
+c(S, T) &= \sum_{u \in S} \sum_{v \in T} c(u, v)
+\end{align}
+
+A minimum cut is a cut with minimal capacity of all cuts. \\
+For any cut $(S, T)$ we have $f(S, T) = |f|$. The prove for this is:\\
+
+First we look at the flow definition:
+\begin{align*}
+|f| &= \sum_{v \in V} f(s, v) - \sum_{v \in V} f(v, s)\\
+&= \sum_{v \in V} f(s, v) - \sum_{v \in V} f(v, s) + \sum_{u \in S - \{s\}} \left ( \sum_{v \in V} f(u, v) - \sum_{f(v, u)}\right)
+\end{align*}
+
+Besides that, see page 722 - the main ideas is: 
+
+\begin{enumerate}
+	\item Expand the right-hand summation 
+	\item Regroup into summations over $v \in V$ with edges going into $v$ and another group with edged going out of $v$
+	\item Split all $v \in V$ into $v \in S$ and $v \in T$. Uses $S \cup T = V$
+	\item Cancel out therms and we get what we want
+\end{enumerate}
+
+This means that $|f|$ (the value of $f$) is bounded above by the capacity of all cuts. Especially the flow is bounded above by the capacity of a minimum cut. This leeds us to the Max-flow min-cut theorem. Max-flow min-cut \textit{duality} (Pawel er fan af dette ord) is that the following are equivalent:
+
+\begin{enumerate}
+	\item $f$ is a maximum flow in $G$
+	\item The residual network $G_f$ contains no augmenting paths 
+	\item $|f| = c(S, T)$ for some cut $(S, T)$ of $G$
+\end{enumerate}
+
+\textbf{\textit{Proof}}\\
+(1) $\Rightarrow$ (2): If we assume $f$ has a max flow, and that there is an augmenting path $p$ in $G_f$. \\
+Let $f_p$ denote the max flow along $p$ - then $|f \uparrow f_p| = |f| + |f_p| > |f|$ (hence, $f \uparrow f_p$ would be a flow in $G$ wit a bigger value $\rightarrow$ contradiction)\\
+
+(2) $\Rightarrow$ (3): We define $S = \{v \in V :$ there exists a path from $s$ to $v$ in $G_f\}$ and $T = V\setminus S (S, T)$ $\rightarrow$ is a cut. Now we would like to show $f(S, T) = c(S, T)$. \\
+
+Consider edge $(u, v) \in E$ with $u\in S$ and $v \in T$ $\rightarrow$ $f(u, v) = c(u, v)$\\
+Consider edge $(v, u) \in E$ with $u\in S$ and $v \in T$ $\rightarrow$ $f(v, u) = 0$\\
+
+Then \begin{align*}
+f(S, T) &= \sum_{u \in S} \sum_{v \in T} f(u, v) - \sum_{u \in S} \sum_{v \in T} f(v, u)\\
+&= \sum_{u \in S} \sum_{v \in T} c(u, v) - \sum_{u \in S} \sum_{v \in T} 0\\
+&= c(S, T)
+\end{align*}
+
+(3) $\Rightarrow$ (1): We let $f$ be a flow in $G$, $|f'| \leq c(S, T) = |f| \Rightarrow f$ is a max flow. (In other words - we cannot have $|f| > c(S, T)$)
+%
+\subsubsection{The basic Ford-Fulkerson Algorithm}
+I have decided this page in the book can not be that important due to all the stuff above (The Ford-Fulkerson Algorithm is basically just an expansion on the Ford-Fulkerson Method from above)- the stuff above must be the important part (including the analysis below) for Ford-Fulkerson. But read it and remember it for the overall understanding of the topic. 
+%
+\subsubsection{Analysis of Ford-Fulkerson}
+The running time depends on how we find the augmenting path $p$. If we assume an appropriate data structure where we can represent the directed graph, the time to find an appropriate path can be linear in the number of edges, if using breadth-first\footnote{In graph theory, breadth-first search (BFS) is a strategy for searching in a graph when search is limited to essentially two operations: (a) visit and inspect a node of a graph; (b) gain access to visit the nodes that neighbour the currently visited node. The BFS begins at a root node and inspects all the neighbouring nodes. Then for each of those neighbour nodes in turn, it inspects their neighbour nodes which were unvisited, and so on} or depth-first\footnote{Depth-first search (DFS) is an algorithm for traversing or searching tree or graph data structures. One starts at the root (selecting some arbitrary node as the root in the case of a graph) and explores as far as possible along each branch before backtracking.} search. \\
+
+This gives os $O(E)$ work per iteration of the while loop, and at most the same number of iterations as the value of the maximum flow (since we increase by at least one unit per iteration). The total running time is therefore $O(E |f^*|)$ where $|f^*|$ is the maximum flow. 
+%
+\subsubsection{The Edmond-Karp Algorithm}
+We can improve the bound on Ford-Fulkerson by finding the augmenting path $p$ with breadth-first search. That is, we choose the augmenting path as a shortest path from $s$ to $t$ in the residual network, where each edge has unit distance (weight). Doing this to the Ford-Fulkerson Method is called the Edmonds-Karp algorithm. \\
+
+This gives us $O(VE^2)$ as running time. \\
+
+First step on proving this is to see that the minimum path length (amount of edges) in $G_f$ increases monotonically. Let $\delta_f(s, v)$ be the minimum path length from $s$ to $v$ in $G_f$. Then we look at the smallest $\delta_{f'}(s, v)$ that changed when augmenting $f$ with $f'$. Let $u$ be the vertex before $v$ in the path from $s$ to $v$. We must have $\delta_{f'}(s, u) = \delta_{f'}(s, v) - 1$. We also have $\delta_f(s, u) = \delta_{f'}(s, u)$. Therefore $(u, v) \neq E_f$. We must therefore have had $\delta_f(s, v) = \delta_f(s, u) - 1$ which leads to contradiction. \\
+
+We can use this to show that an edge can at most be critical $\frac{|V|}{2}$ times. \\
+
+Simply look at $\delta_f(s, v) = \delta_f(s, u) +1$ when $(u, v)$ is critical. In order for the edge to return to the residual network we must have $(v, u)$ be critical. This can only happen when $\delta_{f'}(s, u) = \delta_{f'}(s, v) + 1$. Since $\delta_{f'}(s, v) + 1 \geq \delta_f(s, v) + 1 = \delta_f(s, u) +2$ the result follows. \\
+
+Each augmenting path has at least one critical edge and only $O(VE)$ times can there be a critical edge. This gives the running time. 
+%
 \subsection{Maximum bipartite matching}
+This topic sucks! Jeg har basically bare kopieret noter fra Søren D. Men fatter sgu ikke så meget af det. Derfor er det heller ikke med i min disposition. Håber på, jeg aldrig bliver spurgt ind til det. 
+
 \subsubsection{The Maximum-bipartite-mathing problem}
+A matching is a subset $M \subseteq E$ such that for all vertices $v \in V$ at most one edge in $M$ is incident to $v$. A maximum matching is a matching $M$ that has $|M| \geq |M'|$ for any other matching $M'$.
+%
 \subsubsection{Finding a maximum bipartite matching}
+We can create a graph $G'$ with nodes $V' = V \cup \{s, t\}$ and edges
+\begin{align*}
+E' = \{(s, u) : u \in L\} \cup \{(u, v) : (u, v) \in E \} \cup \{(u, t) : u \in R\}
+\end{align*}
+
+All capacities $c(u, v) = 1$. It is clear that $|E'| = O(|E|)$ because we assume each node $v \in L \cup R$ has one edge incident in $E$. \\
+
+We wanna show that a flow $f$ in $G'$ corresponds to a matching $M$ in $G$. First we say that a flow is integer-valued if $f(u,v)$ is integer for all $(u,v) \in V 	\cdot V$. The claim is that if $M$ is a matching in $G$ it corresponds to a flow $f$ in $G'$ with $|f| = |M|$ and the other way around.\\
+
+To proof this, we say for a matching $M$ create a flow $f(u, v) = f(s, u) = f(u, t) = 1$ for all $(u, v) \in M$. It is easy to see that the constraints are satisfied and that $|f| = |M|$. For a flow $f$ we create a matching
+\begin{align*}
+	M = \{(u, v) : u \in L, v \in R, \text{and} f(u, v) > 0 
+\end{align*}
+Because $f$ is integer-valued this is okay. To see that this is a matching use that $(s, u) = 1$ and flow conservation means the sum over $(u, v) = 1$ (or $0$). We can also use this to show that $|M| = |f|$. \\
+
+We also need to show that when $c(u, v)$ is integral for all $(u, v)$ the maximum flow found by Ford-Fulkerson will be integer-valued. This is done easily by induction over the iteration. Base case is trivial cause $|f| = 0$.\\
+
+We can now proof by contradiction that a maximum flow corresponds to a maximum matching.
+
+\subsection{Disposition}
+The following disposition is what you can manage in 15 minutes. 
+\begin{itemize}
+	\item Flow Network $G$
+	\item Flow $|f|$
+		\begin{itemize}
+			\item Capacity Constraints
+			\item Flow Conservation
+		\end{itemize}
+	\item Ford-Fulkerson Method
+		\begin{itemize}
+			\item Residual Network \& Augmenting Paths
+			\item Max-Flow Min-Cut Theorem (with prove)
+			\item Running time (perhaps mention Edmonds-Karp - at least have an understanding of the prove, but you have no time to go through the prove)
+		\end{itemize}
+\end{itemize}
 
 \newpage
 
 \section{Fibonacci Heaps}
+Okaaaaaay! This is awesome! Kick some serious ass!
+%
+\subsubsection{Mergeable Heaps}
+A mergeable heap is any data structure that supports the following five operations in which each has a key:
+
+\begin{footnotesize}
+\begin{itemize}
+	\item MAKE-HEAP() creates and returns a new heap containing no elements
+	\item INSERT($H, x$) inserts an element $x$, whose $key$ has already been filled in, into heap $H$
+	\item MINIMUM($H$) returns a pointer to the element in heap $H$ whose key is minimum
+	\item EXTRACT-MIN($H$) deletes the element from heap $H$ whose key is minimum, returning a pointer to the element
+	\item UNION($H_1, H_2$) creates and returns a new heap that contains all the elements of heaps $H_1$ and $H_2$. Heaps $H_1$ and $H_2$ are ``destroyed'' by this operation
+\end{itemize}
+\end{footnotesize}
+
+Besides the mergeable-heap operations above, Fibonacci heaps also support the following two operations:
+
+\begin{footnotesize}
+\begin{itemize}
+	\item DECREASE-KEY($H, x, k$) assigns to element $x$ within heap $H$ the new key value $k$, which we assume to be no greater than its current value
+	\item DELETE($H, x$) deletes element $x$ from heap $H$
+\end{itemize}
+\end{footnotesize}
+
+\begin{footnotesize}
+\begin{table}[H]
+\center
+\begin{tabular}{l c c}
+ & Binary heap & Fibonacci heap \\
+ Procedure & (worst case) & (amortised)\\
+\hline
+MAKE-HEAP 		& $\Phi(1)$ 		& $\Phi(1)$\\
+INSERT 			& $\Phi(\lg(n))$ 	& $\Phi(1)$\\
+MINIMUM			& $\Phi(1)$		& $\Phi(1)$\\
+EXTRACT-MIN		& $\Phi(\lg(n))$	& $O(\lg(n))$\\
+UNION			& $\Phi(n)$		& $\Phi(1)$\\
+DECREASE-KEY	& $\Phi(\lg(n))$	& $\Phi(1)$\\
+DELETE			& $\Phi(\lg(n))$	& $O(\lg(n))$
+\end{tabular}
+\caption{Running times for operations on two implementations of mergeable heaps. The number of items in the heap(s) at the time of an operation is denoted by $n$}
+\end{table}
+\end{footnotesize}
+%
+\subsubsection{Fibonacci heaps in theory and practice}
+Fibonacci heaps are theoretically desirable when the number of EXTRACT-MIN and DELETE operations is small relative to the number of other operations performed. This can be the case for some algorithms in graph problems, that call DECREASE-KEY once per edge. Fast algorithms for computing minimum spanning trees and finding single-source shortest paths make essential use of Fibonacci heaps.\\
+From a practical point of view, however, the constant factors and complexity of Fibonacci heaps make them less desirable than ordinary binary (or $k$-ary) heaps for most applications. As such, Fibonacci heaps are pre-dominantly of theoretical interest.
+%
+\subsection{Structure of Fibonacci Heaps}
+A Fibonacci Heap is a collection of rooted trees that are min-heap ordered. That is, each tree obeys the min-heap property: the key of a node is greater than or equal to the key of its parent. Each node contains a pointer to its parent and a pointer to any one of its children. The children are linked together in a circular, doubly linked list. In a circular, doubly linked list we can insert a node into any location or remove a node from anywhere in the list in $O(1)$ time. We can also concatenate two such lists in $O(1)$ time.
+\begin{figure} [H]
+    \begin{center}
+        \includegraphics[width=\textwidth]{Images/Hmin.png}
+        \caption{Fibonacci heap consisting of five min-heap-ordered trees and 14 nodes}
+        \label{fig:H.min}
+    \end{center}
+\end{figure}
+
+We store the number of children in the cild list of node $x$ in $x.degree$. The boolean-valued attribute $x.mark$ indicates whether node $x$ has lost a child since the last time $x$ was made the child of another node. Newly created nodes are unmarked, and a node becomes unmarked whenever it is made the child of another node. Root nodes are unmarked.\\
+
+We access a Fibonacci heap $H$ by a pointer $H.min$ to the root of a tree containing the minimum key; we call this node the \textit{minimum node} of the Fibonacci heap.\\
+
+The roots of all the trees in a Fibonacci heap are linked together using their left and right pointers into a circular, doubly linked list called the \textit{root list} of the Fibonacci heap. Finally, $H.n$ refers to the number of nodes currently in the heap.
+%
+\subsubsection{Potential Function}
+In the following, the potential function of fibonacci heap is defined by
+\begin{align}
+	\Phi(H) = t(H) + 2m(H)
+\end{align}
+where $t(H)$ is the number of trees in the root list and $m(H)$ is the number of marked nodes. The potential function captures the state of a system at a given point, and we can then calculate an amortised\footnote{Amortiseret = Udover n operationer, så er det gennemsnittet} time as the actual time plus a constant times the change in state ‘energy’. This provides a valid upper bound on running time.
+
+\subsubsection{Maximum Degree}
+Meeh, nothing important, I think... 
+
+\subsection{Mergeable-heap Operations}
+The mergeable-heap operations on Fibonacci heaps delay work as long as possible. We shall see that, no matter what the root list looks like before a EXTRACT-MIN operation, afterward each node in the root list has a degree that is unique within the root list, which leads to a root list of size at most $D(n) + 1$. 
+%
+\subsubsection{Creating a New Fibonacci Heap}
+To make an empty Fibonacci heap, the MAKE-FIB-HEAP procedure allocates and returns the Fibonacci heap object $H$, where $H.n = 0$ and $H.min = NIL$; there are no trees in $H$. Because $t(H) = 0$ and $m(H) = 0$, the potential of the empty Fibonacci heap is $\Phi(H) = 0$. The amortised cost of MAKE-FIB-HEAP is thus equal to its $O(1)$ actual cost.
+%
+\subsubsection{Inserting a Node}
+\begin{figure} [H]
+    \begin{center}
+        \includegraphics[width=\textwidth]{Images/InsertFib.png}
+        \caption{\footnotesize{Inserting a node into a Fibonacci heap. \textbf{(a)} A Fibonacci heap $H$. \textbf{(b)} Fibonacci heap $H$ after inserting the node with key 21. The node becomes its own min-heap-ordered tree and is then added to the root list, becoming the left sibling of the root.}}
+    \end{center}
+\end{figure}
+
+To determine the amortised cost of FIB-HEAP-INSERT, let $H$ be the input Fibonacci heap and $H'$ be the resulting Fibonacci heap. Then $t(H') = t(H) + 1$ and $m(H') = m(H)$, and the increase in potential is $((t(H) + 1) + 2m(H)) - (t(H) + 2m(H)) = 1$. \\
+
+Since the actual cost is $O(1)$, the amortised cost is $O(1) + 1 = O(1)$.
+%
+\subsubsection{Finding the Minimum Node}
+The minimum node of a Fibonacci heap $H$ is given by the pointer $H.min$, so we can find the minimum node in $O(1)$ actual time. Because the potential of $H$ does not change, the amortised cost of this operation is equal to its $O(1)$ actual cost. 
+%
+\subsubsection{Uniting Two Fibonacci Heaps}
+We simply concatenate the root lists of $H_1$ and $H_2$ and then determines the new minimum node. Afterward, the objects representing $H_1$ and $H_2$ will never be used again. \\
+
+The change in potential is\\ $\Phi(H) - (\Phi(H_1) + \Phi(H_2)) = (t(H) + 2m(H)) - ((t(H_1) + 2m(H_1)) + (t(H_2) + 2m(H_2))) = 0$\\ because $t(H) = t(H_1) + t(H_2)$ and $m(H) = m(H_1) + m(H_2)$. The amortised cost of FIB-HEAP-UNION is therefore equal to its $O(1)$ actual cost. 
+%
+\subsubsection{Extracting the Minimum Node}
+The process of extracting the minimum node is the most complicated of the operations presented in this section. It is also where the delayed work of consolidating trees in the root list finally occurs. \\
+
+FIB-HEAP-EXTRACT-MIN works by first making a root out of each of the minimum node’s children and removing the minimum node from the root list. It then consolidates the root list by linking roots of equal degree until at most one root remains of each degree.\\
+
+Consolidating the root list consists of repeatedly executing the following steps until every root in the root list has a distinct degree value:
+\begin{enumerate}
+	\item Find two roots $x$ and $y$ in the root list with the same degree. Without loss of generality, let $x.key \leq y.key$
+	\item \textbf{\textit{Link}} $y$ to $x$: remove $y$ from the root list, and make $y$ a child of $x$ by calling the FIB-HEAP-LINK procedure. This procedure increments the attribute $x.degree$ and clears the mark on $y$. 
+\end{enumerate}
+
+So what we do is, removing $H.min$ and add its children to the root list. Then we start the consolidation with array $A$, starting at the new $H.min$ going to right. When we have to nodes with same degree (height) in a row, we merge them. In the end we have a bunch of nodes at the root list with different degrees, and we mark the new $H.min$. \\
+
+There are several things we must estimate the cost of: extracting the minimum node, the main for-loop through the root list and within that the while-loop that links together trees.\\
+
+The amortised cost of extracting the minimum node of an n-node Fibonacci heap is $O(D(n))$. Let $H$ denote the Fibonacci heap prior to the ExtractMin operation. The actual cost of extracting the minimum node contributes $O(D(n))$ work from processing at most $D(n)$ children of the minimum node.\\
+
+Upon calling consolidate, the size of the root list is at most $D(n) + t(H) - 1$: the original $t(H)$ root-list nodes, minus the extracted root node, plus the children of the extracted node, at most $D(n)$. Every iteration of the inner while-loop, we know that one root is linked to another, and so the total number of iterations of the while loop over all iterations of the for loop is at most the number of roots in the root list. Hence, the total amount of work performed in the for loop is at most proportional to $D(n)+ t(H)$. The total actual work in extracting the minimum node is therefore $O(D(n) + t(H))$. The potential before extracting the minimum node is $t(H) + 2m(H)$. The potential afterwards is at most $(D(n) + 1) + 2m(H)$, since at most $D(n) + 1$ roots remain and no nodes get marked during this operation. The amortised cost is thus at most:
+\begin{align*}
+	&O(D(n) + t(H)) + ((D(n) + 1) + 2m(H)) - (t(H) + 2m(H))\\
+	&= O(D(n)) + O(t(H)) - O(t(H))\\
+	&= O(D(n))
+\end{align*}
+if we scale up the units of the potential to dominate the constant hidden in $t(H)$. We will see later that $D(n) = O(\lg n)$, giving an amortised running time of $O(\lg n)$ for extracting the minimum node.
+%
+\subsection{Decreasing a Key and Deleting a Node}
+\subsubsection{Decreasing a Key}
+To decrease a key a few things happens. We start with an initial Fibonacci heap. It is important to notice the marked nodes. A node is now decreased and it is moved to the root list, and its parent is marked. IF the parent was marked already, the marked parent is cut from its own parent and moved to the root list unmarked. When we reach an unmarked node or a root key, the algorithm stops, and we update $H.min$ if necessary. \\
+
+The FIB-HEAP-DECREASE-KEY procedure takes $O(1)$ time plus the time to perform the cascading cuts. Suppose that a given invocation of FIB-HEAP-DECREASE-KEY results in $c$ calls of CASCADING-CUT - each of these calls takes $O(1)$ time exclusive recursive calls. Thus, the actual cost is $O(c)$. \\
+
+Next we compute the change in potential. We let $H$ denote the Fibonacci heap just prior to the FIB-HEAP-DECREASE-KEY operation. The call to CUT creates a new tree rooted at node $x$ and clears $x$'s mark bit. Each call of CASCADING-CUT, except for the last one, cuts a marked node and clears the mark bit. The Fibonacci heap now contains $t(H) + c$ trees and at most $m(H) - c + 2$ marked nodes. The change in potential is therefore at most \\
+
+$((t(H) + c) + 2(m(H) -c + 2)) - (t(H) + 2m(H)) = 4 - c$. \\
+
+Thus, the amortised cost of FIB-HEAP-DECREASE-KEY is at most $O(c) + 4 - c = O(1)$, since we can scale up the units of potential to dominate the constant hidden in $O(c)$. You can now see why we defined the potential function to include a term that is twice the number of marked nodes. When a marked node $y$ is cut by a cascading cut, its mark bit is cleared, which reduces the potential by 2. One unit of potential pays for the cut and the clearing of the mark bit, and the other unit compensates for the unit increase in potential due to node $y$ becoming a root.
+%
+\subsubsection{Deleting a Node}
+Deleting a node works by first setting its key to minus infinity, and then extracting the minimum. We already know that decreasing a key takes $O(1)$ amortised time, and extracting minimum takes $O(D(n))$ amortised time. As we will see that $D(n) = O(\lg n)$, deleting a node runs in amortised time of $O(\lg n)$.
+
+\subsection{Bounding the Maximum Degree}
+To prove that the amortised time of FIB-HEAP-EXTRACT-MIN and FIB-HEAP-DELTE is $O(\lg n)$, we must show that the upper bound $D(n)$ on the degree of any node of an $n$-node Fibonacci heap is $O(\lg n)$. In particular, we shall show that $D(n) \leq \lfloor \log_{\phi}n\rfloor$, where $\phi$ is the golden ration, defined in the book as $\phi = \frac{(1 + \sqrt{5})}{2} = 1.61803...$\\
+
+The key to the analysis is as follows. For each node $x$ within a Fibonacci heap, define size($x$) to be the number of nodes, including $x$ itself, in the subtree rooted at $x$. We shall show that size($x$) is exponential in $x.degree$. \\
+
+\textbf{INDSÆT NOGET HER, SOM DU KAN LÆSE OP PÅ, NÅR DU ØVER. DER VIL NÆPPE VÆRE TID TIL AT SNAKKE ET 4 SIDERS OPLÆG IGENNEM MED 5 LEMMAER/COROLLARER}
+%
+\subsection{Disposition}
 \newpage
 
 \section{NP-Completeness}
@@ -250,7 +697,7 @@ Illustration in the book on page 254
 Downsides of direct addressing: If the universe $U$ is large, storing a table $T$ of size $|U|$ may be impractical or even impossible, given the memory available on a typical computer. Furthermore, the set $K$ of keys actually stored may be so small relative to $U$ that most of the space allocated for $T$ would be wasted. 
 
 \subsection{Hash tables}
-To overcome the downsides of direct addressing, we can use hash tables. When $K$ is much smaller than $U$, a hash table requires much less space than a direct-address table. It can also reduce storage requirements to $\Theta (|K|)$. \\
+To overcome the downsides of direct addressing, we can use hash tables. When $K$ is much smaller than $U$, a hash table requires much less space than a direct-address table. It can also reduce storage requirements to $\Phi (|K|)$. \\
 
 This bound is for average-case time whereas for direct addressing it holds for the worst-case time. \\
 
@@ -277,15 +724,15 @@ In chaining we place all the elements that hash to the same slot into the same l
 \textbf{Analysis of hashing with chaining}\\
 Given a hash table $T$ with $m$ slots that stores $n$ elements, we define the load factor $\alpha$ for $T$ as $n/m$ which is the same as the average number of elements stores in a chain. \\
 
-Worst case performing: $\Theta (n)$ + the time to compute the hash function (all $n$ keys hash to the same slot, creating a list of length $n$. \\
+Worst case performing: $\Phi (n)$ + the time to compute the hash function (all $n$ keys hash to the same slot, creating a list of length $n$. \\
 
 Average case performing of hashing depends on how well the hash function $h$ distributes the set of keys to be stores among the $m$ slots, on the average. \\
 
 \textbf{\textit{Theorem 11.1}}
-In a hash table in which collisions are resolved by chaining, an unsuccessful search takes an average-case time $\Theta (1 + \alpha)$, under the assumption of simple uniform hashing. (OBS: Beviset herfor står på side 259!! LÆS OG FORSTÅ)\\
+In a hash table in which collisions are resolved by chaining, an unsuccessful search takes an average-case time $\Phi (1 + \alpha)$, under the assumption of simple uniform hashing. (OBS: Beviset herfor står på side 259!! LÆS OG FORSTÅ)\\
 
 \textbf{\textit{Theorem 11.2}} 
-In a hash table in which collisions are resolved by chaining, a successful search takes average-case time $\Theta (1 + \alpha)$, under the assumption of simple uniform hashing. (OBS: Beviset herfor står på side 259-260!! LÆS OG FORSTÅ)
+In a hash table in which collisions are resolved by chaining, a successful search takes average-case time $\Phi (1 + \alpha)$, under the assumption of simple uniform hashing. (OBS: Beviset herfor står på side 259-260!! LÆS OG FORSTÅ)
 
 \subsection{Hash functions}
 \textbf{What makes a good hash function?} \\
@@ -311,6 +758,13 @@ Most hash functions assume that the universe of keys is the set $\mathbb{N} = \{
 \newpage
 
 \section{Linear Programming and Optimisation}
+[\cite{monoids}]
+
+\newpage
+\bibliographystyle{plainnat}
+%\bibliographystyle{unsrt}
+\bibliography{bibliography}
+
 
 %-----------------------------------------------------------------------------
 \end{document}

@@ -17,6 +17,150 @@ two-sided. A one sided algorithm is always correct for one of the answer
 (yes/no) but might be wrong on the other one. If it is two-sided then it might
 be wrong on both answers.
 
+% \subsubsection{Randomized Quicksort}
+% \begin{description}
+% \item[Input:] A set of numbers, $S$.
+% \item[Output:] The elements of $S$ sorted in increasing order.
+% \item[1.] Choose an element $y$ uniformly at random from $S$: Every element in
+%   $S$ have equal probability of being chosen.
+% \item[2.] By comparing each element of $S$ with y, determine the set $S_1$ of
+%   elements smaller than $y$ and the set $S_2$ of elements larger than $y$.
+% \item[3.] Recursively sort $S_1$ and $S_2$. Output the sorted version of $S_1$
+%   followed by $y$, then the sorted version of $S_2$.
+% \end{description}
+
+% To find the running time of the algorithm we need to find the expected number of
+% comparisons done in step 2. For $1 \leq i \leq n$, let $S_{(i)}$ denote the
+% element of rank $i$ (the $i$th smallest element) in the set $S$.  Thus $S_{(1)}$
+% denotes the smallest element of $S$, and $S_{(n)}$ denotes the largest.  Define
+% a random variable $X_{ij}$ to assume the value 1 if $S_{(i)}$ and $S_{(j)}$ are
+% compared in an execution, and the value 0 otherwise.  Thus, $X_{(ij)}$ is a
+% count of comparisons between $S_{(i)}$ and $S_{(j)}$, and so the total number of
+% comparisons is $\sum^n_{i=1}\sum_{j>i} X_{ij}$. We want the expected number of
+% comparisons which is:
+% \begin{align}
+% \mathbb{E}[\sum^n_{i=1}\sum_{j>i} X_{ij}] = \sum^n_{i=1}\sum_{j>i}
+% \mathbb{E}[X_{ij}] \label{eq:rand1.2}
+% \end{align}
+% Let $p_{ij}$ denote the probability that $S_{(i)}$ and $S_{(j)}$ are compared in
+% an execution.  Since $X_{ij}$ only assumes the values 0 and 1,
+% \begin{align}
+%   \mathbb{E}[X_{ij}] = p_{ij} \times 1 + (1 - p_{ij}) \times 0 = p_{ij} \label{eq:rand1.3}
+% \end{align}
+
+% To faciltiate the determination of $p_{ij}$, we view the execution of the
+% algorithm as a binary tree $T$, each node is labeled as an element of $S$, with
+% $y$ as the root, and the left subtree being $S_1$ and the right subtree being
+% $S_2$.  The root $y$ is compared to the elements in the two sub-trees, but no
+% comparison is performed between elements in different subtrees.  Thus there is a
+% comparison between $S_{(i)}$ and $S_{(j)}$ iff one of the elements is an
+% ancestor of the other.
+
+% The in-order traversal of $T$ will visit the elements of $S$ in sorted order,
+% and that is the output of the algorithm.
+
+% The level-order traversal (left to right then one level down and repeat) yields
+% a permutation $\pi$.  To compute $p_{ij}$ we make two observations:
+% \begin{enumerate*}
+% \item There is a comparison between $S_{(i)}$ and $S_{(j)}$ iff $S_{(i)}$ or
+%   $S_{(j)}$ occurs earlier in the permutation $\pi$ than any element
+%   $S_{(\ell)}$ such that $i < \ell < j$. To seee this let $S_{(k)}$ be the
+%   earliest in $\pi$ from among all elements of rank between $i$ and $j$.  If $k
+%   \notin \{ i,j \}$, then $S_{(i)}$ wil lbelong to the left sub-tree of
+%   $S_{(k)}$ while $S_{(j)}$ will belong to the right. implying that there is no
+%   comparison between the two.  Conversely if $k \in \{i,j\}$ , there is an
+%   ancesto-descendant relationship between $S_{(i)}$ and $S_{(j)}$, implying
+%   comparisons.
+
+% \item Any of the elements $S_{(i)}$, $S_{(ji+1}$, ..., $S_{(j)}$ is equally
+%   likely to be the first element chosen as partition element, and hence appear
+%   first in $\pi$.  Thus the probability that this first element is either
+%   $S_{(i)}$ or $S_{(j)}$ is exactly $\frac{2}{j-i+1}$.
+% \end{enumerate*}
+
+% We have established that $p_{ij} = \frac{2}{j-i+1}$ and by equations
+% \ref{eq:rand1.2} and \ref{eq:rand1.3} the expected number of comparisons is
+% given by:
+% \begin{align*}
+% \sum^n_{i=1} \sum_{j>i} p_{ij} &= \sum^n_{i=1} \sum_{j>i} \frac{2}{j-i+1} \\
+%  &\leq \sum^n_{i=1} \sum^{n-i+1}_{k=1} \frac{2}{k} \\
+%  &\leq 2\sum^n_{i=1} \sum^{n}_{k=1} \frac{1}{k}
+% \end{align*}
+
+% It follow that the expected number of comparisons is bounded above by $2nH_n$,
+% where $H_n$ is the n'th harmonic number, defined by: $H_n = \sum^n_{k=1} 1/k$.
+
+% \begin{description}
+% \item[Theorem 1.1] The expected number of comparisons in the execution of
+%   randimized quicksort is at most $2nH_n$.
+
+% \item[Proof] \qed
+% \end{description}
+
+% \subsubsection{Randomized selection with LazySelect}
+% We can use random sampling to selecth the $k$th smallest element i na set $S$ of
+% $n$ elements. We assume all elements in $S$ are distinct. Let $r_s(t)$ denote
+% the rank of an element $t$ (the $k$th smallest element has rank $k$) and let
+% $S_{(i)}$ denote the $i$th smallest element of $S$. Thus we seek to identify
+% $S_{(k)}$.
+
+% \begin{description}
+% \item[Input:] A set $S$ of $n$ elements from a totally ordered universe, and an
+  % integer $0 < k\leq n$.
+% \item[Output:] The $k$'th smallest element of $S$, $S_{(k)}$.
+% \item[1.] Pick $n^{3/4}$ elements form $S$, chosen independtly and uniformly at
+  % random; calls this multiset of elements $R$.
+% \item[2.] Sort $R$ in $O(n^{3/4} log n)$ steps using an optimal sorting
+  % algorithm.
+% \item[3.] Let $x = kn^{-1/4}$. For $\ell = \text{max}\{\lfloor
+  % x-\sqrt{n}\rfloor,1\}$, and $h = \text{min}\{\lceil x + \sqrt{n}\rceil
+  % ,n^{3/4}\}$, let $a = R_{(\ell)}$, and $b = R_{(h)}$. By comparing $a$ and $b$
+  % to every element o $S$, determine $r_S(a)$ and $r_S(b)$.
+% \item[4.] \begin{codebox}
+% \li \If $k < n^{1/4}$ let $P \gets \{y \in S | y \leq b\}$ \\
+% \li \Else \If $k > n-n^{1/4}$, let $P \gets \{y \in S | y\geq a\}$ \\
+% \li \Else \If $k \in [n^{1/4}, n-n^{1/4}]$, let $P \gets \{y \in S | a \leq y \leq b\}$ \\
+% \end{codebox}
+% Check wether $S_{(k)} \in P$ and $|P| \leq 4n^{3/4}+2$. If not, repeat steps 1-3
+% until such a $P$ is found.
+% \item[5.] By sorting $P$ in $O(|P|\text{log}|P|)$ steps, identify
+  % $P_{(k-r_s(a)+1)}$, which is $S_{(k)}$.
+% \end{description}
+
+\subsubsection{Randomized Min Cut}
+
+Events $\varepsilon_1$ and $\varepsilon_2$ are independent if the probability that they both occur are
+\begin{align}
+  \mathbf{Pr}[\varepsilon_1 \cap  \varepsilon_2] = \mathbf{Pr}[\varepsilon_1] \times \mathbf{Pr}[\varepsilon_2]
+\end{align}
+
+When they are not necessarily independent,
+\begin{align}
+  \mathbf{Pr}[\varepsilon_1 \cap \varepsilon_2] = \mathbf{Pr}[\varepsilon_1|\varepsilon_2] \times
+  \mathbf{Pr}[\varepsilon_2] = \mathbf{Pr}[\varepsilon_2|\varepsilon_1] \times \mathbf{Pr}[\varepsilon_1],
+  \label{eq:rand2}
+\end{align}
+sometimes when a collection of events is not independent, a generalization of (\ref{eq:rand2}) can be used:
+\begin{align}
+  \mathbf{Pr}[\cap^k_{i=1}\varepsilon_i] = \mathbf{Pr}[\varepsilon_1] \times \mathbf{Pr}[\varepsilon_2|\varepsilon_1]
+  \times \mathbf{Pr}[\varepsilon_3|\varepsilon_1 \cap \varepsilon_2] ... \mathbf{Pr}[\varepsilon_k|\cap^{k-1}_{i=1}\varepsilon_i].
+\end{align}
+
+
+Consider a multigraph $G$ (multigraphs can have multiple edges between two vertices). A cut in the graph $G$is the removal of a set of edges that divides the graph into
+two or more components. A min cut is a cut of minimum cardinality (cardinality is how many items are in a set).
+The algorithm works by contracting edges, contracting and edges simply means merge the two vertices at the end and retain all edges connected to them, delete any self-loops.
+This algorithm will work since all edges in the newly created graph will always be edges also in $G$ so any cut in $G'$ is also a cut in $G$.
+
+The algorithm is simple:
+\begin{enumerate*}
+  \item Pick an edge uniformly at random and contract it to create $G'$ with at least one edge less than $G$.
+  \item Repeat step 1 until only two vertices remain.
+  \item The edges between the two vertices in $G'$ is output as a candidate min-cut.
+\end{enumerate*}
+
+
+
 
 \subsubsection{Markov \& Chebyshev's inequalities}
 \begin{description}
@@ -59,5 +203,3 @@ be wrong on both answers.
   applying the Markov inequality to $Y$ bounds this probability from above by
   $1/t^2$. \qed
 \end{description}
-
-\todo[inline]{Write about lazy select or randomized quicksort}
