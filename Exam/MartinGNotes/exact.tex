@@ -1,0 +1,55 @@
+\section{Exact Exponential Algorithms \& Fixed-parameter tractable problems: Disposition}
+\begin{enumerate}
+  \item $O^*$-notation
+  \item Parameterized Complexity
+  \item Travelling Salesman Problem using Dynamic Programming
+  \item CNF-Satisfiablility.
+\end{enumerate}
+
+Formin \& Kratsch, Ch. 1
+Fixed-parameter tractable problems - Selected notes.
+
+\section{Exact Exponential Algorithms \& Fixed-parameter tractable problems: Notes}
+
+\subsection{$O^*$-notation}
+$\mathbb{O}^*$ notation is $\mathbb{O}$ notation where we suppress all
+polynomially bounded factors. For example $O(kn^kk^n) = O(n^kk^n)$ but we have
+$O^*(kn^kk^n) = O^*(k^n)$.
+
+Different kinds of problems are measured based on different `kinds' of input:
+\begin{itemize}
+	\item Optimization problems on graphs are analyzed in terms of the number of vertices.
+	\item Problems on sets are analyzed in terms of the number of elements.
+	\item Problems on Boolean formulas are analyzed in terms of the number of variables.
+\end{itemize}
+
+There are often three broad categories of exact exponential algorithms:
+\begin{itemize}
+	\item Subset problems. Maximum independent set.
+	\item Permutation problems. Travelling Salesman Problem.
+	\item Partition problems. Graph coloring.
+\end{itemize}
+
+\subsection{Parameterized complexity}
+\textit{Parameterized complexity} seeks to obtain algorithms whose running time can be bounded
+by a polynomial function of the input length, and, usually, an exponential function of a parameter.
+The parameter depends on the problem, e.g.\ the number of vertices in a graph, the number of variables
+in a formula, etc. However, it is unclear whether parameterized complexity is directly applicable, as one
+of the fundamental assumptions is that the parameter is independent of the input size.
+
+\subsection{Travelling Salesman Problem}
+Given cities $\{c_1,c_2,\hdots, c_n\}$ with distances $d(c_i,c_j)$, find the shortest path
+going through all cities exactly once and returning to the starting point. Different point of view:
+Find the permutation $\pi$ of $\{1 \hdots n\}$ that minimizes 
+$\sum_{i=1}^{n-1} d(c_{\pi(i)}, c_{\pi(i+1)}) + d(c_{\pi(n), c_{\pi(1)}})$.
+
+We use dynamic programming to compute for every pair $(S, c_i)$ the optimal tour of $S$, starting
+at $c_1$ and ending at $c_i \rightarrow OPT[S,c_i]$. For $|S| > 1$, we have that
+$OPT[S,c_i] = min\{OPT[S\setminus\{c_i\}, c_j] + d(c_j,c_i): c_j \in S\setminus \{c_i\}\}$. That is, the
+optimal tour is the minimum distance from $c_1$ to $c_j$, plus the distance from $c_j$ to $c_i$,
+for all subsets not containing $c_i$. For $|S|=k$, each step is $O(k^2)$, because we choose $k$ possible
+$c_i$ and for each find the preceeding best $c_j$. The total number of subsets is
+$\sum_{k=1}^{n-1} \binom{n}{k}k^2 = \mathbb{O}^*(2^n)$.
+
+\subsection{CNF etc...}
+\todo[inline]{FUUUUUDGE DET HER LAAAART!}

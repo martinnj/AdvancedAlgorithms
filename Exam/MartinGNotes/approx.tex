@@ -1,0 +1,122 @@
+\section{Approximation Algorithms: Disposition}
+\begin{enumerate}
+	\item Performance ratio
+	\item Vertex-cover
+	\item Traveling-salesman
+	\item Set-covering
+	\item Randomization \& Linear programming
+	\item Subset-sum problem
+\end{enumerate}
+
+CLRS 35.1, 35.2, 35.3, 35.4, 35.5
+
+\section{Approximation Algorithms: Notes}
+An approximation algorithm is an algorithm that computes a near-optimal solution,
+often because the optimal solution is NP-complete and thus intractable or at least
+exponential in running time. One solution to that is to only work on small problem sets,
+where exponential time is fine. Another is to compute a near-optimal solution using an
+approximation algorithm.
+
+\subsection{Performance ratio}
+We say that an algorithm for a problem has an \textbf{approximation ratio} of
+$p(n)$ if, for any input of size $n$, the cost $C$ of the solution produced by
+the algorithm is within a factor of $p(n)$ of the cost $C^*$ of an optimal
+solution:
+%
+\[
+	max\left( \frac{C}{C^*}, \frac{C^*}{C}\right) \leq p(n)
+\]
+%
+If an algorithm achieves an approximation ratio of $p(n)$ we call it a
+$p(n)$\textbf{-approximation algorithm}. Because we assume all solutions have
+a positive cost, these ratios are always well-defined. The approximation ratio of
+an approximation algorithm is never less than 1, since $C/C^*\leq 1$ implies $C^*/C \geq 1$.
+Therefore, a 1-approximation algorithm produces an optimal solution, and an approximation
+algorithm with a large approximation ratio may return a solution much worse than optimal.
+
+Below some schemes are outlined which allow us to give a value $\epsilon$ along
+with the instance of the problem and achieve an approximation that have a
+quality depending on the value.
+\begin{description}
+\item[Approximation Scheme] for an optimization problem is an approximation
+  algorithm that takes as input, not only an instance of the problem, but also a
+  value $\epsilon > 0$ such that for any fied $\epsilon$ the scheme is a
+  $(1+\epsilon)$-approximation algorithm.
+
+\item[Polynomial-Time Approximation Scheme] is an approximation scheme if for
+  any fixed $\epsilon > 0$, the scheme runs in polynomia ltime in the size $n$
+  of it's input instance. The running time of such a scheme can increase rapidly
+  as $\epsilon$ decreases. For example, the running time of a polynomial-time
+  approximation scheme might be $O(n^{(2/\epsilon)})$. Ideally, if $\epsilon$
+  decrease by a constant factor, the running time to achieve the desired
+  approximation should not incrase by more than a constant factor. (Not
+  necessarily by the same factor $\epsilon$ was decreased with.)
+
+\item[Fully Polynomial-Time Approximation Scheme] means the approximation
+  algorithm runs in polynomial time in both $1/\epsilon$ and the size $n$ of the
+  input instance. I.e. $O((1/\epsilon)^2n^3)$. With such a scheme, a constant
+  factor decrease in $\epsilon$ comes with a constant factor increase in
+  runningtime.
+\end{description}
+
+\subsection{Vertex-cover}
+A Vertex Cover of an undirected graph $G = (V,E)$ is a subset $V' \subseteq V$
+such that if $(u,v)$is an edge of $G$, then either $u \in V'$ or $v \in V'$ or
+both. The size of a vertex cover is the number of vertices in it.
+
+The Vertex Cover Problem is to find a vertex cover of minimum size in a given
+undirected graph, this is an optimization version of an NP-Complete decision
+problem.
+
+\begin{description}
+\item[Theorem 35.1] \texttt{Approx-Vertex-Cover} is a polynomial-time
+  2-approximation algorithm.
+\item[Proof] It is already shown that the algorithm is a polynomial time
+  algorithm.
+
+  The set $C$ of vertices return must be a vertex cover since it loops until
+  every edge in $G.E$ have been covered by some vertex.
+
+  To see that the algorithm returns a vertex cover of at most twice the size of
+  an optimal cover, let $A$ denote the set og edges that line 4 selects.  To
+  cover all the edges in $A$, any vertex cover, in particular the optimal vertex
+  cover $C^*$, must include at least one endpoint of each edge in $A$. No two
+  edges share endpoints since when an edge is picked, all edges incident on its
+  endpoints are removed. Thus no two edges in $A$ are covered by the same vertex
+  from $C^*$, and we have the lower bound
+  \[
+    |C^*| \geq |A|
+  \]
+  on the size of an optimal vertex cover. Each execution of line 4 picks an edge
+  which neither of its endpoints are already in $C$, yielding an upper boind on
+  the size of the vertex cover returned
+  \[
+    |C| = 2|A|
+  \]
+  Combining the two bounds gives
+  \begin{align*}
+    |C| &= 2|A| \\
+        &\leq 2|C*|
+  \end{align*}
+  thereby proving the theorem. \qed
+\end{description}
+
+\subsection{Travelling-salesman}
+The TSP is also NP-Complete, the following is a method for approximating an
+optimal solution that is at most twice as long as the optimal tour.
+
+It creates a minimum spanning tree using Prims algorithm, and walks along this
+tree using a pre-order walk (parent first then child), and uses this as the
+solution.
+
+\begin{description}
+\item[Theorem 35.2] \texttt{Approx-TSP-Tour} is a polynomial-time
+  2-approximation algorithm for the traveling salesman problem, with the
+  triangle inequality.
+
+\item[Proof] See page 1114.
+\end{description}
+
+\subsection{Set-covering}
+\subsection{Randomization \& Linear programming}
+\subsection{Subset-sum problem}
