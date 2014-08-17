@@ -1,0 +1,82 @@
+\section{Randomised Algorithms}
+OMG!!! This you can do! Even in danglish
+
+\subsection{Randomised Quicksort}
+Vi vil sortere sættet $S$ på $n$ numre. Hvis vi kan finde et $y$ af $S$, sådan at halvdelen er mindre end $y$, så kan vi dele sættet i 2 bortset fra $y$, sådan at $S_1$ indeholder alle elementer, der er $< y$ og $S_2$ resten. Så sorterer vi rekursivt $S_1$ og $S_2$ og outputter elementerne af $S_1$ sorteret stigende, efterfuldt af $y$ og så elementerne af $S_2$, også i stigende rækkefølge. Hvis vi kunne finde $y$ i $cn$ trin for en eller anden konstant $c$m ville vi kunne partionere $S \setminus \{y\}$ til $S_1$ og $S_2$ i $n - 1$ tilsvarende trin ved at sammenligne hvert element af $S$ med $y$ - og dermed ville det totale antal trin være givet af følgende rekurrens: 
+
+\begin{align}
+	T(n) \leq 2T(\frac{n}{2}) + (c + 1)n
+\end{align}
+
+hvor $T(k)$ repræsenterer tiden det tager for denne metode at sortere $k$ input. Ved direkte substitution kan vi verificere, at $T(n) \leq c'n \lg n$ for en konstant $c'$. \\
+
+Der er en vis udfordring i, at dele $S_1$ og $S_2$ i to lige store dele. Her prøver vi at gøre det med tilfældighed, og ender med algoritmen: RandQS = Randomised Quicksort\footnote{RandQS er et eksempel på en randomiseret algoritme - altså en algoritme, der foretager et tilfældigt valg på et tidspunkt i sin eksekvering - her i step 1}. \\
+
+\textbf{Køretiden for RandQS kan analyseres til følgende:} \\
+Køretiden for randomiseret Quicksort er analyseret ud fra antallet af sammenligninger. Vi vil gerne finde the forventede antal af sammenligninger. \\
+
+For $1 \leq i \leq n$, lad $S_{(i)}$ angive elementet af rang $i$ (det $i$te mindste element) i sæt $S$. Således er $S_{(1)}$ det mindste element og $S_{(n)}$ det største. Definér den tilfældige variabel $X_{ij}$ til at antage værdien $1$ hvis $S_{(i)}$ og $S_{(j)}$ er sammenlignet, og værdien $0$ ellers.\\
+
+Det totale antal sammenligninger er 
+\[
+	\sum_{i=1}^n \sum_{j>i} X_{ij}
+\]
+Det forventede antal sammenligninger er (by Linearity of Expectation)
+\[
+	\mathbb{E}[\sum_{i=1}^n \sum_{j>i} X_{ij}] = \sum_{i=1}^n \sum_{j>i} \mathbb{E}[X_{ij}]
+\]
+
+Så lader vi $p_{ij}$ angive sansynligheden for at $S_{(i)}$ og $S_{(j)}$ bliver sammenlignet i en udførelse. $X_{ij}$ kan antage værdierne $0$ og $1$, så:
+\[
+	\mathbb{E}[X_{ij}] = p_{ij} \times 1 + (1 - p_{ij}) \times 0 = p_{ij}
+\]
+
+For at bestemme $p_{ij}$, kigger vi på udførelsen af RandQS som et binært søgetræ $T$, hvor hver node er et særskilt element af $S$. Roden i træet er pivoten $y$, som vi valgte indledningsvist. Venstre subtræ indeholder elementerne i $S_1$ og højre subtræ $S_2$. Strukturen bestemmes rekursivt ved sekventielle kørsler af RandQS. Man sammenligner roden af træet $y$ med elementerne i henholdsvis $S_1$ og $S_2$, men elementerne i $S_1$ og $S_2$ sammenlignes ikke med hinanden. \\
+
+
+This makes $T$ a random binary search tree. We are for this analysis interested in the level-order traversal of the
+nodes of $T$. Such a traversal is a permutation $\pi$ obtained by visiting the nodes of $T$ in increasing order of
+the level numbers, and in a left-to-right order within each level; recall that the $i$th level of the tree is the set
+of all nodes at distance exactly $i$ from the root node.
+
+To compute $p_{ij}$ we make use of two observations:
+
+\begin{enumerate}
+	\item There is a comparison between $S_{(i)}$ and $S_{(j)}$ if and only if $S_{(i)}$ or $S_{(j)}$ occur
+	earlier in the permutation $\pi$ than any element $S_{(l)}$ such that $i < l < j$. Intuitively, they are
+	only compared if there is some pivot node $l$ that puts $i$ in $S_1$ and $j$ in $S_2$. To see this, let
+	$S_{(k)}$ be the earliest in $\pi$ from among all elements of rank between $i$ and $j$. If $k \notin \{i,j\}$
+	then $S_{(i)}$ will belong to the left sub-tree of $S_{(k)}$ while $S_{(j)}$ will belong to the right sub-tree
+	of $S_{(k)}$, implying that there is no comparison between $S_{(i)}$ and $S_{(j)}$. Conversely, if
+	$k \in \{i,j\}$ then it must be that there is a parent-child relationship between $S_{(i)}$ and $S_{(j)}$
+	implying that the two are compared.
+
+	\item Any of the elements $S_{(i)}, S_{(i+1)}, \hdots, S_{(j)}$ is equally likely to be chosen as the pivot and
+	hence appear first in $\pi$. Thus, the probability that the first element is either $S_{(i)}$ or $S_{(j)}$ is
+	exactly $2 / (j - i + 1)$.
+\end{enumerate}
+
+This establishes that $p_{ij} = 2/(j - i + 1)$. The expected number of comparisons is thus:
+%
+\begin{align*}
+	\sum_{i=1}^n \sum_{j>i} p_{ij} &= \sum_{i=1}^n \sum_{j>i} \frac{2}{j-i+1} \\
+	&\leq \sum_{i=1}^n \sum_{k=1}^{n-i+1} \frac{2}{k} \\
+	&\leq 2\sum_{i=1}^n \sum_{k=1}^{n} \frac{1}{k}
+\end{align*}
+%
+It follows that the expected number of comparisons is bounded by $2nH_n$, where $H_n$ is the \textit{nth}
+Harmonic number, defined by $H_n = \sum_{k=1}^n 1/k$. We know that $H_n \sim ln\ n + \Theta(1)$, making the
+expected running time of randomized quicksort $O(n\ lg\ n)$
+
+
+\subsection{Disposition}
+Forslag - bygget på Martin G's noter - måske er Søren D's bedre...
+
+\begin{enumerate}
+	\item Randomised Quicksort
+	\item Las Vegas, Monte Carlo
+	\item 1-sided vs. 2-sided
+	\item Bounded Running Times
+	\item Markov \& Chebyshev's Inequalities
+	\item Randomised Selection
+\end{enumerate}
