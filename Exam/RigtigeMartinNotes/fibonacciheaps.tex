@@ -210,4 +210,43 @@ which is the number of nodes currently in $H$.
   \end{codebox}
 \end{description}
 
-\todo[inline]{Wrwite something about $D(n)$ since it's used for all the proofs.}
+\subsubsection{Bounding Maximum Degree}
+\todo[inline]{Starts on p. 523}
+\begin{description}
+  % \item[Lemma 19.1] Let $x$ be a node in a Fibonacci heap, and suppose that
+  %   $x.degree = k$. Let $y_1, y_2,...y_k$ denote the children of $x$ in order
+  %   of which they were linked to $x$, from earliest to latest. Then
+  %   $y_1.degree \geq 0$ and $y_i.degree \geq i-2$ for $i = 2,3,...,k$.
+
+% \item[Proof] Obviusly, $y_1.degree = \geq 0$. For $i \geq 2$, we note that
+%   when $y_i$ was linked to $x$, all of $y_1,y_2,..,y_{i-1}$ were children of
+%   $x$, and so we must have had $x.degree \geq i-1$.  Because $y_i$ is linked
+%   to $x$ (by \texttt{Consolidate}) only if $x.degree = y_i.degree$, we must
+%   also have $y_i.degree \geq i-1$ at that time. Since then, node $y_i$ has
+%   lost at most one child, since it would have been cut from $x$ (by
+%   \texttt{Cascading-Cut}) if it had lost two children. We conclude that
+%   $y_i.degree \geq i-2$. \qed
+
+%\item[Lemma 19.2]
+%\item[Proof]
+
+%\item[Lemma 19.3]
+%\item[Proof]
+
+  \item[Lemma 19.4] Let $x$ be any node in a Fibonacci heap, and let $k =
+    x.degree$. Then size$(x) \geq F_{k+2} \geq \phi^k$, where $\phi =
+    (1+\sqrt{5})/2$.
+  \item[Proof]
+
+  \item[Corollary 19.5] The maximum degree $D(n)$ of any node in an $n$-node
+    Fibonacci heap is $O(\text{lg} n)$.
+  \item[Proof] Let $x$ be any node in an $n$-node Fibonacci heap, and let $k =
+    x.degree$. By Lemma 19.4, we have $n \geq \text{size}(x) \geq
+    \phi^k$. Taking base-$\phi$ logarithms gives us $k \leq \text{log}_\phi n$.
+    In fact, because $k$ is an integer, $k \leq \lfloor \text{log}_\phi n
+    \rfloor$. The maximum degree $D(n)$of any node is thus $O(\text{lg}
+    n)$. \qed
+
+\end{description}
+
+
