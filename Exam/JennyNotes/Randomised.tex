@@ -33,19 +33,13 @@ Så lader vi $p_{ij}$ angive sansynligheden for at $S_{(i)}$ og $S_{(j)}$ bliver
 
 For at bestemme $p_{ij}$, kigger vi på udførelsen af RandQS som et binært søgetræ $T$, hvor hver node er et særskilt element af $S$. Roden i træet er pivoten $y$, som vi valgte indledningsvist. Venstre subtræ indeholder elementerne i $S_1$ og højre subtræ $S_2$. Strukturen bestemmes rekursivt ved sekventielle kørsler af RandQS. Man sammenligner roden af træet $y$ med elementerne i henholdsvis $S_1$ og $S_2$, men elementerne i $S_1$ og $S_2$ sammenlignes ikke med hinanden. \\
 
-
-This makes $T$ a random binary search tree. We are for this analysis interested in the level-order traversal of the
-nodes of $T$. Such a traversal is a permutation $\pi$ obtained by visiting the nodes of $T$ in increasing order of
-the level numbers, and in a left-to-right order within each level; recall that the $i$th level of the tree is the set
-of all nodes at distance exactly $i$ from the root node.
-
-To compute $p_{ij}$ we make use of two observations:
+For at udregne $p_{ij}$ laver vi to observationer:
 
 \begin{enumerate}
-	\item There is a comparison between $S_{(i)}$ and $S_{(j)}$ if and only if $S_{(i)}$ or $S_{(j)}$ occur
-	earlier in the permutation $\pi$ than any element $S_{(l)}$ such that $i < l < j$. Intuitively, they are
-	only compared if there is some pivot node $l$ that puts $i$ in $S_1$ and $j$ in $S_2$. To see this, let
-	$S_{(k)}$ be the earliest in $\pi$ from among all elements of rank between $i$ and $j$. If $k \notin \{i,j\}$
+	\item Der er en sammenligning mellem $S_{(i)}$ og $S_{(j)}$, hvis og kun hvis $S_{(i)}$ eller $S_{(j)}$ 
+	fremkommer i permutationen $\pi$ tidligere end noget element $S_{(l)}$ sådan at $i < l < j$. Intuitively, 
+	they are only compared if there is some pivot node $l$ that puts $i$ in $S_1$ and $j$ in $S_2$. To see 
+	this, let $S_{(k)}$ be the earliest in $\pi$ from among all elements of rank between $i$ and $j$. If $k \notin \{i,j\}$
 	then $S_{(i)}$ will belong to the left sub-tree of $S_{(k)}$ while $S_{(j)}$ will belong to the right sub-tree
 	of $S_{(k)}$, implying that there is no comparison between $S_{(i)}$ and $S_{(j)}$. Conversely, if
 	$k \in \{i,j\}$ then it must be that there is a parent-child relationship between $S_{(i)}$ and $S_{(j)}$
@@ -65,9 +59,71 @@ This establishes that $p_{ij} = 2/(j - i + 1)$. The expected number of compariso
 \end{align*}
 %
 It follows that the expected number of comparisons is bounded by $2nH_n$, where $H_n$ is the \textit{nth}
-Harmonic number, defined by $H_n = \sum_{k=1}^n 1/k$. We know that $H_n \sim ln\ n + \Theta(1)$, making the
-expected running time of randomized quicksort $O(n\ lg\ n)$
+Harmonic number, defined by $H_n = \sum_{k=1}^n 1/k$. We know that $H_n \sim ln\ n + \Theta(1)$, making the expected running time of RandQS $O(n\ lg\ n)$
 
+\subsection{Las Vegas \& Monte-Carlo}
+An algorithm that \textit{always} gives the correct solution, but whose running time is variable or perhaps even
+unbounded, is a \textbf{Las Vegas} algorithm. In contrast, an algorithm that may sometimes produce an incorrect
+solution (although we can often bound the probability of this), but we know will always terminate, is a
+\textbf{Monte-Carlo} algorithm. One useful property of a Monte-Carlo algorithm is that we can reduce the risk of
+failure to be arbitrarily small by running the experiment repeatedly with
+independent random choices each time.
+
+For decision problems (yes or no problems), there are two kinds of Monte-Carlo
+algorithms: those with one-sided error and those with two-sided error. A
+Monte-Carlo algorithm is said to have a two-sided error if there is a non-zero
+probability that it errs when it outputs either \texttt{YES} or \texttt{NO}. It is said
+to have one-sided error if the probability that it errs is zero for at least one of the
+possible outputs (\texttt{YES} / \texttt{NO}).
+
+By definition, a Las Vegas algorithm is a Monte-Carlo algorithm with error
+probability $0$. We say that a Las Vegas algorithm is an \textit{efficient}
+Las Vegas algorithm if on any input its expected running time is bounded by a
+polynomial function of the input size. Similarly, we say that a Monte-Carlo
+algorithm is an \textit{efficient} Monte-Carlo algorithm if on any input its
+worst-case running time is bounded by a polynomial function of the input size.
+
+\subsubsection{Markov \& Chebyshev's inequalities}
+\begin{description}
+\item[Markov inequality] Let $Y$ be a random variable assuming only non-negative
+  values. Then for all $t \in \mathbb{R}^+$,
+  \[
+    \text{Pr}[Y \geq t] \leq \frac{\text{E[Y]}}{t}.
+  \]
+  Equivalently,
+  \[
+    \text{Pr}[Y \geq k\text{E}[Y]] \leq \frac{1}{k}.
+  \]
+\item[Proof] Define a function $f(y)$:
+  \[
+   f(y) = \begin{cases}
+     1 & \text{iff } y \geq t\\
+     0 & \text{otherwise.}
+   \end{cases}
+  \]
+  Then $\text{Pr}[Y \geq t] = \text{E}[f(y)]$. Since $f(y) \leq y/t$ for all $y$,
+  \[
+    \text{E}[f(Y)] \leq \text{E}\left [\frac{Y}{t} \right ] = \frac{\text{E}[Y]}{t},
+  \]
+  and the theorem follows.
+\end{description}
+
+\begin{description}
+\item[Chebyshevs inequality] Let $X$ be a random variable with expectation
+  $\mu_X$ and a standard deviation of $\sigma_X$. Then for any $t \in
+  \mathbb{R}^+$,
+  \[
+    \text{Pr}[|X - \mu_X| \geq t\sigma_X] \leq \frac{1}{t^2}
+  \]
+\item[Proof] Note that
+  \[
+    \text{Pr}[|X - \mu_X| \geq t\sigma_X] = \text{Pr}[(X - \mu_X)^2 \geq
+    t^2\sigma_X^2]
+  \]
+  The random variable $Y = (X - \mu_X)^2$ has expectation $\sigma_X^2$, and
+  applying the Markov inequality to $Y$ bounds this probability from above by
+  $1/t^2$. 
+\end{description}
 
 \subsection{Disposition}
 Forslag - bygget på Martin G's noter - måske er Søren D's bedre...
